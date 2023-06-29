@@ -31,7 +31,7 @@ void Audio::SoundLoadWave(const char* filename)
         return;
     }
 
-    HRESULT result;
+    
     //ファイル入力ストリームのインスタンス
     std::ifstream file;
     //.wavファイルをバイナリモードで開く
