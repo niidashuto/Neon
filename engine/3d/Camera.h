@@ -24,6 +24,8 @@ public:
 	//カメラ視点移動
 	void CameraMoveVectorEye(const XMFLOAT3& move);
 
+	void CameraMoveVectorTarget(const XMFLOAT3& move);
+
 protected:
 	// ビュー行列
 	XMMATRIX matView_ = {};

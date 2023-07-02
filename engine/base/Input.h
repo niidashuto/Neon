@@ -29,6 +29,8 @@ public://メンバ関数
     /// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
 
+	static Input* GetInstance();
+
 private: //メンバ変数
 	//キーボードのデバイス
 	ComPtr<IDirectInputDevice8> keyboard = nullptr;

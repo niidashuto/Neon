@@ -177,16 +177,21 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="position">座標</param>
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
-
+	
 
 	void SetModel(Model* model) { this->model = model; }
 
 	void SetScale(const XMFLOAT3& scale) { this->scale = scale; }
+	const XMFLOAT3& GetScale() const { return scale; }
 
 	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
+	const XMFLOAT3& GetRotation() const { return rotation; }
 
 	//カメラ
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
+
+	const XMMATRIX& GetWorld() const { return matWorld; }
+	void SetWorld(const XMMATRIX& matWorld) { this->matWorld = matWorld; }
 
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ

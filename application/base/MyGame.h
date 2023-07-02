@@ -13,6 +13,8 @@
 #include "ObjectFBX.h"
 #include "PostEffect.h"
 #include "GamePlayScene.h"
+#include "Player.h"
+#include "Enemy.h"
 
 class MyGame : public SNFramework
 {
@@ -25,6 +27,9 @@ public:
 	void Update() override;
 	//•`‰æ
 	void Draw() override;
+
+	//“–‚½‚è”»’è
+	void CheckAllCollisions();
 
 private:
 
@@ -42,6 +47,8 @@ private:
 	Object3d* object3d_1 = nullptr;
 	Object3d* object3d_2 = nullptr;
 	Object3d* object3d_3 = nullptr;
+	Object3d* object3DPlayer_ = nullptr;
+	Object3d* object3DEnemy_ = nullptr;
 
 	Camera* camera_ = nullptr;
 
@@ -58,6 +65,12 @@ private:
 	PostEffect* postEffect = nullptr;
 
 	GamePlayScene* scene_ = nullptr;
+
+	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+
+	Enemy* enemy_ = nullptr;
+	Model* modelEnemy_ = nullptr;
 
 };
 

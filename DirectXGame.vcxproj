@@ -171,6 +171,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application\base\Enemy.cpp" />
+    <ClCompile Include="application\base\EnemyBullet.cpp" />
+    <ClCompile Include="application\base\Player.cpp" />
+    <ClCompile Include="application\base\PlayerBullet.cpp" />
     <ClCompile Include="engine\2d\PostEffect.cpp" />
     <ClCompile Include="engine\audio\Audio.cpp" />
     <ClCompile Include="engine\3d\Camera.cpp" />
@@ -280,6 +284,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\base\Enemy.h" />
+    <ClInclude Include="application\base\EnemyBullet.h" />
+    <ClInclude Include="application\base\Player.h" />
+    <ClInclude Include="application\base\PlayerBullet.h" />
     <ClInclude Include="engine\2d\PostEffect.h" />
     <ClInclude Include="engine\audio\Audio.h" />
     <ClInclude Include="engine\3d\Camera.h" />

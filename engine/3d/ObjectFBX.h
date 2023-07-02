@@ -66,6 +66,12 @@ public://静的メンバ関数
 
 	static void CreateGraphicsPipeline();
 
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const XMFLOAT3& GetPosition() const { return position; }
+
 protected:
 	ComPtr<ID3D12Resource> constBuffTransform;
 
