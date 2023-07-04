@@ -75,6 +75,12 @@ private:
 	bool isDead_ = false;
 	int life_ = 5;
 
+	const float rotLimitZ_ = 30.0f;
+	const float rotLimitX_ = 30.0f;
+
+	const float moveLimitX_ = 40.0f;
+	const float moveLimitY_ = 40.0f;
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 };

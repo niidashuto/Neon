@@ -85,69 +85,110 @@ void Player::Draw() {
 void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 rot = obj_->GetRotation();
 	float moveSpeed = 1.0f;
+	float rot1 = 1.0f;
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
 		move.x += moveSpeed;
+		rot.z -= rot1;
 	}
 	if (input_->Pushkey(DIK_D)) {
 		move.x -= moveSpeed;
+		rot.z += rot1;
 	}
 	if (input_->Pushkey(DIK_W)) {
 		move.y += moveSpeed;
+		rot.x += rot1;
 	}
 	if (input_->Pushkey(DIK_S)) {
 		move.y -= moveSpeed;
+		rot.x -= rot1;
+	}
+	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
+	{
+		if (rot.z < 0)
+		{
+			rot.z += rot1;
+		}
+		else if (rot.z > 0)
+		{
+			rot.z -= rot1;
+		}
 	}
 
+	if (!input_->Pushkey(DIK_W) && !input_->Pushkey(DIK_S))
+	{
+		if (rot.x < 0)
+		{
+			rot.x += rot1;
+		}
+		else if (rot.x > 0)
+		{
+			rot.x -= rot1;
+		}
+	}
+
+	rot.z = max(rot.z, -rotLimitZ_);
+	rot.z = min(rot.z, +rotLimitZ_);
+
+	rot.x = max(rot.x, -rotLimitX_);
+	rot.x = min(rot.x, +rotLimitX_);
+
+	move.x = max(move.x, -moveLimitX_);
+	move.x = min(move.x, +moveLimitX_);
+
+	move.y = max(move.y, 0.0f);
+	move.y = min(move.y, +moveLimitY_);
 
 	obj_->SetPosition(move);
+	obj_->SetRotation(rot);
 
 }
 
 void Player::CameraMove()
 {
-	////XMFLOAT3 move = obj_->GetPosition();
-	//XMFLOAT3 cmove = camera_->GetEye();
-	//XMFLOAT3 tmove = camera_->GetTarget();
-	//float moveSpeed = 1.0f;
+	//XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 cmove = camera_->GetEye();
+	XMFLOAT3 tmove = camera_->GetTarget();
+	float moveSpeed = 1.0f;
 
-	////キーボード入力による移動処理
-	//XMMATRIX matTrans = XMMatrixIdentity();
-	//if (input_->Pushkey(DIK_LEFT)) {
-	//	//move.x -= moveSpeed;
-	//	cmove.x -= moveSpeed;
-	//	tmove.x -= moveSpeed;
-	//}
-	//if (input_->Pushkey(DIK_RIGHT)) {
-	//	//move.x += moveSpeed;
-	//	cmove.x += moveSpeed;
-	//	tmove.x += moveSpeed;
-	//}
-	//if (input_->Pushkey(DIK_UP)) {
-	//	//move.y += moveSpeed;
-	//	cmove.y += moveSpeed;
-	//	tmove.y += moveSpeed;
-	//}
-	//if (input_->Pushkey(DIK_DOWN)) {
-	//	//move.y -= moveSpeed;
-	//	cmove.y -= moveSpeed;
-	//	tmove.y -= moveSpeed;
-	//}
-	////obj_->SetPosition(move);
-	//camera_->SetEye(cmove);
-	//camera_->SetTarget(tmove);
+	//キーボード入力による移動処理
+	XMMATRIX matTrans = XMMatrixIdentity();
+	if (input_->Pushkey(DIK_LEFT)) {
+		//move.x -= moveSpeed;
+		cmove.x -= moveSpeed;
+		tmove.x -= moveSpeed;
+	}
+	if (input_->Pushkey(DIK_RIGHT)) {
+		//move.x += moveSpeed;
+		cmove.x += moveSpeed;
+		tmove.x += moveSpeed;
+	}
+	if (input_->Pushkey(DIK_UP)) {
+		//move.y += moveSpeed;
+		cmove.y += moveSpeed;
+		tmove.y += moveSpeed;
+	}
+	if (input_->Pushkey(DIK_DOWN)) {
+		//move.y -= moveSpeed;
+		cmove.y -= moveSpeed;
+		tmove.y -= moveSpeed;
+	}
+	//obj_->SetPosition(move);
+	camera_->SetEye(cmove);
+	camera_->SetTarget(tmove);
 }
 
 //攻撃処理
 void Player::Attack() {
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->Pushkey(DIK_SPACE)) {
 		//弾の速度
 		const float kBulletSpeed = 1.0f;
-		XMFLOAT3 velocity(0.0f, 0.0f, kBulletSpeed);
+		XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
 
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[0].m128_f32[0] = velocity.x;

@@ -95,7 +95,7 @@ void MyGame::Initialize()
     object3d_1->SetPosition({ 0,-10,0 });
     object3d_1->SetScale({ 10.0f,10.0f,100.0f });
     //object3d_1->SetRotation({ 10.0f,0.0f,0.0f });
-    object3d_2->SetScale({ 500.0f,500.0f,500.0f });
+    object3d_2->SetScale({ 600.0f,600.0f,600.0f });
     object3d_3->SetScale({ 10.0f,10.0f,10.0f });
     object3DPlayer_->SetScale({ 10.0f,10.0f,10.0f });
     object3DEnemy_->SetScale({ 15.0f,15.0f,15.0f });
@@ -196,56 +196,6 @@ void MyGame::Update()
 
     CheckAllCollisions();
 
-    //カメラ操作
-    {
-        XMFLOAT3 cmove = camera_->GetEye();
-        float moveSpeed = 0.5f;
-
-        //キーボード入力による移動処理
-        //XMMATRIX matTrans = XMMatrixIdentity();
-        if (input->Pushkey(DIK_LEFT)) {
-           
-            cmove.x -= moveSpeed;
-        }
-        if (input->Pushkey(DIK_RIGHT)) {
-            
-            cmove.x += moveSpeed;
-        }
-        if (input->Pushkey(DIK_UP)) {
-          
-            cmove.y += moveSpeed;
-        }
-        if (input->Pushkey(DIK_DOWN)) {
-           
-            cmove.y -= moveSpeed;
-        }
-
-        camera_->SetEye(cmove);
-    }
-
-    //{
-    //    XMFLOAT3 move = object1->GetPosition();
-    //    float Speed = 1.0f;
-
-    //    if (input->Pushkey(DIK_W)) {
-
-    //        move.y += Speed;
-    //    }
-    //    if (input->Pushkey(DIK_A)) {
-
-    //        move.x += Speed;
-    //    }
-    //    if (input->Pushkey(DIK_S)) {
-
-    //        move.y -= Speed;
-    //    }
-    //    if (input->Pushkey(DIK_D)) {
-
-    //        move.x -= Speed;
-    //    }
-    //    object1->SetPosition(move);
-    //}
-
     camera_->Update();
     sprite->Update();
 
@@ -266,11 +216,8 @@ void MyGame::Update()
     pm1_->Update();
     pm2_->Update();
 
-    imGui->Begin();
+    imGui->Begin();  
 
-    //ImGui::ShowDemoWindow();
-
-    //ImGui::Text("aaa");
 
     imGui->End();
 
@@ -300,10 +247,6 @@ void MyGame::Draw()
 
     
     spriteCommon->PostDraw();
-    ParticleManager::PreDraw(dxCommon->GetCommandList());
-    //pm1_->Draw();
-    //pm2_->Draw();
-    ParticleManager::PostDraw();
 
     Object3d::PreDraw(dxCommon->GetCommandList());
     object3d_1->Draw();
@@ -319,6 +262,11 @@ void MyGame::Draw()
     //object1->Draw(dxCommon->GetCommandList());
 
     ObjectFBX::PostDraw();
+
+    ParticleManager::PreDraw(dxCommon->GetCommandList());
+    //pm1_->Draw();
+    //pm2_->Draw();
+    ParticleManager::PostDraw();
 
     imGui->Draw();
 #pragma endregion 最初のシーンの描画
