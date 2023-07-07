@@ -231,7 +231,7 @@ void Enemy::UpdateAttackStage1() {
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	//移動
-	velocity = { 1.3f, 0.0f, 0.0f };
+	velocity = { 4.0f, 0.0f, 0.0f };
 	if (isReverse_) {
 		pos = Bezier(end, p2, p1, start, timeRate);
 	}
@@ -310,4 +310,9 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 //衝突を検出したら呼び出されるコールバック関数
-void Enemy::OnCollisionPlayer() { life_--; }
+void Enemy::OnCollisionPlayer()
+{ 
+	life_--; 
+
+	
+}

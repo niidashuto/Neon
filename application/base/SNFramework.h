@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Audio.h"
 #include "FbxLoader.h"
+#include "PostEffect.h"
 
 
 class SNFramework
@@ -41,5 +42,9 @@ protected:
 	Input* input = nullptr;
 
 	Audio* audio = nullptr;
+
+	PostEffect* postEffect = nullptr;
+
+	
 };
 

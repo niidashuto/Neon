@@ -15,7 +15,7 @@ private:
 public:
 
 	//‰Šú‰»
-	void Initialize(Model* model, Object3d* obj, const XMFLOAT3& position, const XMFLOAT3& velocity);
+	void Initialize(Model* model, Object3d* obj,const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//ƒŠƒZƒbƒgˆ—
 	void Reset();
 

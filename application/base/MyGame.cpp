@@ -11,36 +11,21 @@ void MyGame::Initialize()
 
     SNFramework::Initialize();
 
-    //spriteCommon->LoadTexture(0, "texture.png");
-    //spriteCommon->LoadTexture(1, "reimu.png");
+    
 
-    //scene_ = new GamePlayScene();
+    scene_ = new GamePlayScene();
 
-    //scene_->Initialize();
+    scene_->Initialize();
 
     player_ = new Player();
 
     enemy_ = new Enemy();
 
-    spriteCommon->LoadTexture(1, "white1x1.png");
-
-    spriteCommon->LoadTexture(0, "background.png");
-
-   
-    
 
     postEffect = new PostEffect();
     postEffect->SetTextureIndex(1);
     postEffect->Initialize(spriteCommon,1);
     postEffect->SetSize({ 500.0f,500.0f });
-    
-    
-
-    Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
-
-    
-
-    ParticleManager::StaticInitialize(dxCommon->GetDevice());
 
     //音声読み込み
     //audio->SoundLoadWave("Resources/fanfare.wav");
@@ -155,12 +140,7 @@ void MyGame::Finalize()
 #pragma endregion 最初のシーンの終了
 
 #pragma region 基盤システムの終了
-    //スプライト共通部解放
-    delete spriteCommon;
-    //入力解放
-    delete input;
-    //DirectX解放
-    delete dxCommon;
+   
 
     delete postEffect;
 
@@ -174,9 +154,7 @@ void MyGame::Finalize()
     delete model1;
     
     SNFramework::Finalize();
-    delete audio;
-    //WindowsAPI解放
-    delete winApp;
+    
 #pragma endregion 基盤システムの終了
 }
 
@@ -252,8 +230,8 @@ void MyGame::Draw()
     object3d_1->Draw();
     object3d_2->Draw();
     //object3d_3->Draw();
-    object3DPlayer_->Draw();
-    object3DEnemy_->Draw();
+    player_->Draw();
+    enemy_->Draw();
 
     Object3d::PostDraw();
 

@@ -23,7 +23,7 @@ private:
 public:
 	~Enemy();
 	//’e”­ËŠÔŠu
-	static const int kFireIntervalStage1 = 40;
+	static const int kFireIntervalStage1 = 50;
 	//‰Šú‰»
 	void Initialize(Model* model, Object3d* obj, Camera* camera);
 

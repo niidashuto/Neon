@@ -21,6 +21,8 @@ public://メンバ関数
 	//メッセージの処理
 	bool ProcessMessage();
 
+	static WinApp* GetInstance();
+
 private:
 	//ウィンドウハンドル
 	HWND hwnd = nullptr;

@@ -58,7 +58,7 @@ void Player::Update() {
 		Attack();
 
 		//’eXV
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) { 
 			bullet->Update();
 		}
 
@@ -87,56 +87,60 @@ void Player::Move() {
 	XMFLOAT3 move = obj_->GetPosition();
 	XMFLOAT3 rot = obj_->GetRotation();
 	float moveSpeed = 1.0f;
-	float rot1 = 1.0f;
+	float rotSpeed = 1.0f;
 
 	//ƒL[ƒ{[ƒh“ü—Í‚É‚æ‚éˆÚ“®ˆ—
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
 		move.x += moveSpeed;
-		rot.z -= rot1;
+		rot.z -= rotSpeed;
 	}
 	if (input_->Pushkey(DIK_D)) {
 		move.x -= moveSpeed;
-		rot.z += rot1;
+		rot.z += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_W)) {
 		move.y += moveSpeed;
-		rot.x += rot1;
+		rot.x += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_S)) {
 		move.y -= moveSpeed;
-		rot.x -= rot1;
+		rot.x -= rotSpeed;
 	}
+	//©‹@‚Ì‰ñ“](Z²)
 	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
 	{
 		if (rot.z < 0)
 		{
-			rot.z += rot1;
+			rot.z += rotSpeed;
 		}
 		else if (rot.z > 0)
 		{
-			rot.z -= rot1;
+			rot.z -= rotSpeed;
 		}
 	}
 
+	//©‹@‚Ì‰ñ“](X²)
 	if (!input_->Pushkey(DIK_W) && !input_->Pushkey(DIK_S))
 	{
 		if (rot.x < 0)
 		{
-			rot.x += rot1;
+			rot.x += rotSpeed;
 		}
 		else if (rot.x > 0)
 		{
-			rot.x -= rot1;
+			rot.x -= rotSpeed;
 		}
 	}
 
+	//‰ñ“]§ŒÀ
 	rot.z = max(rot.z, -rotLimitZ_);
 	rot.z = min(rot.z, +rotLimitZ_);
 
 	rot.x = max(rot.x, -rotLimitX_);
 	rot.x = min(rot.x, +rotLimitX_);
 
+	//ˆÚ“®§ŒÀ
 	move.x = max(move.x, -moveLimitX_);
 	move.x = min(move.x, +moveLimitX_);
 
@@ -185,10 +189,12 @@ void Player::CameraMove()
 //UŒ‚ˆ—
 void Player::Attack() {
 
-	if (input_->Pushkey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_SPACE)) {
 		//’e‚Ì‘¬“x
 		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
+
+		
 
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[0].m128_f32[0] = velocity.x;
@@ -203,6 +209,9 @@ void Player::Attack() {
 
 		//’e‚ğ¶¬‚µ‰Šú‰»
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+
+		//PlayerBullet* newBullet=new PlayerBullet();
+
 		newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 		//’e‚ğ“o˜^

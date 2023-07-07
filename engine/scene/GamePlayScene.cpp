@@ -1,18 +1,18 @@
 #include "GamePlayScene.h"
-#include "SpriteCommon.h"
-#include "Object3d.h"
-#include "ParticleManager.h"
-#include "DirectXCommon.h"
-#include "Audio.h"
+
+
+DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
+
+SpriteCommon* GamePlayScene::spriteCommon_ = SpriteCommon::GetInstance();
 
 void GamePlayScene::Initialize()
 {
     ////spriteCommon->LoadTexture(0, "texture.png");
     ////spriteCommon->LoadTexture(1, "reimu.png");
 
-    //SpriteCommon::GetInstance()->LoadTexture(1, "white1x1.png");
+    spriteCommon_->LoadTexture(1, "white1x1.png");
 
-    //SpriteCommon::GetInstance()->LoadTexture(0, "background.png");
+    spriteCommon_->LoadTexture(0, "background.png");
 
     //ParticleManager::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
 
