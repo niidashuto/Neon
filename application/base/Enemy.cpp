@@ -50,7 +50,7 @@ void Enemy::Stage1Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireIntervalStage1;
 
-	life_ = 40;
+	life_ = 1;
 	isDead_ = false;
 
 	isReverse_ = false;
@@ -262,6 +262,7 @@ void Enemy::UpdateAttackStage1() {
 	if (life_ <= 0) {
 		isDead_ = true;
 		life_ = 0;
+		
 	}
 	if (isDead_)
 	{
@@ -274,8 +275,10 @@ void Enemy::UpdateLeave() {
 	//速度
 	XMFLOAT3 velocity;
 
+	deathTimer_--;
+
 	//移動
-	velocity = { 0.0f, 0.0f, 0.03f };
+	velocity = { 1.0f, 1.0f, 0.03f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;

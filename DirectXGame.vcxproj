@@ -199,6 +199,7 @@
     <ClCompile Include="engine\math\Vector3.cpp" />
     <ClCompile Include="engine\base\ViewProjection.cpp" />
     <ClCompile Include="engine\base\WinApp.cpp" />
+    <ClCompile Include="RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\AL4\DirectXGame\OBJShaderHeader.hlsli" />
@@ -311,6 +312,7 @@
     <ClInclude Include="engine\math\Vector3.h" />
     <ClInclude Include="engine\base\ViewProjection.h" />
     <ClInclude Include="engine\base\WinApp.h" />
+    <ClInclude Include="RailCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

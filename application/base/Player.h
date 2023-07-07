@@ -83,6 +83,8 @@ private:
 	const float moveLimitX_ = 40.0f;
 	const float moveLimitY_ = 40.0f;
 
+	bool start_ = false;
+
 	
 
 public: //アクセッサ、インライン関数

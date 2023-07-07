@@ -112,6 +112,8 @@ private:
 	bool isDead_;
 	int life_;
 
+	int deathTimer_ = 60 * 5;
+
 	//”½“]ƒtƒ‰ƒO
 	bool isReverse_ = false;
 

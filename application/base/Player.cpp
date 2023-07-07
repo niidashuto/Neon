@@ -89,6 +89,11 @@ void Player::Move() {
 	float moveSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
+	if (isDead_ == true)
+	{
+		move.z--;
+	}
+
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
@@ -107,6 +112,11 @@ void Player::Move() {
 		move.y -= moveSpeed;
 		rot.x -= rotSpeed;
 	}
+
+	if (input_->Pushkey(DIK_0)) {
+		start_ = true;
+	}
+
 	//自機の回転(Z軸)
 	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
 	{
@@ -158,7 +168,13 @@ void Player::CameraMove()
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
-
+	
+	if (isDead_ == true)
+	{
+		cmove.z--;
+		tmove.z--;
+	}
+	
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_LEFT)) {
@@ -181,6 +197,8 @@ void Player::CameraMove()
 		cmove.y -= moveSpeed;
 		tmove.y -= moveSpeed;
 	}
+	
+	
 	//obj_->SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
@@ -191,7 +209,7 @@ void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		//弾の速度
-		const float kBulletSpeed = 1.0f;
+		const float kBulletSpeed = 2.0f;
 		XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
 
 		
