@@ -89,7 +89,7 @@ void Player::Move() {
 	float moveSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
-	if (isDead_ == true)
+	if (start_ == true)
 	{
 		move.z--;
 	}
@@ -169,7 +169,7 @@ void Player::CameraMove()
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
 	
-	if (isDead_ == true)
+	if (start_ == true)
 	{
 		cmove.z--;
 		tmove.z--;

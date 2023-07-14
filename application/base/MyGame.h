@@ -15,6 +15,7 @@
 #include "GamePlayScene.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "WeakEnemy.h"
 
 class MyGame : public SNFramework
 {
@@ -43,12 +44,15 @@ private:
 
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;
+	Model* modelRail_ = nullptr;
 	//3Dオブジェクト生成
 	Object3d* object3d_1 = nullptr;
 	Object3d* object3d_2 = nullptr;
 	Object3d* object3d_3 = nullptr;
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
+	Object3d* object3DWeakEnemy_ = nullptr;
+	Object3d* object3DRail_ = nullptr;
 
 	Camera* camera_ = nullptr;
 
@@ -71,6 +75,9 @@ private:
 
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy_ = nullptr;
+
+	//WeakEnemy* weakEnemy_ = nullptr;
+	//Model* modelWeakEnemy_ = nullptr;
 
 };
 
