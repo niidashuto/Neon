@@ -21,6 +21,8 @@ void MyGame::Initialize()
 
     enemy_ = new Enemy();
 
+    weakEnemy_ = new WeakEnemy();
+
 
     postEffect = new PostEffect();
     //postEffect->SetTextureIndex(1);
@@ -60,7 +62,7 @@ void MyGame::Initialize()
     model_2 = Model::LoadFromOBJ("skybox");
     modelPlayer_ = Model::LoadFromOBJ("player");
     modelEnemy_ = Model::LoadFromOBJ("enemy");
-    //modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
+    modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
     modelRail_ = Model::LoadFromOBJ("rail");
 
     object3d_1 = Object3d::Create();
@@ -77,7 +79,7 @@ void MyGame::Initialize()
     object3d_3->SetModel(model_2);
     object3DPlayer_->SetModel(modelPlayer_);
     object3DEnemy_->SetModel(modelEnemy_);
-    //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
+    object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
     //3Dオブジェクトの位置を指定
     //object3d_2->SetPosition({ -5,0,-5 });
@@ -99,7 +101,7 @@ void MyGame::Initialize()
     object3d_3->SetCamera(camera_);
     object3DPlayer_->SetCamera(camera_);
     object3DEnemy_->SetCamera(camera_);
-    //object3DWeakEnemy_->SetCamera(camera_);
+    object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
 
     particle1_ = Particle::LoadFromParticleTexture("particle.png");
@@ -136,8 +138,9 @@ void MyGame::Initialize()
     player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
-    //weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_);
-    //weakEnemy_->SetPlayer(player_);
+    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_,myGame_);
+    weakEnemy_->SetPlayer(player_);
+    weakEnemy_->SetMyGame(this->myGame_);
 
 #pragma endregion 最初のシーンを初期化
 }
@@ -184,7 +187,8 @@ void MyGame::Update()
 
     player_->Update();
     enemy_->Update();
-    //weakEnemy_->Update();
+    weakEnemy_->Update();
+    
 
     CheckAllCollisions();
 
@@ -239,7 +243,8 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
-    //weakEnemy_->Draw();
+    weakEnemy_->Draw();
+    
 
     Object3d::PostDraw();
 
@@ -274,25 +279,28 @@ void MyGame::Draw()
 void MyGame::CheckAllCollisions()
 {
     //判定対象A,Bの座標
-    XMFLOAT3 posA, posB;
+    XMFLOAT3 posA, posB,posC;
     // A,Bの座標の距離用
-    XMFLOAT3 posAB;
+    XMFLOAT3 posAB,posAC;
     //判定対象A,Bの半径
     float radiusA;
     float radiusB;
-    float radiiusAB;
+    float radiusC;
+    float radiusAB;
+    float radiusAC;
 
     //自機弾リストを取得
     const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
     //敵弾リストを取得
     const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
 
-    //const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = weakEnemy_->GetWeakEnemyBullets();
+    const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = weakEnemy_->GetWeakEnemyBullets();
 
 #pragma region 自機と敵弾の当たり判定
     //それぞれの半径
     radiusA = 1.0f;
     radiusB = 1.0f;
+    radiusC = 1.0f;
 
     //自機の座標
     posA = player_->GetWorldPosition();
@@ -305,10 +313,10 @@ void MyGame::CheckAllCollisions()
         posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
         posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
         posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-        radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+        radiusAB = (radiusA + radiusB) * (radiusA + radiusB);
 
         //球と球の交差判定
-        if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+        if (radiusAB >= (posAB.x + posAB.y + posAB.z)) {
             //自キャラの衝突時コールバック関数を呼び出す
             player_->OnCollision();
             //敵弾の衝突時コールバック関数を呼び出す
@@ -316,24 +324,24 @@ void MyGame::CheckAllCollisions()
         }
     }
 
-    ////自機と全ての敵弾の当たり判定
-    //for (const std::unique_ptr<WeakEnemyBullet>& weakbullet : weakEnemyBullets) {
-    //    //敵弾の座標
-    //    posB = weakbullet->GetWorldPosition();
-    //    //座標A,Bの距離を求める
-    //    posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-    //    posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-    //    posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-    //    radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+    //自機と全ての敵弾の当たり判定
+    for (const std::unique_ptr<WeakEnemyBullet>& weakbullet : weakEnemyBullets) {
+        //敵弾の座標
+        posC = weakbullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAC.x = (posC.x - posA.x) * (posC.x - posA.x);
+        posAC.y = (posC.y - posA.y) * (posC.y - posA.y);
+        posAC.z = (posC.z - posA.z) * (posC.z - posA.z);
+        radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
 
-    //    //球と球の交差判定
-    //    if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-    //        //自キャラの衝突時コールバック関数を呼び出す
-    //        player_->OnCollision();
-    //        //敵弾の衝突時コールバック関数を呼び出す
-    //        weakbullet->OnCollision();
-    //    }
-    //}
+        //球と球の交差判定
+        if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
+            //自キャラの衝突時コールバック関数を呼び出す
+            player_->OnCollision();
+            //敵弾の衝突時コールバック関数を呼び出す
+            weakbullet->OnCollision();
+        }
+    }
 
 #pragma endregion
 
@@ -341,11 +349,12 @@ void MyGame::CheckAllCollisions()
     //それぞれの半径
     radiusA = 5.0f;
     radiusB = 1.0f;
+    radiusC = 1.0f;
 
     //敵の座標
     posA = enemy_->GetWorldPosition();
 
-    //posC = weakEnemy_->GetWorldPosition();
+    posC = weakEnemy_->GetWorldPosition();
 
     //敵と全ての弾の当たり判定
     for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
@@ -355,10 +364,10 @@ void MyGame::CheckAllCollisions()
         posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
         posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
         posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-        radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+        radiusAB = (radiusA + radiusB) * (radiusA + radiusB);
 
         //球と球の交差判定
-        if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+        if (radiusAB >= (posAB.x + posAB.y + posAB.z)) {
             //敵キャラの衝突時コールバック関数を呼び出す
             enemy_->OnCollisionPlayer();
             //自機弾の衝突時コールバック関数を呼び出す
@@ -366,24 +375,33 @@ void MyGame::CheckAllCollisions()
         }
     }
 
-    ////敵と全ての弾の当たり判定
-    //for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-    //    //弾の座標
-    //    posC = bullet->GetWorldPosition();
-    //    //座標A,Bの距離を求める
-    //    posAB.x = (posC.x - posA.x) * (posC.x - posA.x);
-    //    posAB.y = (posC.y - posA.y) * (posC.y - posA.y);
-    //    posAB.z = (posC.z - posA.z) * (posC.z - posA.z);
-    //    radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+    //敵と全ての弾の当たり判定
+    for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+        //弾の座標
+        posB = bullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAC.x = (posB.x - posC.x) * (posB.x - posC.x);
+        posAC.y = (posB.y - posC.y) * (posB.y - posC.y);
+        posAC.z = (posB.z - posC.z) * (posB.z - posC.z);
+        radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
 
-    //    //球と球の交差判定
-    //    if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-    //        //敵キャラの衝突時コールバック関数を呼び出す
-    //        weakEnemy_->OnCollisionPlayer();
-    //        //自機弾の衝突時コールバック関数を呼び出す
-    //        bullet->OnCollision();
-    //    }
-    //}
+        //球と球の交差判定
+        if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
+            //敵キャラの衝突時コールバック関数を呼び出す
+            weakEnemy_->OnCollisionPlayer();
+            //自機弾の衝突時コールバック関数を呼び出す
+            bullet->OnCollision();
+        }
+    }
 
 #pragma endregion
 }
+
+//void MyGame::AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
+//{
+//    WeakEnemyBullets_.push_back(std::move(weakEnemyBullet));
+//}
+
+
+
+

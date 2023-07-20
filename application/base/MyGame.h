@@ -32,7 +32,11 @@ public:
 	//“–‚½‚è”»’è
 	void CheckAllCollisions();
 
+	//void AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
+
 private:
+
+	
 
 	ImGuiManager* imGui = nullptr;
 
@@ -53,6 +57,7 @@ private:
 	Object3d* object3DEnemy_ = nullptr;
 	Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
+	Object3d* obj_ = nullptr;
 
 	Camera* camera_ = nullptr;
 
@@ -76,8 +81,12 @@ private:
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 
-	//WeakEnemy* weakEnemy_ = nullptr;
-	//Model* modelWeakEnemy_ = nullptr;
+	WeakEnemy* weakEnemy_ = nullptr;
+	Model* modelWeakEnemy_ = nullptr;
+
+	
+
+	MyGame* myGame_ = nullptr;
 
 };
 
