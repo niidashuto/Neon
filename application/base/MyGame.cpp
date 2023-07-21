@@ -138,9 +138,10 @@ void MyGame::Initialize()
     player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
-    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_,myGame_);
-    weakEnemy_->SetPlayer(player_);
+    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_);
     weakEnemy_->SetMyGame(this->myGame_);
+    weakEnemy_->SetPlayer(player_);
+    
 
 #pragma endregion 最初のシーンを初期化
 }
@@ -187,7 +188,8 @@ void MyGame::Update()
 
     player_->Update();
     enemy_->Update();
-    weakEnemy_->Update();
+    //weakEnemy_->Update();
+    WeakEnemyUpdate();
     
 
     CheckAllCollisions();
@@ -243,7 +245,8 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
-    weakEnemy_->Draw();
+    //weakEnemy_->Draw();
+    WeakEnemyDraw();
     
 
     Object3d::PostDraw();
@@ -319,7 +322,7 @@ void MyGame::CheckAllCollisions()
         if (radiusAB >= (posAB.x + posAB.y + posAB.z)) {
             //自キャラの衝突時コールバック関数を呼び出す
             player_->OnCollision();
-            //敵弾の衝突時コールバック関数を呼び出す
+            //敵弾の衝突時コールバック関数を呼び出すgg
             bullet->OnCollision();
         }
     }
@@ -397,10 +400,62 @@ void MyGame::CheckAllCollisions()
 #pragma endregion
 }
 
-//void MyGame::AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
-//{
-//    WeakEnemyBullets_.push_back(std::move(weakEnemyBullet));
-//}
+void MyGame::AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
+{
+    WeakEnemyBullets_.push_back(std::move(weakEnemyBullet));
+}
+
+void MyGame::WeakEnemyUpdate()
+{
+    //死亡フラグの立った弾を削除
+    WeakEnemyBullets_.remove_if(
+        [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+
+    //座標を移動させる
+    switch (phase_) {
+    case MyGame::Phase::ApproachStage1:
+
+        weakEnemy_->UpdateApproachStage1();
+        break;
+
+    case MyGame::Phase::AttackStage1:
+
+        weakEnemy_->UpdateAttackStage1();
+
+        break;
+    }
+    //弾更新
+    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+        bullet->Update();
+    }
+
+    //座標を移動させる
+    switch (phase_) {
+    case MyGame::Phase::Leave:
+        weakEnemy_->UpdateLeave();
+        break;
+
+    }
+
+    //行列更新
+    weakEnemy_->Trans();
+
+    object3DWeakEnemy_->Update();
+}
+
+void MyGame::WeakEnemyDraw()
+{
+    if (!isDead_) {
+        //モデルの描画
+        object3DWeakEnemy_->Draw();
+
+        //弾描画
+        for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+            bullet->Draw();
+        }
+    }
+}
+
 
 
 

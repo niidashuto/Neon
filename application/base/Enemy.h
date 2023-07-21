@@ -59,10 +59,12 @@ public:
 	//’eƒŠƒXƒg‚ðŽæ“¾
 	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() { return enemyBullets_; }
 
-private:
-
 	//’e
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
+
+private:
+
+	
 	//ƒ‚ƒfƒ‹
 	Model* model_ = nullptr;
 	Model* modelBullet_ = nullptr;

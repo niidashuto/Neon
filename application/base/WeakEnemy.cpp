@@ -13,14 +13,14 @@ WeakEnemy::~WeakEnemy() {
 }
 
 // 初期化
-void WeakEnemy::Initialize(Model* model, Object3d* obj, Camera* camera,MyGame *myGame) {
+void WeakEnemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	// NULLポインタチェック
 	assert(model);
 
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
-	myGame_ = myGame;
+	
 
 	modelBullet_ = Model::LoadFromOBJ("weakenemybullet");
 	objBullet_ = Object3d::Create();
@@ -56,8 +56,8 @@ void WeakEnemy::Stage1Parameter() {
 
 	isReverse_ = false;
 	//弾リセット
-	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-		bullet->Reset();
+	for (std::unique_ptr<WeakEnemyBullet>& bullets : WeakEnemyBullets_) {
+		bullets->Reset();
 	}
 	
 }
@@ -65,45 +65,45 @@ void WeakEnemy::Stage1Parameter() {
 //リセット
 void WeakEnemy::Reset() { Stage1Parameter(); }
 
-//更新
-void WeakEnemy::Update() {
-
-
-	//死亡フラグの立った弾を削除
-	WeakEnemyBullets_.remove_if(
-		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
-
-	//座標を移動させる
-	switch (phase_) {
-	case WeakEnemy::Phase::ApproachStage1:
-
-		UpdateApproachStage1();
-		break;
-
-	case WeakEnemy::Phase::AttackStage1:
-
-		UpdateAttackStage1();
-
-		break;
-	}
-	//弾更新
-	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-		bullet->Update();
-	}
-
-	//座標を移動させる
-	switch (phase_) {
-	case WeakEnemy::Phase::Leave:
-		UpdateLeave();
-		break;
-
-	}
-
-	//行列更新
-	Trans();
-
-	obj_->Update();
-}
+////更新
+//void WeakEnemy::Update() {
+//
+//
+//	//死亡フラグの立った弾を削除
+//	WeakEnemyBullets_.remove_if(
+//		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+//
+//	//座標を移動させる
+//	switch (phase_) {
+//	case WeakEnemy::Phase::ApproachStage1:
+//
+//		UpdateApproachStage1();
+//		break;
+//
+//	case WeakEnemy::Phase::AttackStage1:
+//
+//		UpdateAttackStage1();
+//
+//		break;
+//	}
+//	//弾更新
+//	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+//		bullet->Update();
+//	}
+//
+//	//座標を移動させる
+//	switch (phase_) {
+//	case WeakEnemy::Phase::Leave:
+//		UpdateLeave();
+//		break;
+//
+//	}
+//
+//	//行列更新
+//	Trans();
+//
+//	obj_->Update();
+//}
 
 //転送
 void WeakEnemy::Trans() {
@@ -168,21 +168,22 @@ void WeakEnemy::Fire() {
 
 	//弾を登録
 	WeakEnemyBullets_.push_back(std::move(newBullet));
+	
 }
 
-//描画
-void WeakEnemy::Draw() {
-	if (!isDead_) {
-		//モデルの描画
-		obj_->Draw();
-
-		//弾描画
-		for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-			bullet->Draw();
-		}
-	}
-
-}
+////描画
+//void WeakEnemy::Draw() {
+//	if (!isDead_) {
+//		//モデルの描画
+//		obj_->Draw();
+//
+//		//弾描画
+//		for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+//			bullet->Draw();
+//		}
+//	}
+//
+//}
 
 
 //状態変化用の更新関数
@@ -191,7 +192,7 @@ void WeakEnemy::UpdateApproachStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	//移動
-	velocity = { 0.0f, 0.0f, -0.3f };
+	velocity = { 0.0f, 0.0f, 0.0f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;

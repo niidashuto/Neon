@@ -20,6 +20,9 @@
 class MyGame : public SNFramework
 {
 public:
+
+	//弾発射間隔
+	static const int kFireIntervalStage1 = 50;
 	//初期化
 	void Initialize() override;
 	//終了
@@ -32,10 +35,51 @@ public:
 	//当たり判定
 	void CheckAllCollisions();
 
-	//void AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
+	void AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
+
+	void WeakEnemyUpdate();
+
+	void WeakEnemyFire();
+
+	void WeakEnemyDraw();
+
+	//弾リストを取得
+	//const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
+
+	
 
 private:
 
+	
+	//弾
+	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
+
+	//行動フェーズ
+	enum class Phase {
+		//ここからステージ1
+		ApproachStage1, //接近
+		AttackStage1,   //攻撃
+
+		//全体
+		Leave, //離脱
+
+	};
+
+	//フェーズ
+	Phase phase_;
+	//弾発射タイマー
+	int32_t fireTimer = 0;
+
+	//死亡フラグとライフ
+	bool isDead_;
+	int life_;
+
+	//スケール
+	XMFLOAT3 scale;
+	//ポジション
+	XMFLOAT3 pos;
+	//アングル
+	XMFLOAT3 angle;
 	
 
 	ImGuiManager* imGui = nullptr;
@@ -57,7 +101,7 @@ private:
 	Object3d* object3DEnemy_ = nullptr;
 	Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
-	Object3d* obj_ = nullptr;
+	//Object3d* obj_ = nullptr;
 
 	Camera* camera_ = nullptr;
 

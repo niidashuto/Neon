@@ -27,7 +27,7 @@ public:
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 50;
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Camera* camera,MyGame* myGame);
+	void Initialize(Model* model, Object3d* obj, Camera* camera);
 
 	//リセット処理
 	void Reset();
@@ -58,15 +58,14 @@ public:
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollisionPlayer();
 
-	
 	//弾リストを取得
 	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
-	
 
 private:
 
 	//弾
 	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
+
 	//モデル
 	Model* model_ = nullptr;
 	Model* modelBullet_ = nullptr;
