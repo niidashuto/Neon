@@ -5,7 +5,6 @@
 #include "Model.h"
 #include "ImGuiManager.h"
 #include <imgui.h>
-#include <fstream>
 #include <wrl.h>
 #include "SNFramework.h"
 #include "Camera.h"
@@ -16,6 +15,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "WeakEnemy.h"
+#include <sstream>
 
 class MyGame : public SNFramework
 {
@@ -35,52 +35,31 @@ public:
 	//当たり判定
 	void CheckAllCollisions();
 
-	void AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
+	void AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
 
-	void WeakEnemyUpdate();
+	void WeakEnemy_(XMFLOAT3 trans);
 
-	void WeakEnemyFire();
+	void LoadPopEnemyData();
 
-	void WeakEnemyDraw();
+	void UpdateEnemyPopCommands();
 
-	//弾リストを取得
-	//const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
+	
+	
+	
 
 	
 
 private:
 
-	
 	//弾
 	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
 
-	//行動フェーズ
-	enum class Phase {
-		//ここからステージ1
-		ApproachStage1, //接近
-		AttackStage1,   //攻撃
+	std::list<std::unique_ptr<WeakEnemy>> _WeakEnemy;
 
-		//全体
-		Leave, //離脱
-
-	};
-
-	//フェーズ
-	Phase phase_;
-	//弾発射タイマー
-	int32_t fireTimer = 0;
-
-	//死亡フラグとライフ
-	bool isDead_;
-	int life_;
-
-	//スケール
-	XMFLOAT3 scale;
-	//ポジション
-	XMFLOAT3 pos;
-	//アングル
-	XMFLOAT3 angle;
+	std::stringstream enemyPopCommands;
 	
+	bool isWait_;
+	int waitTimer_;
 
 	ImGuiManager* imGui = nullptr;
 

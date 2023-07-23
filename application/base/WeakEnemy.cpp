@@ -1,5 +1,6 @@
 #include "WeakEnemy.h"
 #include <cassert>
+#include "MyGame.h"
 
 #include "Player.h"
 
@@ -20,7 +21,6 @@ void WeakEnemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
-	
 
 	modelBullet_ = Model::LoadFromOBJ("weakenemybullet");
 	objBullet_ = Object3d::Create();
@@ -34,6 +34,8 @@ void WeakEnemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 10.0f;					//全体時間
 	timeRate;
+
+	//LoadPopEnemyData();
 }
 
 //パラメータ
@@ -65,45 +67,47 @@ void WeakEnemy::Stage1Parameter() {
 //リセット
 void WeakEnemy::Reset() { Stage1Parameter(); }
 
-////更新
-//void WeakEnemy::Update() {
-//
-//
-//	//死亡フラグの立った弾を削除
-//	WeakEnemyBullets_.remove_if(
-//		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
-//
-//	//座標を移動させる
-//	switch (phase_) {
-//	case WeakEnemy::Phase::ApproachStage1:
-//
-//		UpdateApproachStage1();
-//		break;
-//
-//	case WeakEnemy::Phase::AttackStage1:
-//
-//		UpdateAttackStage1();
-//
-//		break;
-//	}
-//	//弾更新
-//	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-//		bullet->Update();
-//	}
-//
-//	//座標を移動させる
-//	switch (phase_) {
-//	case WeakEnemy::Phase::Leave:
-//		UpdateLeave();
-//		break;
-//
-//	}
-//
-//	//行列更新
-//	Trans();
-//
-//	obj_->Update();
-//}
+//更新
+void WeakEnemy::Update() {
+
+
+	//死亡フラグの立った弾を削除
+	WeakEnemyBullets_.remove_if(
+		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+
+	//UpdateEnemyPopCommands();
+
+	//座標を移動させる
+	switch (phase_) {
+	case WeakEnemy::Phase::ApproachStage1:
+
+		UpdateApproachStage1();
+		break;
+
+	case WeakEnemy::Phase::AttackStage1:
+
+		UpdateAttackStage1();
+
+		break;
+	}
+	//弾更新
+	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+		bullet->Update();
+	}
+
+	//座標を移動させる
+	switch (phase_) {
+	case WeakEnemy::Phase::Leave:
+		UpdateLeave();
+		break;
+
+	}
+
+	//行列更新
+	Trans();
+
+	obj_->Update();
+}
 
 //転送
 void WeakEnemy::Trans() {
@@ -167,23 +171,24 @@ void WeakEnemy::Fire() {
 	newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 	//弾を登録
-	WeakEnemyBullets_.push_back(std::move(newBullet));
+	myGame_->AddEnemyBullet(std::move(newBullet));
+	
 	
 }
 
-////描画
-//void WeakEnemy::Draw() {
-//	if (!isDead_) {
-//		//モデルの描画
-//		obj_->Draw();
-//
-//		//弾描画
-//		for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-//			bullet->Draw();
-//		}
-//	}
-//
-//}
+//描画
+void WeakEnemy::Draw() {
+	if (!isDead_) {
+		//モデルの描画
+		obj_->Draw();
+
+		//弾描画
+		for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+			bullet->Draw();
+		}
+	}
+
+}
 
 
 //状態変化用の更新関数
@@ -262,6 +267,8 @@ void WeakEnemy::UpdateLeave() {
 	pos.z += velocity.z;
 	obj_->SetPosition(pos);
 }
+
+
 
 const XMFLOAT3 WeakEnemy::Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {

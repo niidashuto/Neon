@@ -7,6 +7,8 @@
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
+#include <sstream>
+#include <Vector3.h>
 
 //自機クラスの前方宣言
 class Player;
@@ -53,6 +55,8 @@ public:
 	//離脱
 	void UpdateLeave();
 
+	
+
 	const XMFLOAT3 Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
@@ -61,10 +65,14 @@ public:
 	//弾リストを取得
 	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
 
+	
+
 private:
 
 	//弾
 	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
+
+	
 
 	//モデル
 	Model* model_ = nullptr;
@@ -117,7 +125,11 @@ private:
 	bool isDead_;
 	int life_;
 
+	
+
 	int deathTimer_ = 60 * 5;
+
+	
 
 	//反転フラグ
 	bool isReverse_ = false;

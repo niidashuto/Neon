@@ -2,6 +2,7 @@
 #include "Quaternion.h"
 #include "FbxLoader.h"
 #include "ObjectFBX.h"
+#include <fstream>
 
 
 void MyGame::Initialize()
@@ -138,9 +139,8 @@ void MyGame::Initialize()
     player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
-    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_);
-    weakEnemy_->SetMyGame(this->myGame_);
-    weakEnemy_->SetPlayer(player_);
+   
+    LoadPopEnemyData();
     
 
 #pragma endregion 最初のシーンを初期化
@@ -188,8 +188,15 @@ void MyGame::Update()
 
     player_->Update();
     enemy_->Update();
-    //weakEnemy_->Update();
-    WeakEnemyUpdate();
+
+    UpdateEnemyPopCommands();
+
+    //弾更新
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+
+        weakEnemy_->Update();
+
+    }
     
 
     CheckAllCollisions();
@@ -245,8 +252,10 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
-    //weakEnemy_->Draw();
-    WeakEnemyDraw();
+    //弾更新
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+        weakEnemy_->Draw();
+    }
     
 
     Object3d::PostDraw();
@@ -357,8 +366,11 @@ void MyGame::CheckAllCollisions()
     //敵の座標
     posA = enemy_->GetWorldPosition();
 
-    posC = weakEnemy_->GetWorldPosition();
-
+    //弾更新
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+        posC = weakEnemy_->GetWorldPosition();
+    }
+    
     //敵と全ての弾の当たり判定
     for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
         //弾の座標
@@ -391,7 +403,10 @@ void MyGame::CheckAllCollisions()
         //球と球の交差判定
         if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
             //敵キャラの衝突時コールバック関数を呼び出す
-            weakEnemy_->OnCollisionPlayer();
+             //弾更新
+           
+             weakEnemy_->OnCollisionPlayer();
+            
             //自機弾の衝突時コールバック関数を呼び出す
             bullet->OnCollision();
         }
@@ -400,61 +415,81 @@ void MyGame::CheckAllCollisions()
 #pragma endregion
 }
 
-void MyGame::AddWeakEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
+void MyGame::AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
 {
     WeakEnemyBullets_.push_back(std::move(weakEnemyBullet));
 }
 
-void MyGame::WeakEnemyUpdate()
+void MyGame::WeakEnemy_(XMFLOAT3 trans)
 {
-    //死亡フラグの立った弾を削除
-    WeakEnemyBullets_.remove_if(
-        [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
-
-    //座標を移動させる
-    switch (phase_) {
-    case MyGame::Phase::ApproachStage1:
-
-        weakEnemy_->UpdateApproachStage1();
-        break;
-
-    case MyGame::Phase::AttackStage1:
-
-        weakEnemy_->UpdateAttackStage1();
-
-        break;
-    }
-    //弾更新
-    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-        bullet->Update();
-    }
-
-    //座標を移動させる
-    switch (phase_) {
-    case MyGame::Phase::Leave:
-        weakEnemy_->UpdateLeave();
-        break;
-
-    }
-
-    //行列更新
-    weakEnemy_->Trans();
-
-    object3DWeakEnemy_->Update();
+    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_);
+    weakEnemy_->SetPlayer(player_);
+    weakEnemy_->SetMyGame(myGame_);
+    
 }
 
-void MyGame::WeakEnemyDraw()
+void MyGame::LoadPopEnemyData()
 {
-    if (!isDead_) {
-        //モデルの描画
-        object3DWeakEnemy_->Draw();
+    //ファイルを開く
+    std::ifstream file;
+    file.open("Resources/enemyPop.csv");
+    assert(file.is_open());
 
-        //弾描画
-        for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-            bullet->Draw();
+    enemyPopCommands << file.rdbuf();
+
+    file.close();
+}
+
+void MyGame::UpdateEnemyPopCommands()
+{
+    if (isWait_) {
+        waitTimer_--;
+        if (waitTimer_ <= 0) {
+            isWait_ = false;
+        }
+        return;
+    }
+
+
+    std::string line;
+
+    while (getline(enemyPopCommands, line)) {
+        std::istringstream line_stream(line);
+
+        std::string word;
+        getline(line_stream, word, ',');
+
+        if (word.find("//") == 0) {
+            continue;
+        }
+
+        if (word.find("POP") == 0) {
+            getline(line_stream, word, ',');
+            float x = (float)std::atof(word.c_str());
+
+            getline(line_stream, word, ',');
+            float y = (float)std::atof(word.c_str());
+
+            getline(line_stream, word, ',');
+            float z = (float)std::atof(word.c_str());
+
+            WeakEnemy_(XMFLOAT3(x,y,z));
+        }
+
+        else if (word.find("WAIT") == 0) {
+            getline(line_stream, word, ',');
+
+            int32_t waitTime = atoi(word.c_str());
+
+            isWait_ = true;
+            waitTimer_ = waitTime;
+
+            break;
         }
     }
 }
+
+
 
 
 
