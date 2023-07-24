@@ -23,7 +23,7 @@ private:
 public:
 	~Enemy();
 	//弾発射間隔
-	static const int kFireIntervalStage1 = 40;
+	static const int kFireIntervalStage1 = 50;
 	//初期化
 	void Initialize(Model* model, Object3d* obj, Camera* camera);
 
@@ -51,7 +51,7 @@ public:
 	//離脱
 	void UpdateLeave();
 
-	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
+	const XMFLOAT3 Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollisionPlayer();
@@ -59,10 +59,12 @@ public:
 	//弾リストを取得
 	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() { return enemyBullets_; }
 
-private:
-
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
+
+private:
+
+	
 	//モデル
 	Model* model_ = nullptr;
 	Model* modelBullet_ = nullptr;
@@ -111,6 +113,8 @@ private:
 	//死亡フラグとライフ
 	bool isDead_;
 	int life_;
+
+	int deathTimer_ = 60 * 5;
 
 	//反転フラグ
 	bool isReverse_ = false;

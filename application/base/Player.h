@@ -50,6 +50,8 @@ public:
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
+	
+
 private:
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
@@ -74,6 +76,16 @@ private:
 	//死亡フラグとライフ
 	bool isDead_ = false;
 	int life_ = 5;
+
+	const float rotLimitZ_ = 30.0f;
+	const float rotLimitX_ = 30.0f;
+
+	const float moveLimitX_ = 40.0f;
+	const float moveLimitY_ = 40.0f;
+
+	bool start_ = false;
+
+	
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

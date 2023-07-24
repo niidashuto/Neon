@@ -193,12 +193,14 @@ public: // メンバ関数
 	const XMMATRIX& GetWorld() const { return matWorld; }
 	void SetWorld(const XMMATRIX& matWorld) { this->matWorld = matWorld; }
 
+	void SetColor(const XMFLOAT4& color) { this->color_ = color; }
+
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 
 	// 色
-	XMFLOAT4 color = { 1,1,1,1 };
+	XMFLOAT4 color_ = { 1,1,1,0 };
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
 	// X,Y,Z軸回りのローカル回転角

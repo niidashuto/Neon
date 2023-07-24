@@ -23,7 +23,7 @@ void Enemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 	objBullet_ = Object3d::Create();
-
+	objBullet_->SetScale({ 5,5,5 });
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);
 	Stage1Parameter();
@@ -41,7 +41,7 @@ void Enemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 10.0f,10.0f,10.0f };
-	pos = { 0.0f,10.0f,-100.0f };
+	pos = { 0.0f,10.0f,-200.0f };
 	obj_->SetPosition(pos);
 	obj_->SetScale(scale);
 	//初期フェーズ
@@ -50,7 +50,7 @@ void Enemy::Stage1Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireIntervalStage1;
 
-	life_ = 40;
+	life_ = 1;
 	isDead_ = false;
 
 	isReverse_ = false;
@@ -216,11 +216,10 @@ void Enemy::UpdateAttackStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	//制御点
-	start = { -30.0f,10.0f,-100.0f };
-	p1 = { -10.0f,-20.0f,-100.0f };
-	p2 = { 10.0f,40.0f,-100.0f };
-	end = { 30.0f,10.0f,-100.0f };
-	//時間
+	start = { -30.0f,10.0f,-200.0f };
+	p1 = { -10.0f,-20.0f,-200.0f };
+	p2 = { 10.0f,40.0f,-200.0f };
+	end = { 30.0f,10.0f,-200.0f };
 
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -232,12 +231,12 @@ void Enemy::UpdateAttackStage1() {
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	//移動
-	velocity = { 0.3f, 0.0f, 0.0f };
+	velocity = { 4.0f, 0.0f, 0.0f };
 	if (isReverse_) {
-		pos = Bezier3(end, p2, p1, start, timeRate);
+		pos = Bezier(end, p2, p1, start, timeRate);
 	}
 	else {
-		pos = Bezier3(start, p1, p2, end, timeRate);
+		pos = Bezier(start, p1, p2, end, timeRate);
 	}
 	obj_->SetPosition(pos);
 	//指定の位置に到達したら反転
@@ -263,6 +262,7 @@ void Enemy::UpdateAttackStage1() {
 	if (life_ <= 0) {
 		isDead_ = true;
 		life_ = 0;
+		
 	}
 	if (isDead_)
 	{
@@ -275,15 +275,17 @@ void Enemy::UpdateLeave() {
 	//速度
 	XMFLOAT3 velocity;
 
+	deathTimer_--;
+
 	//移動
-	velocity = { 0.0f, 0.0f, 0.03f };
+	velocity = { 1.0f, 1.0f, 0.03f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
 	obj_->SetPosition(pos);
 }
 
-const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+const XMFLOAT3 Enemy::Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
 	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
@@ -311,4 +313,9 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 //衝突を検出したら呼び出されるコールバック関数
-void Enemy::OnCollisionPlayer() { life_--; }
+void Enemy::OnCollisionPlayer()
+{ 
+	life_--; 
+
+	
+}

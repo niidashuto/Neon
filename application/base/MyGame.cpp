@@ -2,6 +2,9 @@
 #include "Quaternion.h"
 #include "FbxLoader.h"
 #include "ObjectFBX.h"
+#include <fstream>
+
+
 
 
 void MyGame::Initialize()
@@ -11,36 +14,25 @@ void MyGame::Initialize()
 
     SNFramework::Initialize();
 
-    //spriteCommon->LoadTexture(0, "texture.png");
-    //spriteCommon->LoadTexture(1, "reimu.png");
+    
 
-    //scene_ = new GamePlayScene();
+    scene_ = new GamePlayScene();
 
-    //scene_->Initialize();
+    scene_->Initialize();
 
     player_ = new Player();
 
     enemy_ = new Enemy();
 
-    spriteCommon->LoadTexture(1, "white1x1.png");
+    weakEnemy_ = new WeakEnemy();
+    WeakEnemy::SetMyGame(this);
+    WeakEnemy::SetPlayer(player_);
 
-    spriteCommon->LoadTexture(0, "background.png");
-
-   
-    
 
     postEffect = new PostEffect();
-    postEffect->SetTextureIndex(1);
+    //postEffect->SetTextureIndex(1);
     postEffect->Initialize(spriteCommon,1);
-    postEffect->SetSize({ 500.0f,500.0f });
-    
-    
-
-    Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
-
-    
-
-    ParticleManager::StaticInitialize(dxCommon->GetDevice());
+    //postEffect->SetSize({ 500.0f,500.0f });
 
     //音声読み込み
     //audio->SoundLoadWave("Resources/fanfare.wav");
@@ -75,12 +67,16 @@ void MyGame::Initialize()
     model_2 = Model::LoadFromOBJ("skybox");
     modelPlayer_ = Model::LoadFromOBJ("player");
     modelEnemy_ = Model::LoadFromOBJ("enemy");
+    modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
+    modelRail_ = Model::LoadFromOBJ("rail");
 
     object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
     object3d_3 = Object3d::Create();
     object3DPlayer_ = Object3d::Create();
     object3DEnemy_ = Object3d::Create();
+    //object3DWeakEnemy_ = Object3d::Create();
+    object3DRail_ = Object3d::Create();
     
     //3Dオブジェクトと3Dモデルをひも付け
     object3d_1->SetModel(model_1);
@@ -88,6 +84,8 @@ void MyGame::Initialize()
     object3d_3->SetModel(model_2);
     object3DPlayer_->SetModel(modelPlayer_);
     object3DEnemy_->SetModel(modelEnemy_);
+    //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
+    object3DRail_->SetModel(modelRail_);
     //3Dオブジェクトの位置を指定
     //object3d_2->SetPosition({ -5,0,-5 });
     object3d_3->SetPosition({ +5,0,+5 });
@@ -95,17 +93,21 @@ void MyGame::Initialize()
     object3d_1->SetPosition({ 0,-10,0 });
     object3d_1->SetScale({ 10.0f,10.0f,100.0f });
     //object3d_1->SetRotation({ 10.0f,0.0f,0.0f });
-    object3d_2->SetScale({ 500.0f,500.0f,500.0f });
+    object3d_2->SetScale({ 600.0f,600.0f,600.0f });
     object3d_3->SetScale({ 10.0f,10.0f,10.0f });
     object3DPlayer_->SetScale({ 10.0f,10.0f,10.0f });
     object3DEnemy_->SetScale({ 15.0f,15.0f,15.0f });
-
+    object3DRail_->SetScale({ 500,100,100 });
+    object3DRail_->SetPosition({ 0,20,-2000 });
+    object3DRail_->SetRotation({ 0,90,0 });
 
     object3d_1->SetCamera(camera_);
     object3d_2->SetCamera(camera_);
     object3d_3->SetCamera(camera_);
     object3DPlayer_->SetCamera(camera_);
     object3DEnemy_->SetCamera(camera_);
+    //object3DWeakEnemy_->SetCamera(camera_);
+    object3DRail_->SetCamera(camera_);
 
     particle1_ = Particle::LoadFromParticleTexture("particle.png");
     pm1_ = ParticleManager::Create();
@@ -141,6 +143,9 @@ void MyGame::Initialize()
     player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
+   
+    LoadPopEnemyData();
+    
 
 #pragma endregion 最初のシーンを初期化
 }
@@ -155,18 +160,14 @@ void MyGame::Finalize()
 #pragma endregion 最初のシーンの終了
 
 #pragma region 基盤システムの終了
-    //スプライト共通部解放
-    delete spriteCommon;
-    //入力解放
-    delete input;
-    //DirectX解放
-    delete dxCommon;
+   
 
     delete postEffect;
 
     delete object3d_1;
     delete object3d_2;
     delete object3d_3;
+    delete object3DRail_;
     delete object1;
 
     delete model_1;
@@ -174,9 +175,7 @@ void MyGame::Finalize()
     delete model1;
     
     SNFramework::Finalize();
-    delete audio;
-    //WindowsAPI解放
-    delete winApp;
+    
 #pragma endregion 基盤システムの終了
 }
 
@@ -194,57 +193,24 @@ void MyGame::Update()
     player_->Update();
     enemy_->Update();
 
-    CheckAllCollisions();
+    UpdateEnemyPopCommands();
 
-    //カメラ操作
-    {
-        XMFLOAT3 cmove = camera_->GetEye();
-        float moveSpeed = 0.5f;
+    
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
-        //キーボード入力による移動処理
-        //XMMATRIX matTrans = XMMatrixIdentity();
-        if (input->Pushkey(DIK_LEFT)) {
-           
-            cmove.x -= moveSpeed;
-        }
-        if (input->Pushkey(DIK_RIGHT)) {
-            
-            cmove.x += moveSpeed;
-        }
-        if (input->Pushkey(DIK_UP)) {
-          
-            cmove.y += moveSpeed;
-        }
-        if (input->Pushkey(DIK_DOWN)) {
-           
-            cmove.y -= moveSpeed;
-        }
+        weakEnemy_->Update();
 
-        camera_->SetEye(cmove);
     }
 
-    //{
-    //    XMFLOAT3 move = object1->GetPosition();
-    //    float Speed = 1.0f;
+    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+        bullet->Update();
+    }
 
-    //    if (input->Pushkey(DIK_W)) {
+    WeakEnemyBullets_.remove_if(
+        [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+    
 
-    //        move.y += Speed;
-    //    }
-    //    if (input->Pushkey(DIK_A)) {
-
-    //        move.x += Speed;
-    //    }
-    //    if (input->Pushkey(DIK_S)) {
-
-    //        move.y -= Speed;
-    //    }
-    //    if (input->Pushkey(DIK_D)) {
-
-    //        move.x -= Speed;
-    //    }
-    //    object1->SetPosition(move);
-    //}
+    CheckAllCollisions();
 
     camera_->Update();
     sprite->Update();
@@ -256,7 +222,7 @@ void MyGame::Update()
     object3d_1->Update();
     object3d_2->Update();
     object3d_3->Update();
-    
+    object3DRail_->Update();
 
     
 
@@ -266,11 +232,8 @@ void MyGame::Update()
     pm1_->Update();
     pm2_->Update();
 
-    imGui->Begin();
+    imGui->Begin();  
 
-    //ImGui::ShowDemoWindow();
-
-    //ImGui::Text("aaa");
 
     imGui->End();
 
@@ -280,37 +243,35 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
-    postEffect->PreDrawScene(dxCommon->GetCommandList());
+    postEffect->PreDraw(dxCommon->GetCommandList());
     //spriteCommon->PreDraw();
     
-    //postEffect->Draw(dxCommon->GetCommandList());
-    //spriteCommon->PostDraw();
-    postEffect->PostDrawScene(dxCommon->GetCommandList());
-   
-    //描画前処理
-    dxCommon->PreDraw();
-
-#pragma region 最初のシーンの描画
     spriteCommon->PreDraw();
     //sprite->Draw();
     //sprite2->Draw();
-    
-    //sprite->Draw();
-    
 
-    
+    //sprite->Draw();
+
+
+
     spriteCommon->PostDraw();
-    ParticleManager::PreDraw(dxCommon->GetCommandList());
-    //pm1_->Draw();
-    //pm2_->Draw();
-    ParticleManager::PostDraw();
 
     Object3d::PreDraw(dxCommon->GetCommandList());
     object3d_1->Draw();
     object3d_2->Draw();
+    object3DRail_->Draw();
     //object3d_3->Draw();
-    object3DPlayer_->Draw();
-    object3DEnemy_->Draw();
+    player_->Draw();
+    enemy_->Draw();
+    
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+        weakEnemy_->Draw();
+    }
+
+    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+        bullet->Draw();
+    }
+    
 
     Object3d::PostDraw();
 
@@ -320,6 +281,21 @@ void MyGame::Draw()
 
     ObjectFBX::PostDraw();
 
+    ParticleManager::PreDraw(dxCommon->GetCommandList());
+    //pm1_->Draw();
+    //pm2_->Draw();
+    ParticleManager::PostDraw();
+    
+    //spriteCommon->PostDraw();
+    
+    postEffect->PostDraw(dxCommon->GetCommandList());
+   
+    //描画前処理
+    dxCommon->PreDraw();
+
+#pragma region 最初のシーンの描画
+   
+    postEffect->Draw(dxCommon->GetCommandList());
     imGui->Draw();
 #pragma endregion 最初のシーンの描画
 
@@ -330,23 +306,28 @@ void MyGame::Draw()
 void MyGame::CheckAllCollisions()
 {
     //判定対象A,Bの座標
-    XMFLOAT3 posA, posB;
+    XMFLOAT3 posA, posB,posC{};
     // A,Bの座標の距離用
-    XMFLOAT3 posAB;
+    XMFLOAT3 posAB,posAC;
     //判定対象A,Bの半径
     float radiusA;
     float radiusB;
-    float radiiusAB;
+    float radiusC;
+    float radiusAB;
+    float radiusAC;
 
     //自機弾リストを取得
     const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
     //敵弾リストを取得
     const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
 
+    const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = this->GetWeakEnemyBullets();
+
 #pragma region 自機と敵弾の当たり判定
     //それぞれの半径
     radiusA = 1.0f;
     radiusB = 1.0f;
+    radiusC = 1.0f;
 
     //自機の座標
     posA = player_->GetWorldPosition();
@@ -359,14 +340,33 @@ void MyGame::CheckAllCollisions()
         posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
         posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
         posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-        radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+        radiusAB = (radiusA + radiusB) * (radiusA + radiusB);
 
         //球と球の交差判定
-        if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+        if (radiusAB >= (posAB.x + posAB.y + posAB.z)) {
+            //自キャラの衝突時コールバック関数を呼び出す
+            player_->OnCollision();
+            //敵弾の衝突時コールバック関数を呼び出すgg
+            bullet->OnCollision();
+        }
+    }
+
+    //自機と全ての敵弾の当たり判定
+    for (const std::unique_ptr<WeakEnemyBullet>& weakbullet : weakEnemyBullets) {
+        //敵弾の座標
+        posC = weakbullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAC.x = (posC.x - posA.x) * (posC.x - posA.x);
+        posAC.y = (posC.y - posA.y) * (posC.y - posA.y);
+        posAC.z = (posC.z - posA.z) * (posC.z - posA.z);
+        radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
+
+        //球と球の交差判定
+        if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
             //自キャラの衝突時コールバック関数を呼び出す
             player_->OnCollision();
             //敵弾の衝突時コールバック関数を呼び出す
-            bullet->OnCollision();
+            weakbullet->OnCollision();
         }
     }
 
@@ -376,10 +376,16 @@ void MyGame::CheckAllCollisions()
     //それぞれの半径
     radiusA = 5.0f;
     radiusB = 1.0f;
+    radiusC = 1.0f;
 
     //敵の座標
     posA = enemy_->GetWorldPosition();
 
+    //弾更新
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+        posC = weakEnemy_->GetWorldPosition();
+    }
+    
     //敵と全ての弾の当たり判定
     for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
         //弾の座標
@@ -388,15 +394,120 @@ void MyGame::CheckAllCollisions()
         posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
         posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
         posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-        radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+        radiusAB = (radiusA + radiusB) * (radiusA + radiusB);
 
         //球と球の交差判定
-        if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+        if (radiusAB >= (posAB.x + posAB.y + posAB.z)) {
             //敵キャラの衝突時コールバック関数を呼び出す
             enemy_->OnCollisionPlayer();
             //自機弾の衝突時コールバック関数を呼び出す
             bullet->OnCollision();
         }
     }
+
+    //敵と全ての弾の当たり判定
+    for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+        //弾の座標
+        posB = bullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAC.x = (posB.x - posC.x) * (posB.x - posC.x);
+        posAC.y = (posB.y - posC.y) * (posB.y - posC.y);
+        posAC.z = (posB.z - posC.z) * (posB.z - posC.z);
+        radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
+
+        //球と球の交差判定
+        if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
+            //敵キャラの衝突時コールバック関数を呼び出す
+             //弾更新
+           
+             weakEnemy_->OnCollisionPlayer();
+            
+            //自機弾の衝突時コールバック関数を呼び出す
+            bullet->OnCollision();
+        }
+    }
+
 #pragma endregion
 }
+
+void MyGame::AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
+{
+    WeakEnemyBullets_.push_back(std::move(weakEnemyBullet));
+}
+
+void MyGame::WeakEnemy_(XMFLOAT3 trans)
+{
+    //object3DWeakEnemy_->SetPosition(trans);
+    std::unique_ptr<WeakEnemy> newWeakEnemy = std::make_unique<WeakEnemy>();
+    newWeakEnemy->Initialize(modelWeakEnemy_, trans, camera_);
+    //newWeakEnemy.reset(weakEnemy_);
+    _WeakEnemy.push_back(std::move(newWeakEnemy));
+}
+
+void MyGame::LoadPopEnemyData()
+{
+    //ファイルを開く
+    std::ifstream file;
+    file.open("Resources/enemyPop.csv");
+    assert(file.is_open());
+
+    enemyPopCommands << file.rdbuf();
+
+    file.close();
+}
+
+void MyGame::UpdateEnemyPopCommands()
+{
+    if (isWait_) {
+        waitTimer_--;
+        if (waitTimer_ <= 0) {
+            isWait_ = false;
+        }
+        return;
+    }
+
+
+    std::string line;
+
+    while (getline(enemyPopCommands, line)) {
+        std::istringstream line_stream(line);
+
+        std::string word;
+        getline(line_stream, word, ',');
+
+        if (word.find("//") == 0) {
+            continue;
+        }
+
+        if (word.find("POP") == 0) {
+            getline(line_stream, word, ',');
+            float x = (float)std::atof(word.c_str());
+
+            getline(line_stream, word, ',');
+            float y = (float)std::atof(word.c_str());
+
+            getline(line_stream, word, ',');
+            float z = (float)std::atof(word.c_str());
+
+            WeakEnemy_(XMFLOAT3(x,y,z));
+        }
+
+        else if (word.find("WAIT") == 0) {
+            getline(line_stream, word, ',');
+
+            int32_t waitTime = atoi(word.c_str());
+
+            isWait_ = true;
+            waitTimer_ = waitTime;
+
+            break;
+        }
+    }
+}
+
+
+
+
+
+
+
