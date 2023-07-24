@@ -44,7 +44,7 @@ public:
 	void UpdateEnemyPopCommands();
 
 	
-	
+	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
 	
 
 	
@@ -78,7 +78,7 @@ private:
 	Object3d* object3d_3 = nullptr;
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
-	Object3d* object3DWeakEnemy_ = nullptr;
+	//Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
 	//Object3d* obj_ = nullptr;
 
@@ -106,10 +106,6 @@ private:
 
 	WeakEnemy* weakEnemy_ = nullptr;
 	Model* modelWeakEnemy_ = nullptr;
-
-	
-
-	MyGame* myGame_ = nullptr;
 
 };
 

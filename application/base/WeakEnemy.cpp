@@ -6,6 +6,9 @@
 
 using namespace DirectX;
 
+MyGame* WeakEnemy::myGame_ = nullptr;
+Player* WeakEnemy::player_ = nullptr;
+
 WeakEnemy::~WeakEnemy() {
 	//モデルの解放
 
@@ -14,19 +17,22 @@ WeakEnemy::~WeakEnemy() {
 }
 
 // 初期化
-void WeakEnemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
+void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
 	// NULLポインタチェック
 	assert(model);
 
-	model_ = model;
-	camera_ = camera;
-	obj_ = obj;
+	obj_ = Object3d::Create();
+
+	this->pos = pos;
+	obj_->SetPosition(pos);
+	obj_->SetCamera(camera);
+	obj_->SetModel(model);
 
 	modelBullet_ = Model::LoadFromOBJ("weakenemybullet");
 	objBullet_ = Object3d::Create();
 	objBullet_->SetScale({ 5,5,5 });
 	objBullet_->SetModel(modelBullet_);
-	objBullet_->SetCamera(camera_);
+	objBullet_->SetCamera(camera);
 	Stage1Parameter();
 
 	startCount = std::chrono::steady_clock::now();	//開始時間
@@ -44,8 +50,8 @@ void WeakEnemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 10.0f,10.0f,10.0f };
-	pos = { 0.0f,10.0f,-200.0f };
-	obj_->SetPosition(pos);
+	//pos = obj_->GetPosition();
+	//obj_->SetPosition(pos);
 	obj_->SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
@@ -58,9 +64,9 @@ void WeakEnemy::Stage1Parameter() {
 
 	isReverse_ = false;
 	//弾リセット
-	for (std::unique_ptr<WeakEnemyBullet>& bullets : WeakEnemyBullets_) {
+	/*for (std::unique_ptr<WeakEnemyBullet>& bullets : WeakEnemyBullets_) {
 		bullets->Reset();
-	}
+	}*/
 	
 }
 
@@ -72,8 +78,8 @@ void WeakEnemy::Update() {
 
 
 	//死亡フラグの立った弾を削除
-	WeakEnemyBullets_.remove_if(
-		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+	/*WeakEnemyBullets_.remove_if(
+		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });*/
 
 	//UpdateEnemyPopCommands();
 
@@ -91,9 +97,9 @@ void WeakEnemy::Update() {
 		break;
 	}
 	//弾更新
-	for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+	/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
 		bullet->Update();
-	}
+	}*/
 
 	//座標を移動させる
 	switch (phase_) {
@@ -183,9 +189,9 @@ void WeakEnemy::Draw() {
 		obj_->Draw();
 
 		//弾描画
-		for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+		/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
 			bullet->Draw();
-		}
+		}*/
 	}
 
 }

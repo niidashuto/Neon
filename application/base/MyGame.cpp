@@ -5,6 +5,8 @@
 #include <fstream>
 
 
+
+
 void MyGame::Initialize()
 {
 #pragma region 基盤システムの初期化
@@ -23,6 +25,8 @@ void MyGame::Initialize()
     enemy_ = new Enemy();
 
     weakEnemy_ = new WeakEnemy();
+    WeakEnemy::SetMyGame(this);
+    WeakEnemy::SetPlayer(player_);
 
 
     postEffect = new PostEffect();
@@ -71,7 +75,7 @@ void MyGame::Initialize()
     object3d_3 = Object3d::Create();
     object3DPlayer_ = Object3d::Create();
     object3DEnemy_ = Object3d::Create();
-    object3DWeakEnemy_ = Object3d::Create();
+    //object3DWeakEnemy_ = Object3d::Create();
     object3DRail_ = Object3d::Create();
     
     //3Dオブジェクトと3Dモデルをひも付け
@@ -80,7 +84,7 @@ void MyGame::Initialize()
     object3d_3->SetModel(model_2);
     object3DPlayer_->SetModel(modelPlayer_);
     object3DEnemy_->SetModel(modelEnemy_);
-    object3DWeakEnemy_->SetModel(modelWeakEnemy_);
+    //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
     //3Dオブジェクトの位置を指定
     //object3d_2->SetPosition({ -5,0,-5 });
@@ -102,7 +106,7 @@ void MyGame::Initialize()
     object3d_3->SetCamera(camera_);
     object3DPlayer_->SetCamera(camera_);
     object3DEnemy_->SetCamera(camera_);
-    object3DWeakEnemy_->SetCamera(camera_);
+    //object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
 
     particle1_ = Particle::LoadFromParticleTexture("particle.png");
@@ -191,12 +195,19 @@ void MyGame::Update()
 
     UpdateEnemyPopCommands();
 
-    //弾更新
+    
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
         weakEnemy_->Update();
 
     }
+
+    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+        bullet->Update();
+    }
+
+    WeakEnemyBullets_.remove_if(
+        [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
     
 
     CheckAllCollisions();
@@ -252,9 +263,13 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
-    //弾更新
+    
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
         weakEnemy_->Draw();
+    }
+
+    for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
+        bullet->Draw();
     }
     
 
@@ -291,7 +306,7 @@ void MyGame::Draw()
 void MyGame::CheckAllCollisions()
 {
     //判定対象A,Bの座標
-    XMFLOAT3 posA, posB,posC;
+    XMFLOAT3 posA, posB,posC{};
     // A,Bの座標の距離用
     XMFLOAT3 posAB,posAC;
     //判定対象A,Bの半径
@@ -306,7 +321,7 @@ void MyGame::CheckAllCollisions()
     //敵弾リストを取得
     const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
 
-    const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = weakEnemy_->GetWeakEnemyBullets();
+    const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = this->GetWeakEnemyBullets();
 
 #pragma region 自機と敵弾の当たり判定
     //それぞれの半径
@@ -422,10 +437,11 @@ void MyGame::AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet)
 
 void MyGame::WeakEnemy_(XMFLOAT3 trans)
 {
-    weakEnemy_->Initialize(modelWeakEnemy_, object3DWeakEnemy_, camera_);
-    weakEnemy_->SetPlayer(player_);
-    weakEnemy_->SetMyGame(myGame_);
-    
+    //object3DWeakEnemy_->SetPosition(trans);
+    std::unique_ptr<WeakEnemy> newWeakEnemy = std::make_unique<WeakEnemy>();
+    newWeakEnemy->Initialize(modelWeakEnemy_, trans, camera_);
+    //newWeakEnemy.reset(weakEnemy_);
+    _WeakEnemy.push_back(std::move(newWeakEnemy));
 }
 
 void MyGame::LoadPopEnemyData()

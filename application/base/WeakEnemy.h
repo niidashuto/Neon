@@ -29,7 +29,7 @@ public:
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 50;
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Camera* camera);
+	void Initialize(Model* model, const XMFLOAT3& pos, Camera* camera);
 
 	//リセット処理
 	void Reset();
@@ -63,27 +63,25 @@ public:
 	void OnCollisionPlayer();
 
 	//弾リストを取得
-	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
+	//const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
 
 	
 
 private:
 
 	//弾
-	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
+	//std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;
 
 	
 
-	//モデル
-	Model* model_ = nullptr;
+	
 	Model* modelBullet_ = nullptr;
 
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
+	
 
-	MyGame* myGame_ = nullptr;
+	static MyGame* myGame_;
 
 	//行動フェーズ
 	enum class Phase {
@@ -108,7 +106,7 @@ private:
 	XMFLOAT3 angle;
 
 	//自機
-	Player* player_ = nullptr;
+	static Player* player_;
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
@@ -136,8 +134,8 @@ private:
 
 public:
 	bool IsDead() const { return isDead_; }
-	void SetPlayer(Player* player) { player_ = player; }
+	static void SetPlayer(Player* player) { player_ = player; }
 
-	void SetMyGame(MyGame* myGame) { myGame_ = myGame; }
+	static void SetMyGame(MyGame* myGame) { myGame_ = myGame; }
 };
 
