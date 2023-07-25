@@ -75,7 +75,7 @@ private:
 
 	//死亡フラグとライフ
 	bool isDead_ = false;
-	int life_ = 5;
+	int life_ = 1;
 
 	const float rotLimitZ_ = 30.0f;
 	const float rotLimitX_ = 30.0f;

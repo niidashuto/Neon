@@ -380,11 +380,6 @@ void MyGame::CheckAllCollisions()
 
     //敵の座標
     posA = enemy_->GetWorldPosition();
-
-    //弾更新
-    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
-        posC = weakEnemy_->GetWorldPosition();
-    }
     
     //敵と全ての弾の当たり判定
     for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
@@ -405,25 +400,32 @@ void MyGame::CheckAllCollisions()
         }
     }
 
-    //敵と全ての弾の当たり判定
-    for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-        //弾の座標
-        posB = bullet->GetWorldPosition();
-        //座標A,Bの距離を求める
-        posAC.x = (posB.x - posC.x) * (posB.x - posC.x);
-        posAC.y = (posB.y - posC.y) * (posB.y - posC.y);
-        posAC.z = (posB.z - posC.z) * (posB.z - posC.z);
-        radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
+    for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
+        posC = weakEnemy_->GetWorldPosition();
 
-        //球と球の交差判定
-        if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
-            //敵キャラの衝突時コールバック関数を呼び出す
-             //弾更新
-           
-             weakEnemy_->OnCollisionPlayer();
-            
-            //自機弾の衝突時コールバック関数を呼び出す
-            bullet->OnCollision();
+
+        //雑魚敵と全ての弾の当たり判定
+        for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+            //弾の座標
+            posB = bullet->GetWorldPosition();
+            //座標A,Bの距離を求める
+            posAC.x = (posB.x - posC.x) * (posB.x - posC.x);
+            posAC.y = (posB.y - posC.y) * (posB.y - posC.y);
+            posAC.z = (posB.z - posC.z) * (posB.z - posC.z);
+            radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
+
+            //球と球の交差判定
+            if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
+                //敵キャラの衝突時コールバック関数を呼び出す
+                 //弾更新
+
+
+                weakEnemy_->OnCollisionPlayer();
+
+
+                //自機弾の衝突時コールバック関数を呼び出す
+                bullet->OnCollision();
+            }
         }
     }
 
