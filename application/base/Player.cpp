@@ -92,7 +92,12 @@ void Player::Move() {
 	if (start_ == true)
 	{
 		move.z--;
+		if (move.z <= -3500.0f)
+		{
+			start_ = false;
+		}
 	}
+	
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();

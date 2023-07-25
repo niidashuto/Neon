@@ -7,6 +7,7 @@
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
+#include "Enemy.h"
 
 class Player
 {
@@ -67,6 +68,8 @@ private:
 
 	//インプット
 	Input* input_ = nullptr;
+
+	Enemy* enemy_ = nullptr;
 
 	//ポジション
 	XMFLOAT3 pos;
