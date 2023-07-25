@@ -468,7 +468,6 @@ void MyGame::UpdateEnemyPopCommands()
         return;
     }
 
-
     std::string line;
 
     while (getline(enemyPopCommands, line)) {
@@ -501,6 +500,7 @@ void MyGame::UpdateEnemyPopCommands()
 
             isWait_ = true;
             waitTimer_ = waitTime;
+            
 
             break;
         }
