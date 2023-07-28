@@ -187,15 +187,15 @@ void MyGame::Update()
 
 #pragma region 最初のシーンの更新
 
-    pm1_->Active(particle1_, 100.0f, 0.2f, 0.001f, 5, { 6.0f, 0.0f });
-    pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f, 0.0f });
+    
+    
 
     player_->Update();
     enemy_->Update();
 
     UpdateEnemyPopCommands();
 
-    
+        
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
         weakEnemy_->Update();
@@ -232,10 +232,7 @@ void MyGame::Update()
     pm1_->Update();
     pm2_->Update();
 
-    imGui->Begin();  
-
-
-    imGui->End();
+    
 
 
 #pragma endregion 最初のシーンの更新
@@ -252,7 +249,10 @@ void MyGame::Draw()
 
     //sprite->Draw();
 
+    imGui->Begin();
 
+
+    
 
     spriteCommon->PostDraw();
 
@@ -263,6 +263,8 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
+
+    imGui->End();
     
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
         weakEnemy_->Draw();
@@ -282,7 +284,7 @@ void MyGame::Draw()
     ObjectFBX::PostDraw();
 
     ParticleManager::PreDraw(dxCommon->GetCommandList());
-    //pm1_->Draw();
+    pm1_->Draw();
     //pm2_->Draw();
     ParticleManager::PostDraw();
     
@@ -327,7 +329,7 @@ void MyGame::CheckAllCollisions()
     //それぞれの半径
     radiusA = 1.0f;
     radiusB = 1.0f;
-    radiusC = 1.0f;
+    radiusC = 2.0f;
 
     //自機の座標
     posA = player_->GetWorldPosition();
@@ -348,6 +350,8 @@ void MyGame::CheckAllCollisions()
             player_->OnCollision();
             //敵弾の衝突時コールバック関数を呼び出すgg
             bullet->OnCollision();
+            
+
         }
     }
 
@@ -367,6 +371,7 @@ void MyGame::CheckAllCollisions()
             player_->OnCollision();
             //敵弾の衝突時コールバック関数を呼び出す
             weakbullet->OnCollision();
+            
         }
     }
 
@@ -376,7 +381,7 @@ void MyGame::CheckAllCollisions()
     //それぞれの半径
     radiusA = 5.0f;
     radiusB = 1.0f;
-    radiusC = 1.0f;
+    radiusC = 5.0f;
 
     //敵の座標
     posA = enemy_->GetWorldPosition();
@@ -397,6 +402,9 @@ void MyGame::CheckAllCollisions()
             enemy_->OnCollisionPlayer();
             //自機弾の衝突時コールバック関数を呼び出す
             bullet->OnCollision();
+
+            pm1_->ActiveZ(particle1_, { object3DEnemy_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
+            
         }
     }
 
@@ -425,6 +433,8 @@ void MyGame::CheckAllCollisions()
 
                 //自機弾の衝突時コールバック関数を呼び出す
                 bullet->OnCollision();
+
+                pm1_->ActiveZ(particle1_, { weakEnemy_->GetWorldPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {10.0f, 0.0f});
             }
         }
     }

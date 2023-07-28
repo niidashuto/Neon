@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <cassert>
+#include <imgui.h>
 
 using namespace DirectX;
 
@@ -72,6 +73,7 @@ void Player::Update() {
 void Player::Draw() {
 	if (!isDead_) {
 		obj_->Draw();
+		ImGui::InputInt("HP", &life_);
 
 		//弾描画
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
@@ -86,7 +88,7 @@ void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
 	XMFLOAT3 rot = obj_->GetRotation();
-	float moveSpeed = 1.0f;
+	float moveSpeed = 1.5f;
 	float rotSpeed = 1.0f;
 
 	if (start_ == true)
@@ -102,19 +104,19 @@ void Player::Move() {
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
-		move.x += moveSpeed;
+		move.x += easeInSine(moveSpeed);
 		rot.z -= rotSpeed;
 	}
 	if (input_->Pushkey(DIK_D)) {
-		move.x -= moveSpeed;
+		move.x -= easeInSine(moveSpeed);
 		rot.z += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_W)) {
-		move.y += moveSpeed;
+		move.y += easeInSine(moveSpeed);
 		rot.x += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_S)) {
-		move.y -= moveSpeed;
+		move.y -= easeInSine(moveSpeed);
 		rot.x -= rotSpeed;
 	}
 
@@ -233,7 +235,7 @@ void Player::Attack() {
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 
-		//PlayerBullet* newBullet=new PlayerBullet();
+		PlayerBullet* newBullet=new PlayerBullet();
 
 		newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 

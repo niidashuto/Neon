@@ -259,7 +259,7 @@ void Enemy::UpdateAttackStage1() {
 		fireTimer = kFireIntervalStage1;
 	}
 	//Ž€‚ñ‚¾‚ç
-	if (life_ <= 0) {
+	if (life_ <= 0||obj_->GetPosition().z>player_->GetWorldPosition().z) {
 		isDead_ = true;
 		life_ = 0;
 		

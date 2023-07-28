@@ -1,7 +1,7 @@
 // マテリアル
 cbuffer ConstBufferDataMaterial : register(b0)
 {
-
+	float4 color;
 };
 
 //３Ｄ変換行列
