@@ -51,6 +51,8 @@ public:
 	//’eƒŠƒXƒg‚ğæ“¾
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
+	float easeInSine(float number) { return 1 - cosf((0.8f * 3.141592f) / 2); }
+
 	
 
 private:

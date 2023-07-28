@@ -30,7 +30,7 @@ void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
 
 	modelBullet_ = Model::LoadFromOBJ("weakenemybullet");
 	objBullet_ = Object3d::Create();
-	objBullet_->SetScale({ 5,5,5 });
+	objBullet_->SetScale({ 2,2,2 });
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera);
 	Stage1Parameter();
@@ -248,7 +248,7 @@ void WeakEnemy::UpdateAttackStage1() {
 		fireTimer = kFireIntervalStage1;
 	}
 	//Ž€‚ñ‚¾‚ç
-	if (life_ <= 0) {
+	if (life_ <= 0 || obj_->GetPosition().z > player_->GetWorldPosition().z) {
 		isDead_ = true;
 		life_ = 0;
 

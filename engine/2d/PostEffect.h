@@ -57,6 +57,8 @@ public:
     //描画後処理
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
+    void SetColor(const DirectX::XMFLOAT4& color) { this->color_ = color; }
+
 private:
     //テクスチャバッファ
     Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
