@@ -50,8 +50,7 @@ void WeakEnemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 10.0f,10.0f,10.0f };
-	//pos = obj_->GetPosition();
-	//obj_->SetPosition(pos);
+	
 	obj_->SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
@@ -59,14 +58,11 @@ void WeakEnemy::Stage1Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireIntervalStage1;
 
-	life_ = 1;
+	life_ = 3;
 	isDead_ = false;
 
 	isReverse_ = false;
-	//弾リセット
-	/*for (std::unique_ptr<WeakEnemyBullet>& bullets : WeakEnemyBullets_) {
-		bullets->Reset();
-	}*/
+	
 	
 }
 
@@ -77,11 +73,7 @@ void WeakEnemy::Reset() { Stage1Parameter(); }
 void WeakEnemy::Update() {
 
 
-	//死亡フラグの立った弾を削除
-	/*WeakEnemyBullets_.remove_if(
-		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });*/
-
-	//UpdateEnemyPopCommands();
+	
 
 	//座標を移動させる
 	switch (phase_) {
@@ -96,10 +88,7 @@ void WeakEnemy::Update() {
 
 		break;
 	}
-	//弾更新
-	/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-		bullet->Update();
-	}*/
+	
 
 	//座標を移動させる
 	switch (phase_) {
@@ -187,11 +176,6 @@ void WeakEnemy::Draw() {
 	if (!isDead_) {
 		//モデルの描画
 		obj_->Draw();
-
-		//弾描画
-		/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-			bullet->Draw();
-		}*/
 	}
 
 }

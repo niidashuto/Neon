@@ -8,6 +8,8 @@
 #include <list>
 #include <memory>
 #include "Enemy.h"
+#include "PostEffect.h"
+#include "SpriteCommon.h"
 
 class Player
 {
@@ -73,6 +75,10 @@ private:
 
 	Enemy* enemy_ = nullptr;
 
+	PostEffect* postEffect_ = nullptr;
+
+	SpriteCommon* spriteCommon_ = nullptr;
+
 	//ポジション
 	XMFLOAT3 pos;
 	//アングル
@@ -90,8 +96,9 @@ private:
 
 	bool start_ = false;
 
-	
+	bool boss_ = false;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+	bool IsBoss() const { return boss_; }
 };

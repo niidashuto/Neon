@@ -33,7 +33,7 @@ public:
     //コンストラクタ
     PostEffect();
     //初期化
-    void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
+    void Initialize(SpriteCommon* spCommon, const std::string& fileName = "");
 
     void Update();
     //テクスチャ生成
@@ -47,7 +47,7 @@ public:
     // DSV生成
     void CreateDSV();
 
-    void CreateGraphicsPipelineState();
+    void CreateGraphicsPipelineState(const std::string& fileName);
 
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -58,6 +58,8 @@ public:
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
     void SetColor(const DirectX::XMFLOAT4& color) { this->color_ = color; }
+
+    static PostEffect* GetInstance();
 
 private:
     //テクスチャバッファ
@@ -97,4 +99,10 @@ private:
 
     //スプライト情報
     DirectX::XMFLOAT4 color_ = { 1,1,1,1 };
+
+private://静的メンバ変数
+    //ベースディレクトリ
+    static const std::string baseDirectory;
+    static const std::string DirectoryVS;
+    static const std::string DirectoryPS;
 };

@@ -88,35 +88,41 @@ void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
 	XMFLOAT3 rot = obj_->GetRotation();
-	float moveSpeed = 1.5f;
+	float moveSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
 	if (start_ == true)
 	{
-		move.z--;
+		move.z-=2.0f;
 		if (move.z <= -3500.0f)
 		{
+
+			boss_ = true;
 			start_ = false;
+			
+			
 		}
 	}
+
+	
 	
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
-		move.x += easeInSine(moveSpeed);
+		move.x += moveSpeed;
 		rot.z -= rotSpeed;
 	}
 	if (input_->Pushkey(DIK_D)) {
-		move.x -= easeInSine(moveSpeed);
+		move.x -= moveSpeed;
 		rot.z += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_W)) {
-		move.y += easeInSine(moveSpeed);
+		move.y += moveSpeed;
 		rot.x += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_S)) {
-		move.y -= easeInSine(moveSpeed);
+		move.y -= moveSpeed;
 		rot.x -= rotSpeed;
 	}
 
@@ -178,8 +184,8 @@ void Player::CameraMove()
 	
 	if (start_ == true)
 	{
-		cmove.z--;
-		tmove.z--;
+		cmove.z-=2.0f;
+		tmove.z-=2.0f;
 	}
 	
 	//キーボード入力による移動処理
