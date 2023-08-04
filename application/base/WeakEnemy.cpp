@@ -33,7 +33,7 @@ void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
 	objBullet_->SetScale({ 2,2,2 });
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera);
-	Stage1Parameter();
+	Parameter();
 
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間
@@ -42,16 +42,17 @@ void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
 	timeRate;
 
 	//LoadPopEnemyData();
+
+	easing_.Standby();
 }
 
 //パラメータ
-void WeakEnemy::Stage1Parameter() {
+void WeakEnemy::Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 10.0f,10.0f,10.0f };
-	//pos = obj_->GetPosition();
-	//obj_->SetPosition(pos);
+	
 	obj_->SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
@@ -59,47 +60,37 @@ void WeakEnemy::Stage1Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireIntervalStage1;
 
-	life_ = 1;
+	life_ = 3;
 	isDead_ = false;
 
 	isReverse_ = false;
-	//弾リセット
-	/*for (std::unique_ptr<WeakEnemyBullet>& bullets : WeakEnemyBullets_) {
-		bullets->Reset();
-	}*/
+	
 	
 }
 
 //リセット
-void WeakEnemy::Reset() { Stage1Parameter(); }
+void WeakEnemy::Reset() { Parameter(); }
 
 //更新
 void WeakEnemy::Update() {
 
 
-	//死亡フラグの立った弾を削除
-	/*WeakEnemyBullets_.remove_if(
-		[](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });*/
-
-	//UpdateEnemyPopCommands();
+	
 
 	//座標を移動させる
 	switch (phase_) {
 	case WeakEnemy::Phase::ApproachStage1:
 
-		UpdateApproachStage1();
+		UpdateApproach();
 		break;
 
 	case WeakEnemy::Phase::AttackStage1:
 
-		UpdateAttackStage1();
+		UpdateAttack();
 
 		break;
 	}
-	//弾更新
-	/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-		bullet->Update();
-	}*/
+	
 
 	//座標を移動させる
 	switch (phase_) {
@@ -187,11 +178,6 @@ void WeakEnemy::Draw() {
 	if (!isDead_) {
 		//モデルの描画
 		obj_->Draw();
-
-		//弾描画
-		/*for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-			bullet->Draw();
-		}*/
 	}
 
 }
@@ -199,7 +185,7 @@ void WeakEnemy::Draw() {
 
 //状態変化用の更新関数
 //接近
-void WeakEnemy::UpdateApproachStage1() {
+void WeakEnemy::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
 	//移動
@@ -225,19 +211,14 @@ void WeakEnemy::UpdateApproachStage1() {
 	}
 }
 //攻撃
-void WeakEnemy::UpdateAttackStage1() {
+void WeakEnemy::UpdateAttack() {
 
 	
-	//指定の位置に到達したら反転
-	if (pos.x >= 30.0f) {
-		isReverse_ = true;
-		startCount = std::chrono::steady_clock::now();
-	}
-	if (pos.x <= -30.0f) {
-		isReverse_ = false;
-		startCount = std::chrono::steady_clock::now();
-	}
 
+
+	easing_.easeIn(easing_.t, easing_.b, easing_.c, easing_.d);
+	
+	obj_->SetPosition({ obj_->GetPosition().x,easing_.num_Y,obj_->GetPosition().z});
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した

@@ -31,7 +31,7 @@ void MyGame::Initialize()
 
     postEffect = new PostEffect();
     //postEffect->SetTextureIndex(1);
-    postEffect->Initialize(spriteCommon,1);
+    postEffect->Initialize(spriteCommon,"PostEffectTest");
     //postEffect->SetSize({ 500.0f,500.0f });
 
     //音声読み込み
@@ -188,13 +188,18 @@ void MyGame::Update()
 #pragma region 最初のシーンの更新
 
     
-    
+    if (player_->IsBoss())
+    {
+        postEffect->Initialize(spriteCommon, "Warning");
+    }
 
     player_->Update();
     enemy_->Update();
 
-    UpdateEnemyPopCommands();
-
+    if (enemy_->IsDead())
+    {
+        UpdateEnemyPopCommands();
+    }
         
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
@@ -458,6 +463,7 @@ void MyGame::WeakEnemy_(XMFLOAT3 trans)
 
 void MyGame::LoadPopEnemyData()
 {
+
     //ファイルを開く
     std::ifstream file;
     file.open("Resources/enemyPop.csv");

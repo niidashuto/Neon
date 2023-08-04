@@ -9,6 +9,7 @@
 #include <memory>
 #include <sstream>
 #include <Vector3.h>
+#include "Easing.h"
 
 //自機クラスの前方宣言
 class Player;
@@ -35,7 +36,7 @@ public:
 	void Reset();
 
 	//パラメータ
-	void Stage1Parameter();
+	void Parameter();
 	//更新
 	void Update();
 	//転送　
@@ -49,9 +50,9 @@ public:
 
 	//状態変化用の更新関数
 	//接近
-	void UpdateApproachStage1();
+	void UpdateApproach();
 	//攻撃
-	void UpdateAttackStage1();
+	void UpdateAttack();
 	//離脱
 	void UpdateLeave();
 
@@ -79,6 +80,8 @@ private:
 
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
+
+	Easing easing_ = { 80.0f,20.0f,1.0f};
 	
 
 	static MyGame* myGame_;

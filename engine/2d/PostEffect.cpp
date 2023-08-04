@@ -3,17 +3,22 @@
 #include "WinApp.h"
 
 #include <d3dcompiler.h>
+#include <Input.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
 using namespace DirectX;
 
 const float PostEffect::clearcolor[4] = { 0.25f,0.5f,0.1f,0.0f };
 
+const std::string PostEffect::baseDirectory = "Resources/Shaders/";
+const std::string PostEffect::DirectoryVS = "VS.hlsl";
+const std::string PostEffect::DirectoryPS = "PS.hlsl";
+
 PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
+void PostEffect::Initialize(SpriteCommon* spCommon, const std::string& fileName)
 {
 	assert(spCommon);
 	this->spriteCommon_ = spCommon;
@@ -90,6 +95,7 @@ void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 		constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
 
 		constMapMaterial->color = this->color_;
+		constMapMaterial->red = this->red_;
 
 		constBuffMaterial->Unmap(0, nullptr);
 	}
@@ -138,7 +144,7 @@ void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	// DSV生成
 	CreateDSV();
 	//パイプライン生成
-	CreateGraphicsPipelineState();
+	CreateGraphicsPipelineState(fileName);
 }
 
 void PostEffect::Update()
@@ -284,17 +290,41 @@ void PostEffect::CreateDSV()
 		depthBuff.Get(), &dsvDesc, descHeapDSV->GetCPUDescriptorHandleForHeapStart());
 }
 
-void PostEffect::CreateGraphicsPipelineState()
+void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 {
 	HRESULT result = S_FALSE;
+
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathV = baseDirectory +  "/" + fileName + DirectoryVS;
+	//Resources/shader/PostEffect/ Test / Test VS.hlsl
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeV = MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> filePathV(filePathBufferSizeV);
+	MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), -1, filePathV.data(), filePathBufferSizeV);
+
+	//ピクセルシェーダー
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathP = baseDirectory +  "/" + fileName + DirectoryPS;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeP = MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> filePathP(filePathBufferSizeP);
+	MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), -1, filePathP.data(), filePathBufferSizeP);
+
+
 
 	Microsoft::WRL::ComPtr<ID3DBlob> vsBlob;//頂点シェーダオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> psBlob;//ピクセルシェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;//エラーオブジェクト
-
+	
 	//頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shaders/PostEffectTestVS.hlsl",//シェーダファイル名
+		filePathV.data(),//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,//インクルード可能にする
 		"main", "vs_5_0",//エントリーポイント名、シェーダーモデル指定
@@ -317,7 +347,7 @@ void PostEffect::CreateGraphicsPipelineState()
 	}
 	//ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shaders/PostEffectTestPS.hlsl",//シェーダファイル名
+		filePathP.data(),//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,//インクルード可能にする
 		"main", "ps_5_0",//エントリーポイント名、シェーダーモデル指定
@@ -449,6 +479,8 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		return;
 	}
+
+
 	//パイプラインステートとルートシグネチャの設定
 	spriteCommon_->GetDirectXCommon()->GetCommandList()->SetPipelineState(pipelineState.Get());
 	spriteCommon_->GetDirectXCommon()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
@@ -513,4 +545,10 @@ void PostEffect::PostDraw(ID3D12GraphicsCommandList* cmdList)
 
 	//リソースバリア変更(描画可能→シェーダーリソース)
 	cmdList->ResourceBarrier(1, &resBufferPost);
+}
+
+PostEffect* PostEffect::GetInstance()
+{
+	static PostEffect ins;
+	return &ins;
 }
