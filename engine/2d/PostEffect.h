@@ -7,6 +7,7 @@ public:
     //定数バッファデータ構造体(マテリアル)
     struct ConstBufferDataMaterial {
         DirectX::XMFLOAT4 color;
+        float red;
     };
 
     //定数バッファデータ構造体(3D変換行列)
@@ -59,6 +60,8 @@ public:
 
     void SetColor(const DirectX::XMFLOAT4& color) { this->color_ = color; }
 
+    void SetRed(const float& red) { this->red_ = red; }
+
     static PostEffect* GetInstance();
 
 private:
@@ -99,6 +102,8 @@ private:
 
     //スプライト情報
     DirectX::XMFLOAT4 color_ = { 1,1,1,1 };
+
+    float red_ = 0.8f;
 
 private://静的メンバ変数
     //ベースディレクトリ

@@ -95,6 +95,7 @@ void PostEffect::Initialize(SpriteCommon* spCommon, const std::string& fileName)
 		constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
 
 		constMapMaterial->color = this->color_;
+		constMapMaterial->red = this->red_;
 
 		constBuffMaterial->Unmap(0, nullptr);
 	}

@@ -93,7 +93,7 @@ void Player::Move() {
 
 	if (start_ == true)
 	{
-		move.z-=2.0f;
+		move.z-=1.0f;
 		if (move.z <= -3500.0f)
 		{
 
@@ -184,8 +184,8 @@ void Player::CameraMove()
 	
 	if (start_ == true)
 	{
-		cmove.z-=2.0f;
-		tmove.z-=2.0f;
+		cmove.z-=1.0f;
+		tmove.z-=1.0f;
 	}
 	
 	//キーボード入力による移動処理

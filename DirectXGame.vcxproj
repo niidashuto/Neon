@@ -185,6 +185,7 @@
     <ClCompile Include="engine\3d\FbxLoader.cpp" />
     <ClCompile Include="engine\3d\FbxModel.cpp" />
     <ClCompile Include="engine\3d\ObjectFBX.cpp" />
+    <ClCompile Include="engine\math\Easing.cpp" />
     <ClCompile Include="engine\scene\GamePlayScene.cpp" />
     <ClCompile Include="engine\io\ImGuiManager.cpp" />
     <ClCompile Include="engine\base\Input.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="engine\3d\FbxLoader.h" />
     <ClInclude Include="engine\3d\FbxModel.h" />
     <ClInclude Include="engine\3d\ObjectFBX.h" />
+    <ClInclude Include="engine\math\Easing.h" />
     <ClInclude Include="engine\scene\GamePlayScene.h" />
     <ClInclude Include="engine\io\ImGuiManager.h" />
     <ClInclude Include="engine\base\Input.h" />

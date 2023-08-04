@@ -2,6 +2,7 @@
 cbuffer ConstBufferDataMaterial : register(b0)
 {
 	float4 color;
+	float red;
 };
 
 //‚R‚c•ÏŠ·s—ñ

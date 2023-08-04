@@ -177,6 +177,9 @@
     <ClCompile Include="application\base\WeakEnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="engine\math\Easing.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -347,6 +350,9 @@
     </ClInclude>
     <ClInclude Include="application\base\WeakEnemyBullet.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\math\Easing.h">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

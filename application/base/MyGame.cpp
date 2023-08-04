@@ -196,8 +196,10 @@ void MyGame::Update()
     player_->Update();
     enemy_->Update();
 
-    UpdateEnemyPopCommands();
-
+    if (enemy_->IsDead())
+    {
+        UpdateEnemyPopCommands();
+    }
         
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
@@ -461,6 +463,7 @@ void MyGame::WeakEnemy_(XMFLOAT3 trans)
 
 void MyGame::LoadPopEnemyData()
 {
+
     //ファイルを開く
     std::ifstream file;
     file.open("Resources/enemyPop.csv");
