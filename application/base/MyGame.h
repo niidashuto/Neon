@@ -16,6 +16,8 @@
 #include "Enemy.h"
 #include "WeakEnemy.h"
 #include <sstream>
+#include "Boss.h"
+
 
 class MyGame : public SNFramework
 {
@@ -62,6 +64,8 @@ private:
 	bool isWait_;
 	int waitTimer_;
 
+	//float color_ = 0.5f;
+
 	ImGuiManager* imGui = nullptr;
 
 	
@@ -79,6 +83,8 @@ private:
 	Object3d* object3d_3 = nullptr;
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
+	Object3d* object3DBoss_ = nullptr;
+
 	//Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
 	//Object3d* obj_ = nullptr;
@@ -107,6 +113,9 @@ private:
 
 	WeakEnemy* weakEnemy_ = nullptr;
 	Model* modelWeakEnemy_ = nullptr;
+
+	Boss* boss_ = nullptr;
+	Model* modelBoss_ = nullptr;
 
 };
 

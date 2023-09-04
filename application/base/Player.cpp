@@ -11,7 +11,7 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -19,6 +19,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
+	warning_ = warning;
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -26,6 +27,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	objBullet_->SetScale({ 5,5,5 });
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);
+	
 
 	//シングルトンインスタンスを取得
 	this->input_ = input;
@@ -33,6 +35,8 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	//ワールド変換の初期化
 	pos = { 0.0f,20.0f,-60.0f };
 	obj_->SetPosition(pos);
+
+	warning_->SetColor({ 1,1,1,warningColor });
 
 }
 
@@ -96,12 +100,22 @@ void Player::Move() {
 		move.z-=1.0f;
 		if (move.z <= -3500.0f)
 		{
-
+			warningTimer_--;
+			for (int i = 0; i <= 100; i++)
+			{
+				
+				warningColor += 0.1f;
+				warning_->SetColor({ 1,1,1,warningColor });
+					
+				
+				
+			}
 			boss_ = true;
 			start_ = false;
 			
 			
 		}
+		
 	}
 
 	
@@ -273,6 +287,11 @@ void Player::Trans() {
 	world = matWorld;
 	obj_->SetWorld(world);
 
+}
+
+void Player::Warning()
+{
+	
 }
 
 //ワールド座標を取得

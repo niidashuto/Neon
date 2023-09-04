@@ -180,6 +180,12 @@
     <ClCompile Include="engine\math\Easing.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="application\base\Boss.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="application\base\BossBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -353,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="engine\math\Easing.h">
       <Filter>ソース ファイル\engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="application\base\Boss.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\base\BossBullet.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

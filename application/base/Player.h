@@ -24,7 +24,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* warning);
 	//リセット処理
 	void Reset();
 
@@ -40,6 +40,8 @@ public:
 
 	//転送
 	void Trans();
+
+	void Warning();
 
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
@@ -70,6 +72,8 @@ private:
 	//カメラ
 	Camera* camera_ = nullptr;
 
+	Sprite* warning_ = nullptr;
+
 	//インプット
 	Input* input_ = nullptr;
 
@@ -86,7 +90,7 @@ private:
 
 	//死亡フラグとライフ
 	bool isDead_ = false;
-	int life_ = 5;
+	int life_ = 20;
 
 	const float rotLimitZ_ = 30.0f;
 	const float rotLimitX_ = 30.0f;
@@ -97,6 +101,10 @@ private:
 	bool start_ = false;
 
 	bool boss_ = false;
+
+	float warningTimer_ = 3.0f;
+
+	float warningColor;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

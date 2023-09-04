@@ -171,6 +171,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application\base\Boss.cpp" />
+    <ClCompile Include="application\base\BossBullet.cpp" />
     <ClCompile Include="application\base\Enemy.cpp" />
     <ClCompile Include="application\base\EnemyBullet.cpp" />
     <ClCompile Include="application\base\Player.cpp" />
@@ -340,6 +342,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\base\Boss.h" />
+    <ClInclude Include="application\base\BossBullet.h" />
     <ClInclude Include="application\base\Enemy.h" />
     <ClInclude Include="application\base\EnemyBullet.h" />
     <ClInclude Include="application\base\Player.h" />

@@ -24,6 +24,8 @@ void MyGame::Initialize()
 
     enemy_ = new Enemy();
 
+    boss_ = new Boss();
+
     weakEnemy_ = new WeakEnemy();
     WeakEnemy::SetMyGame(this);
     WeakEnemy::SetPlayer(player_);
@@ -31,7 +33,12 @@ void MyGame::Initialize()
 
     postEffect = new PostEffect();
     //postEffect->SetTextureIndex(1);
-    postEffect->Initialize(spriteCommon,"PostEffectTest");
+    if (!player_->IsBoss())
+    {
+        postEffect->Initialize(spriteCommon, "PostEffectTest");
+    }
+
+    
     //postEffect->SetSize({ 500.0f,500.0f });
 
     //音声読み込み
@@ -57,6 +64,7 @@ void MyGame::Initialize()
     sprite = new Sprite();
     sprite->SetTextureIndex(0),
     sprite->Initialize(spriteCommon, 0);
+    //sprite->SetColor({ 1,1,1,color_ });
 
     //sprite2 = new Sprite();
     //sprite2->SetTextureIndex(0);
@@ -68,6 +76,7 @@ void MyGame::Initialize()
     modelPlayer_ = Model::LoadFromOBJ("player");
     modelEnemy_ = Model::LoadFromOBJ("enemy");
     modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
+    modelBoss_ = Model::LoadFromOBJ("boss");
     modelRail_ = Model::LoadFromOBJ("rail");
 
     object3d_1 = Object3d::Create();
@@ -75,6 +84,7 @@ void MyGame::Initialize()
     object3d_3 = Object3d::Create();
     object3DPlayer_ = Object3d::Create();
     object3DEnemy_ = Object3d::Create();
+    object3DBoss_ = Object3d::Create();
     //object3DWeakEnemy_ = Object3d::Create();
     object3DRail_ = Object3d::Create();
     
@@ -84,6 +94,7 @@ void MyGame::Initialize()
     object3d_3->SetModel(model_2);
     object3DPlayer_->SetModel(modelPlayer_);
     object3DEnemy_->SetModel(modelEnemy_);
+    object3DBoss_->SetModel(modelBoss_);
     //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
     //3Dオブジェクトの位置を指定
@@ -97,6 +108,7 @@ void MyGame::Initialize()
     object3d_3->SetScale({ 10.0f,10.0f,10.0f });
     object3DPlayer_->SetScale({ 10.0f,10.0f,10.0f });
     object3DEnemy_->SetScale({ 15.0f,15.0f,15.0f });
+    object3DBoss_->SetScale({ 40.0f,40.0f,40.0f });
     object3DRail_->SetScale({ 500,100,100 });
     object3DRail_->SetPosition({ 0,20,-2000 });
     object3DRail_->SetRotation({ 0,90,0 });
@@ -106,6 +118,7 @@ void MyGame::Initialize()
     object3d_3->SetCamera(camera_);
     object3DPlayer_->SetCamera(camera_);
     object3DEnemy_->SetCamera(camera_);
+    object3DBoss_->SetCamera(camera_);
     //object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
 
@@ -140,9 +153,12 @@ void MyGame::Initialize()
     //camera_->SetEye({ 0,0,0 });
     //object1->PlayAnimation();
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_,sprite);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
+
+    boss_->Initialize(modelBoss_, object3DBoss_, camera_);
+    boss_->SetPlayer(player_);
    
     LoadPopEnemyData();
     
@@ -188,13 +204,34 @@ void MyGame::Update()
 #pragma region 最初のシーンの更新
 
     
-    if (player_->IsBoss())
+    /*if (player_->IsBoss())
     {
         postEffect->Initialize(spriteCommon, "Warning");
-    }
+
+        if (input->Pushkey(DIK_1))
+        {
+            postEffect->Initialize(spriteCommon, "PostEffectTest");
+        }
+    }*/
+    
+    /*if (player_->IsBoss())
+    {
+        color_ += 0.01f;
+
+        sprite->SetColor({ 1,1,1,color_ });
+
+        if (color_ >= 0)
+        {
+            color_ -= 0.02f;
+        }
+
+    }*/
+
+
 
     player_->Update();
     enemy_->Update();
+    boss_->Update();
 
     if (enemy_->IsDead())
     {
@@ -249,7 +286,7 @@ void MyGame::Draw()
     //spriteCommon->PreDraw();
     
     spriteCommon->PreDraw();
-    //sprite->Draw();
+    
     //sprite2->Draw();
 
     //sprite->Draw();
@@ -257,9 +294,11 @@ void MyGame::Draw()
     imGui->Begin();
 
 
-    
+    sprite->Draw();
 
     spriteCommon->PostDraw();
+
+    
 
     Object3d::PreDraw(dxCommon->GetCommandList());
     object3d_1->Draw();
@@ -268,6 +307,12 @@ void MyGame::Draw()
     //object3d_3->Draw();
     player_->Draw();
     enemy_->Draw();
+
+    if (player_->IsBoss())
+    {
+        boss_->Draw();
+    }
+    
 
     imGui->End();
     
@@ -278,7 +323,7 @@ void MyGame::Draw()
     for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
         bullet->Draw();
     }
-    
+   
 
     Object3d::PostDraw();
 
@@ -301,6 +346,8 @@ void MyGame::Draw()
     dxCommon->PreDraw();
 
 #pragma region 最初のシーンの描画
+
+    
    
     postEffect->Draw(dxCommon->GetCommandList());
     imGui->Draw();
@@ -313,20 +360,24 @@ void MyGame::Draw()
 void MyGame::CheckAllCollisions()
 {
     //判定対象A,Bの座標
-    XMFLOAT3 posA, posB,posC{};
+    XMFLOAT3 posA, posB, posC, posD{};
     // A,Bの座標の距離用
-    XMFLOAT3 posAB,posAC;
+    XMFLOAT3 posAB,posAC,posAD;
     //判定対象A,Bの半径
     float radiusA;
     float radiusB;
     float radiusC;
+    float radiusD;
     float radiusAB;
     float radiusAC;
+    float radiusAD;
 
     //自機弾リストを取得
     const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
     //敵弾リストを取得
     const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
+
+    const std::list<std::unique_ptr<BossBullet>>& bossBullets = boss_->GetEnemyBullets();
 
     const std::list<std::unique_ptr<WeakEnemyBullet>>& weakEnemyBullets = this->GetWeakEnemyBullets();
 
@@ -335,6 +386,7 @@ void MyGame::CheckAllCollisions()
     radiusA = 1.0f;
     radiusB = 1.0f;
     radiusC = 2.0f;
+    radiusD = 4.0f;
 
     //自機の座標
     posA = player_->GetWorldPosition();
@@ -380,6 +432,27 @@ void MyGame::CheckAllCollisions()
         }
     }
 
+    //自機と全ての敵弾の当たり判定
+    for (const std::unique_ptr<BossBullet>& bossbullet : bossBullets) {
+        //敵弾の座標
+        posD = bossbullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAD.x = (posD.x - posA.x) * (posD.x - posA.x);
+        posAD.y = (posD.y - posA.y) * (posD.y - posA.y);
+        posAD.z = (posD.z - posA.z) * (posD.z - posA.z);
+        radiusAD = (radiusA + radiusD) * (radiusA + radiusD);
+
+        //球と球の交差判定
+        if (radiusAD >= (posAD.x + posAD.y + posAD.z)) {
+            //自キャラの衝突時コールバック関数を呼び出す
+            player_->OnCollision();
+            //敵弾の衝突時コールバック関数を呼び出すgg
+            bossbullet->OnCollision();
+
+
+        }
+    }
+
 #pragma endregion
 
 #pragma region 自弾と敵の当たり判定
@@ -387,6 +460,7 @@ void MyGame::CheckAllCollisions()
     radiusA = 5.0f;
     radiusB = 1.0f;
     radiusC = 5.0f;
+    radiusD = 20.0f;
 
     //敵の座標
     posA = enemy_->GetWorldPosition();
@@ -441,6 +515,30 @@ void MyGame::CheckAllCollisions()
 
                 pm1_->ActiveZ(particle1_, { weakEnemy_->GetWorldPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {10.0f, 0.0f});
             }
+        }
+    }
+    //敵の座標
+    posA = boss_->GetWorldPosition();
+
+    //敵と全ての弾の当たり判定
+    for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+        //弾の座標
+        posD = bullet->GetWorldPosition();
+        //座標A,Bの距離を求める
+        posAD.x = (posD.x - posA.x) * (posD.x - posA.x);
+        posAD.y = (posD.y - posA.y) * (posD.y - posA.y);
+        posAD.z = (posD.z - posA.z) * (posD.z - posA.z);
+        radiusAD = (radiusA + radiusD) * (radiusA + radiusD);
+
+        //球と球の交差判定
+        if (radiusAD >= (posAD.x + posAD.y + posAD.z)) {
+            //敵キャラの衝突時コールバック関数を呼び出す
+            boss_->OnCollisionPlayer();
+            //自機弾の衝突時コールバック関数を呼び出す
+            bullet->OnCollision();
+
+            pm1_->ActiveZ(particle1_, { object3DBoss_->GetPosition() }, { 0.0f ,0.0f,100.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 50.0f, 0.0f });
+
         }
     }
 

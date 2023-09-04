@@ -1,15 +1,11 @@
-#include "WeakEnemy.h"
+#include "Boss.h"
 #include <cassert>
-#include "MyGame.h"
 
 #include "Player.h"
 
 using namespace DirectX;
 
-MyGame* WeakEnemy::myGame_ = nullptr;
-Player* WeakEnemy::player_ = nullptr;
-
-WeakEnemy::~WeakEnemy() {
+Boss::~Boss() {
 	//モデルの解放
 
 	delete modelBullet_;
@@ -17,42 +13,36 @@ WeakEnemy::~WeakEnemy() {
 }
 
 // 初期化
-void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
+void Boss::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	// NULLポインタチェック
 	assert(model);
 
-	obj_ = Object3d::Create();
+	model_ = model;
+	camera_ = camera;
+	obj_ = obj;
 
-	this->pos = pos;
-	obj_->SetPosition(pos);
-	obj_->SetCamera(camera);
-	obj_->SetModel(model);
-
-	modelBullet_ = Model::LoadFromOBJ("weakenemybullet");
+	modelBullet_ = Model::LoadFromOBJ("bossbullet");
 	objBullet_ = Object3d::Create();
-	objBullet_->SetScale({ 2,2,2 });
+	objBullet_->SetScale({ 5,5,5 });
 	objBullet_->SetModel(modelBullet_);
-	objBullet_->SetCamera(camera);
-	Parameter();
+	objBullet_->SetCamera(camera_);
+	Stage1Parameter();
 
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 10.0f;					//全体時間
 	timeRate;
-
-	//LoadPopEnemyData();
-
-	easing_.Standby();
 }
 
 //パラメータ
-void WeakEnemy::Parameter() {
+void Boss::Stage1Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
-	scale = { 10.0f,10.0f,10.0f };
-	
+	scale = { 30.0f,30.0f,30.0f };
+	pos = { 0.0f,40.0f,-3650.0f };
+	obj_->SetPosition(pos);
 	obj_->SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
@@ -64,37 +54,44 @@ void WeakEnemy::Parameter() {
 	isDead_ = false;
 
 	isReverse_ = false;
-	
-	
+	//弾リセット
+	for (std::unique_ptr<BossBullet>& bullet : bossBullets_) {
+		bullet->Reset();
+	}
 }
 
 //リセット
-void WeakEnemy::Reset() { Parameter(); }
+void Boss::Reset() { Stage1Parameter(); }
 
 //更新
-void WeakEnemy::Update() {
+void Boss::Update() {
 
 
-	
+	//死亡フラグの立った弾を削除
+	bossBullets_.remove_if(
+		[](std::unique_ptr<BossBullet>& bullet) { return bullet->IsDead(); });
 
 	//座標を移動させる
 	switch (phase_) {
-	case WeakEnemy::Phase::ApproachStage1:
+	case Boss::Phase::ApproachStage1:
 
-		UpdateApproach();
+		UpdateApproachStage1();
 		break;
 
-	case WeakEnemy::Phase::AttackStage1:
+	case Boss::Phase::AttackStage1:
 
-		UpdateAttack();
+		UpdateAttackStage1();
 
 		break;
 	}
-	
+	//弾更新
+	for (std::unique_ptr<BossBullet>& bullet : bossBullets_) {
+		bullet->Update();
+	}
 
 	//座標を移動させる
 	switch (phase_) {
-	case WeakEnemy::Phase::Leave:
+	case Boss::Phase::Leave:
 		UpdateLeave();
 		break;
 
@@ -107,7 +104,7 @@ void WeakEnemy::Update() {
 }
 
 //転送
-void WeakEnemy::Trans() {
+void Boss::Trans() {
 
 	XMMATRIX world;
 	//行列更新
@@ -130,7 +127,7 @@ void WeakEnemy::Trans() {
 
 }
 //弾発射
-void WeakEnemy::Fire() {
+void Boss::Fire() {
 
 	assert(player_);
 
@@ -164,20 +161,23 @@ void WeakEnemy::Fire() {
 	XMFLOAT3 position = obj_->GetPosition();
 
 	//弾を生成し初期化
-	std::unique_ptr<WeakEnemyBullet> newBullet = std::make_unique<WeakEnemyBullet>();
+	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
 	newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 	//弾を登録
-	myGame_->AddEnemyBullet(std::move(newBullet));
-	
-	
+	bossBullets_.push_back(std::move(newBullet));
 }
 
 //描画
-void WeakEnemy::Draw() {
+void Boss::Draw() {
 	if (!isDead_) {
 		//モデルの描画
 		obj_->Draw();
+
+		//弾描画
+		for (std::unique_ptr<BossBullet>& bullet : bossBullets_) {
+			bullet->Draw();
+		}
 	}
 
 }
@@ -185,11 +185,11 @@ void WeakEnemy::Draw() {
 
 //状態変化用の更新関数
 //接近
-void WeakEnemy::UpdateApproach() {
+void Boss::UpdateApproachStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	//移動
-	velocity = { 0.0f, 0.0f, 0.0f };
+	velocity = { 0.0f, 0.0f, -0.3f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
@@ -211,14 +211,10 @@ void WeakEnemy::UpdateApproach() {
 	}
 }
 //攻撃
-void WeakEnemy::UpdateAttack() {
+void Boss::UpdateAttackStage1() {
 
 	
 
-
-	easing_.easeIn(easing_.t, easing_.b, easing_.c, easing_.d);
-	
-	obj_->SetPosition({ obj_->GetPosition().x,easing_.num_Y,obj_->GetPosition().z});
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -241,7 +237,7 @@ void WeakEnemy::UpdateAttack() {
 }
 
 //離脱
-void WeakEnemy::UpdateLeave() {
+void Boss::UpdateLeave() {
 	//速度
 	XMFLOAT3 velocity;
 
@@ -255,9 +251,7 @@ void WeakEnemy::UpdateLeave() {
 	obj_->SetPosition(pos);
 }
 
-
-
-const XMFLOAT3 WeakEnemy::Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+const XMFLOAT3 Boss::Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
 	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
@@ -272,7 +266,7 @@ const XMFLOAT3 WeakEnemy::Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const X
 
 
 //ワールド座標を取得
-XMFLOAT3 WeakEnemy::GetWorldPosition() {
+XMFLOAT3 Boss::GetWorldPosition() {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -285,9 +279,10 @@ XMFLOAT3 WeakEnemy::GetWorldPosition() {
 	return worldPos;
 }
 //衝突を検出したら呼び出されるコールバック関数
-void WeakEnemy::OnCollisionPlayer()
+void Boss::OnCollisionPlayer()
 {
 	life_--;
 
 
 }
+
