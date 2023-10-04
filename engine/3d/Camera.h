@@ -26,6 +26,10 @@ public:
 
 	void CameraMoveVectorTarget(const XMFLOAT3& move);
 
+	//シェイク
+	XMFLOAT3 ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max);
+	XMFLOAT3 ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 max);
+
 protected:
 	// ビュー行列
 	XMMATRIX matView_ = {};

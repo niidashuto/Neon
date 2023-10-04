@@ -3,6 +3,7 @@
 #include "FbxLoader.h"
 #include "ObjectFBX.h"
 #include <fstream>
+#include "MyMath.h"
 
 
 
@@ -146,8 +147,8 @@ void MyGame::Initialize()
     object1->SetPosition({ 0,30,-100 });
     object1->SetRotation({ 0,90,0 });
     object1->SetScale({ 0.1f,0.1f,0.1f });
-    camera_->SetTarget({ 0,0,0 });
-    camera_->SetEye({ 0,0,8.0f });
+    camera_->SetTarget({ 0,17.0f,-20.0f });
+    camera_->SetEye({ 0,20.0f,-12.0f });
     camera_->SetUp({ 0,20,0 });
     camera_->CameraMoveVector({ 0,20,0 });
     //camera_->SetEye({ 0,0,0 });
@@ -289,7 +290,7 @@ void MyGame::Draw()
     
     //sprite2->Draw();
 
-    //sprite->Draw();
+    sprite->Draw();
 
     imGui->Begin();
 
@@ -306,7 +307,7 @@ void MyGame::Draw()
     object3DRail_->Draw();
     //object3d_3->Draw();
     player_->Draw();
-    enemy_->Draw();
+    //enemy_->Draw();
 
     if (player_->IsBoss())
     {
@@ -429,6 +430,9 @@ void MyGame::CheckAllCollisions()
             //敵弾の衝突時コールバック関数を呼び出す
             weakbullet->OnCollision();
             
+            
+
+            
         }
     }
 
@@ -449,7 +453,7 @@ void MyGame::CheckAllCollisions()
             //敵弾の衝突時コールバック関数を呼び出すgg
             bossbullet->OnCollision();
 
-
+            
         }
     }
 

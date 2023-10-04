@@ -20,6 +20,8 @@ public:
 
 	Matrix4 MakeRotateMatrix() const;
 
+	
+
 };
 
 Quaternion Identity();

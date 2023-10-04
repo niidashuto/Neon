@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "PostEffect.h"
 #include "SpriteCommon.h"
+#include "Easing.h"
 
 class Player
 {
@@ -82,6 +83,8 @@ private:
 	PostEffect* postEffect_ = nullptr;
 
 	SpriteCommon* spriteCommon_ = nullptr;
+	
+	Easing easing_= { 80.0f,20.0f,1.0f };
 
 	//ポジション
 	XMFLOAT3 pos;
@@ -102,6 +105,13 @@ private:
 
 	bool boss_ = false;
 
+	bool hit_ = false;
+
+	bool title_ = true;
+
+	bool changeDown_ = false;
+	bool changeUp_ = false;
+
 	float warningTimer_ = 3.0f;
 
 	float warningColor;
@@ -109,4 +119,5 @@ private:
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool IsBoss() const { return boss_; }
+	bool IsHit()const { return hit_; }
 };

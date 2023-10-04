@@ -205,6 +205,7 @@
     <ClCompile Include="engine\math\Vector3.cpp" />
     <ClCompile Include="engine\base\ViewProjection.cpp" />
     <ClCompile Include="engine\base\WinApp.cpp" />
+    <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +361,7 @@
     <ClInclude Include="engine\3d\FbxModel.h" />
     <ClInclude Include="engine\3d\ObjectFBX.h" />
     <ClInclude Include="engine\math\Easing.h" />
+    <ClInclude Include="engine\math\MyMath.h" />
     <ClInclude Include="engine\scene\GamePlayScene.h" />
     <ClInclude Include="engine\io\ImGuiManager.h" />
     <ClInclude Include="engine\base\Input.h" />
@@ -376,6 +378,7 @@
     <ClInclude Include="engine\math\Vector3.h" />
     <ClInclude Include="engine\base\ViewProjection.h" />
     <ClInclude Include="engine\base\WinApp.h" />
+    <ClInclude Include="MyMath.h" />
     <ClInclude Include="RailCamera.h" />
   </ItemGroup>
   <ItemGroup>

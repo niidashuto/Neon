@@ -144,6 +144,17 @@ void Player::Move() {
 		start_ = true;
 	}
 
+	if (input_->Pushkey(DIK_RETURN))
+	{
+		title_ = false;
+	}
+
+	if (title_)
+	{
+		rot.y += rotSpeed;
+
+	}
+
 	//自機の回転(Z軸)
 	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
 	{
@@ -233,37 +244,38 @@ void Player::CameraMove()
 
 //攻撃処理
 void Player::Attack() {
+	
+		if (input_->TriggerKey(DIK_SPACE)&&!title_) {
+			//弾の速度
+			const float kBulletSpeed = 2.0f;
+			XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		//弾の速度
-		const float kBulletSpeed = 2.0f;
-		XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
 
-		
 
-		XMMATRIX matVec = XMMatrixIdentity();
-		matVec.r[0].m128_f32[0] = velocity.x;
-		matVec.r[0].m128_f32[1] = velocity.y;
-		matVec.r[0].m128_f32[2] = velocity.z;
-		matVec.r[0].m128_f32[3] = 0.0f;
+			XMMATRIX matVec = XMMatrixIdentity();
+			matVec.r[0].m128_f32[0] = velocity.x;
+			matVec.r[0].m128_f32[1] = velocity.y;
+			matVec.r[0].m128_f32[2] = velocity.z;
+			matVec.r[0].m128_f32[3] = 0.0f;
 
-		matVec *= obj_->GetWorld();
+			matVec *= obj_->GetWorld();
 
-		//自キャラの座標をコピー
-		XMFLOAT3 position = obj_->GetPosition();
+			//自キャラの座標をコピー
+			XMFLOAT3 position = obj_->GetPosition();
 
-		//弾を生成し初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			//弾を生成し初期化
+			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 
-		//PlayerBullet* newBullet=new PlayerBullet();
+			//PlayerBullet* newBullet=new PlayerBullet();
 
-		newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
+			newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
-		//弾を登録
-		bullets_.push_back(std::move(newBullet));
-		//あるメモリの所有権を持つunique_ptrはただ一つしか存在できない
-		//その所有権を謙渡するための機能が std::move()
-	}
+			//弾を登録
+			bullets_.push_back(std::move(newBullet));
+			//あるメモリの所有権を持つunique_ptrはただ一つしか存在できない
+			//その所有権を謙渡するための機能が std::move()
+		}
+	
 }
 
 void Player::Trans() {
@@ -311,6 +323,12 @@ XMFLOAT3 Player::GetWorldPosition() {
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision() {
 	life_--;
+
+	//camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
+	//camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
+	//camera_->Update();
+	//easing_.easeIn();
+	
 	if (life_ <= 0) {
 		isDead_ = true;
 	}
