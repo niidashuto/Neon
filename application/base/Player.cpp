@@ -77,7 +77,7 @@ void Player::Update() {
 void Player::Draw() {
 	if (!isDead_) {
 		obj_->Draw();
-		ImGui::InputInt("HP", &life_);
+		//ImGui::InputInt("HP", &life_);
 
 		//’e•`‰æ
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
@@ -100,16 +100,6 @@ void Player::Move() {
 		move.z-=1.0f;
 		if (move.z <= -3500.0f)
 		{
-			warningTimer_--;
-			for (int i = 0; i <= 100; i++)
-			{
-				
-				warningColor += 0.1f;
-				warning_->SetColor({ 1,1,1,warningColor });
-					
-				
-				
-			}
 			boss_ = true;
 			start_ = false;
 			
@@ -147,6 +137,8 @@ void Player::Move() {
 	if (input_->Pushkey(DIK_RETURN))
 	{
 		title_ = false;
+		warningColor += 0.02f;
+		warning_->SetColor({ 1,1,1,warningColor });
 	}
 
 	if (title_)

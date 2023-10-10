@@ -77,6 +77,7 @@ private:
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;
 	Model* modelRail_ = nullptr;
+	Model* modelTitle_ = nullptr;
 	//3Dオブジェクト生成
 	Object3d* object3d_1 = nullptr;
 	Object3d* object3d_2 = nullptr;
@@ -84,6 +85,7 @@ private:
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
 	Object3d* object3DBoss_ = nullptr;
+	Object3d* object3DTitle_ = nullptr;
 
 	//Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;

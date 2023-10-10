@@ -79,6 +79,7 @@ void MyGame::Initialize()
     modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
     modelBoss_ = Model::LoadFromOBJ("boss");
     modelRail_ = Model::LoadFromOBJ("rail");
+    modelTitle_ = Model::LoadFromOBJ("neon");
 
     object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
@@ -88,6 +89,7 @@ void MyGame::Initialize()
     object3DBoss_ = Object3d::Create();
     //object3DWeakEnemy_ = Object3d::Create();
     object3DRail_ = Object3d::Create();
+    object3DTitle_ = Object3d::Create();
     
     //3Dオブジェクトと3Dモデルをひも付け
     object3d_1->SetModel(model_1);
@@ -98,6 +100,7 @@ void MyGame::Initialize()
     object3DBoss_->SetModel(modelBoss_);
     //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
+    object3DTitle_->SetModel(modelTitle_);
     //3Dオブジェクトの位置を指定
     //object3d_2->SetPosition({ -5,0,-5 });
     object3d_3->SetPosition({ +5,0,+5 });
@@ -113,6 +116,9 @@ void MyGame::Initialize()
     object3DRail_->SetScale({ 500,100,100 });
     object3DRail_->SetPosition({ 0,20,-2000 });
     object3DRail_->SetRotation({ 0,90,0 });
+    object3DTitle_->SetRotation({ 270,0,0 });
+    object3DTitle_->SetScale({ 10.0f,10.0f,10.0f });
+    object3DTitle_->SetPosition({ 11.0f,30.0f,-60.0f });
 
     object3d_1->SetCamera(camera_);
     object3d_2->SetCamera(camera_);
@@ -122,6 +128,7 @@ void MyGame::Initialize()
     object3DBoss_->SetCamera(camera_);
     //object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
+    object3DTitle_->SetCamera(camera_);
 
     particle1_ = Particle::LoadFromParticleTexture("particle.png");
     pm1_ = ParticleManager::Create();
@@ -266,6 +273,7 @@ void MyGame::Update()
     object3d_2->Update();
     object3d_3->Update();
     object3DRail_->Update();
+    object3DTitle_->Update();
 
     
 
@@ -286,25 +294,15 @@ void MyGame::Draw()
     postEffect->PreDraw(dxCommon->GetCommandList());
     //spriteCommon->PreDraw();
     
-    spriteCommon->PreDraw();
     
-    //sprite2->Draw();
-
-    sprite->Draw();
-
     imGui->Begin();
-
-
-    sprite->Draw();
-
-    spriteCommon->PostDraw();
-
     
 
     Object3d::PreDraw(dxCommon->GetCommandList());
     object3d_1->Draw();
     object3d_2->Draw();
     object3DRail_->Draw();
+    object3DTitle_->Draw();
     //object3d_3->Draw();
     player_->Draw();
     //enemy_->Draw();
@@ -333,6 +331,19 @@ void MyGame::Draw()
     //object1->Draw(dxCommon->GetCommandList());
 
     ObjectFBX::PostDraw();
+
+    spriteCommon->PreDraw();
+
+    //sprite2->Draw();
+
+    sprite->Draw();
+
+    
+
+
+    //sprite->Draw();
+
+    spriteCommon->PostDraw();
 
     ParticleManager::PreDraw(dxCommon->GetCommandList());
     pm1_->Draw();
