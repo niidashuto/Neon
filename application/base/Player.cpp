@@ -137,14 +137,50 @@ void Player::Move() {
 	if (input_->Pushkey(DIK_RETURN))
 	{
 		title_ = false;
-		warningColor += 0.02f;
-		warning_->SetColor({ 1,1,1,warningColor });
+		transition_ = true;
+		
 	}
+	if (warningColor >= 1.0f)
+	{
+		fadeIn_ = true;
+		
+	}
+
+	if (fadeIn_)
+	{
+		warningTimer_ -= 1.0f;
+		if (warningTimer_ <= 0.0f)
+		{
+			transition_ = false;
+			camera_->SetTarget({ 0,0,0 });
+			camera_->SetEye({ 0,0,8.0f });
+			camera_->SetUp({ 0,20,0 });
+			camera_->CameraMoveVector({ 0,20,0 });
+			rot.y = 0;
+			
+
+		}
+		warningColor -= 0.02f;
+		warning_->SetColor({ 1,1,1,warningColor });
+		if (warningColor <= 0)
+		{
+			warningTimer_ = 60.0f * 3;
+
+		}
+		
+	}
+	
+	
 
 	if (title_)
 	{
 		rot.y += rotSpeed;
 
+	}
+
+	if (transition_) {
+		warningColor += 0.02f;
+		warning_->SetColor({ 1,1,1,warningColor });
 	}
 
 	//Ž©‹@‚Ì‰ñ“](ZŽ²)
@@ -227,6 +263,8 @@ void Player::CameraMove()
 		cmove.y -= moveSpeed;
 		tmove.y -= moveSpeed;
 	}
+
+	
 	
 	
 	//obj_->SetPosition(move);

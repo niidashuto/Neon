@@ -109,10 +109,11 @@ private:
 
 	bool title_ = true;
 
-	bool changeDown_ = false;
-	bool changeUp_ = false;
+	bool transition_ = false;
 
-	float warningTimer_ = 3.0f;
+	bool fadeIn_ = false;
+
+	float warningTimer_ = 60.0f * 2;
 
 	float warningColor;
 
@@ -120,4 +121,5 @@ public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool IsBoss() const { return boss_; }
 	bool IsHit()const { return hit_; }
+	bool IsFadeIn()const { return fadeIn_; }
 };

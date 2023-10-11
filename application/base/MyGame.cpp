@@ -302,10 +302,16 @@ void MyGame::Draw()
     object3d_1->Draw();
     object3d_2->Draw();
     object3DRail_->Draw();
-    object3DTitle_->Draw();
+    if (player_->IsFadeIn()==false)
+    {
+        object3DTitle_->Draw();
+    }
     //object3d_3->Draw();
     player_->Draw();
-    //enemy_->Draw();
+    if (player_->IsFadeIn() == true)
+    {
+        enemy_->Draw();
+    }
 
     if (player_->IsBoss())
     {
