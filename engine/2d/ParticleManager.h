@@ -112,9 +112,9 @@ public: // メンバ関数
 	/// <param name="setnum">一気に何個か</param>
 	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
 	void Active(Particle* p, const float& setpos, const float& setvel, const float& setacc, const int& setnum, const XMFLOAT2& setscale);
-
+	// Y軸パーティクル発射
 	void ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-
+	// Z軸パーティクル発射
 	void ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
 
 private: // メンバ変数

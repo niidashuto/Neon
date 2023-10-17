@@ -38,16 +38,21 @@ public:
 public://メンバ関数
 	//初期化
 	void Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex = UINT32_MAX);
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw();
 public:
 	//setter
+	//座標指定Setter
 	void SetPosition(const DirectX::XMFLOAT2& position) { position_ = position; }
+	//回転指定Setter
 	void SetRotation(float rotation) { rotationZ = rotation; }
+	//カラー指定Setter
 	void SetColor(DirectX::XMFLOAT4 color) { color_ = color; }
+	//サイズ指定Setter
 	void SetSize(const DirectX::XMFLOAT2& size) { size_ = size; }
+	//アンカーポイント指定Setter
 	void SetAnchorPoint(const DirectX::XMFLOAT2& anchorPoint) { anchorPoint_ = anchorPoint; }
 	void SetIsFlipX(const bool& isFlipX) { isFlipX_ = isFlipX; }
 	void SetIsFlipY(const bool& isFlipY) { isFlipY_ = isFlipY; }

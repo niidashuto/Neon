@@ -40,13 +40,13 @@ public:
 
 	//“–‚½‚è”»’è
 	void CheckAllCollisions();
-
+	//ƒGƒlƒ~[‚Ì’e‚ğ’Ç‰Á
 	void AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
-
+	//G‹›“G‚ÌˆÊ’u
 	void WeakEnemy_(XMFLOAT3 trans);
-
+	//G‹›“G¶¬ƒf[ƒ^
 	void LoadPopEnemyData();
-
+	//G‹›“G¶¬
 	void UpdateEnemyPopCommands();
 
 	

@@ -18,22 +18,26 @@ class SpriteCommon
 public://メンバ関数
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
-
+	//テクスチャ読み込み
 	void LoadTexture(uint32_t index, const std::string& fileName);
-
+	//テクスチャコマンド指定
 	void SetTextureCommands(uint32_t index);
 	//描画前処理
 	void PreDraw();
 	//描画後処理
 	void PostDraw();
 	//getter
+	//DirectXCommon指定Getter
 	DirectXCommon* GetDirectXCommon() { return dxCommon_; }
+	//テクスチャバッファ指定Getter
 	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuff[index].Get(); }
-
+	//パイプライン指定Getter
 	ID3D12PipelineState* GetPipeLineState() { return pipelineState.Get(); }
+	//ルートシグネチャ指定Getter
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 
 public:
+	//SpriteCommonインスタンス
 	static SpriteCommon* GetInstance();
 protected://静的メンバ変数
 	//SRVの最大個数
