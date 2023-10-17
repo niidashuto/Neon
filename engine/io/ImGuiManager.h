@@ -1,6 +1,11 @@
 #pragma once
 #include "DirectXCommon.h"
-//ImGUIの管理
+
+/**
+*ImGuiManager.h
+
+* ImGuiマネージャー
+*/
 class ImGuiManager
 {
 public:

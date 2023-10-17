@@ -3,7 +3,11 @@
 #include "SpriteCommon.h"
 
 
-//スプライト
+/**
+*Sprite.h
+
+* スプライト
+*/
 class Sprite
 {
 public:

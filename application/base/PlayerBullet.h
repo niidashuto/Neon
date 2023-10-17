@@ -3,7 +3,11 @@
 #include "Model.h"
 #include <DirectXMath.h>
 
-//自キャラの弾
+/**
+*PlayerBullet.h
+
+* プレイヤーの弾
+*/
 class PlayerBullet {
 private:
 	// DirectX::を省略

@@ -6,6 +6,11 @@
 #include "Sprite.h"
 #include "Camera.h"
 
+/**
+*GamePlayScene.h
+
+* ゲームプレイシーン
+*/
 class GamePlayScene
 {
 public://メンバ関数

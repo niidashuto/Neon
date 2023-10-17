@@ -3,6 +3,11 @@
 #include <wrl.h>
 #include <d3d12.h>
 
+/**
+*ViewProjection.h
+
+* ビュープロジェクション
+*/
 struct ViewProjection
 {
 private:

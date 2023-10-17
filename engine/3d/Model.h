@@ -8,7 +8,11 @@
 
 using namespace DirectX;
 
-//3Dƒ‚ƒfƒ‹
+/**
+*Model.h
+
+* 3Dƒ‚ƒfƒ‹
+*/
 class Model
 {
 public:

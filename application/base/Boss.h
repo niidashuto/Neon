@@ -8,10 +8,16 @@
 #include <list>
 #include <memory>
 
+
+
 //自機クラスの前方宣言
 class Player;
 
-//敵
+/** 
+*Boss.h
+
+* ボス
+*/
 class Boss {
 private:
 	// DirectX::を省略

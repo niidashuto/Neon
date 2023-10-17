@@ -10,6 +10,11 @@
 #include <DirectXMath.h>
 #include <string>
 
+/**
+*ObjectFBX.h
+
+* FBXオブジェクト
+*/
 class ObjectFBX
 {
 protected://エイリアス

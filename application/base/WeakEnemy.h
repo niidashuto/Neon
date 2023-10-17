@@ -16,7 +16,11 @@ class Player;
 
 class MyGame;
 
-//“G
+/**
+*WeakEnemy.h
+
+* G‹›“G
+*/
 class WeakEnemy {
 private:
 	// DirectX::‚ğÈ—ª

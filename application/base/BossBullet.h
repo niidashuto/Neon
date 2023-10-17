@@ -3,7 +3,11 @@
 #include "Object3d.h"
 #include <DirectXMath.h>
 
-//敵の弾
+/**
+*BossBullet.h
+
+* ボスバレット
+*/
 class BossBullet {
 private:
 	// DirectX::を省略

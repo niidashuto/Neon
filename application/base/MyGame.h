@@ -18,7 +18,11 @@
 #include <sstream>
 #include "Boss.h"
 
+/**
+*MyGame.h
 
+* É}ÉCÉQÅ[ÉÄ
+*/
 class MyGame : public SNFramework
 {
 public:

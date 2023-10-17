@@ -7,7 +7,11 @@
 #include "FbxLoader.h"
 #include "PostEffect.h"
 
+/**
+*SNFramework.h
 
+* 自作フレームワーク
+*/
 class SNFramework
 {
 public://メンバ関数

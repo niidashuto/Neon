@@ -8,9 +8,11 @@
 #include "Model.h"
 #include "Camera.h"
 
-/// <summary>
-/// 3Dオブジェクト
-/// </summary>
+/**
+*Object3d.h
+
+* 3Dオブジェクト
+*/
 class Object3d
 {
 private: // エイリアス

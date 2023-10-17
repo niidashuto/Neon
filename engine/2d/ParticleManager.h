@@ -8,9 +8,11 @@
 #include "Camera.h"
 #include "Particle.h"
 
-/// <summary>
-/// 3Dオブジェクト
-/// </summary>
+/**
+*ParticleManager.h
+
+* パーティクルマネージャー
+*/
 class ParticleManager
 {
 private: // エイリアス

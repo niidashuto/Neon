@@ -5,7 +5,11 @@
 #include <map>
 #include <string>
 
+/**
+*Audio.h
 
+* オーディオ
+*/
 class Audio
 {
 public:

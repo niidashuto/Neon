@@ -211,32 +211,6 @@ void MyGame::Update()
 
 #pragma region 最初のシーンの更新
 
-    
-    /*if (player_->IsBoss())
-    {
-        postEffect->Initialize(spriteCommon, "Warning");
-
-        if (input->Pushkey(DIK_1))
-        {
-            postEffect->Initialize(spriteCommon, "PostEffectTest");
-        }
-    }*/
-    
-    /*if (player_->IsBoss())
-    {
-        color_ += 0.01f;
-
-        sprite->SetColor({ 1,1,1,color_ });
-
-        if (color_ >= 0)
-        {
-            color_ -= 0.02f;
-        }
-
-    }*/
-
-
-
     player_->Update();
     enemy_->Update();
     boss_->Update();
@@ -315,7 +289,7 @@ void MyGame::Draw()
 
     if (player_->IsBoss())
     {
-        boss_->Draw();
+        //boss_->Draw();
     }
     
 

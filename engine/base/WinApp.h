@@ -1,7 +1,11 @@
 #pragma once
 #include <Windows.h>
 
-//WindowsAPI
+/**
+*WinApp.h
+
+* WindowsAPI
+*/
 class WinApp
 {
 public://Ã“Iƒƒ“ƒoŠÖ”

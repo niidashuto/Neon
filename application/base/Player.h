@@ -12,6 +12,11 @@
 #include "SpriteCommon.h"
 #include "Easing.h"
 
+/**
+*Player.h
+
+* ƒvƒŒƒCƒ„[
+*/
 class Player
 {
 private:

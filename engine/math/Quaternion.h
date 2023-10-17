@@ -2,6 +2,11 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 
+/**
+*Quaternion.h
+
+* élå≥êî
+*/
 class Quaternion
 {
 public:

@@ -5,6 +5,11 @@
 #include <wrl.h>
 #include <forward_list>
 
+/**
+*Particle.h
+
+* パーティクル
+*/
 class Particle
 {
 private://エイリアス

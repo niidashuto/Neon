@@ -1,6 +1,11 @@
 #pragma once
 #include "vector3.h"
 
+/**
+*Matrix4.h
+
+* ”z—ñ
+*/
 struct Matrix4
 {
 	float m[4][4];
