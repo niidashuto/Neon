@@ -30,7 +30,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* warning);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning, Sprite* white,Sprite* gameover);
 	//リセット処理
 	void Reset();
 
@@ -80,6 +80,10 @@ private:
 
 	Sprite* warning_ = nullptr;
 
+	Sprite* fadeIn_white = nullptr;
+
+	Sprite* gameover_ = nullptr;
+
 	//インプット
 	Input* input_ = nullptr;
 
@@ -97,16 +101,18 @@ private:
 	XMFLOAT3 angle;
 
 	//死亡フラグとライフ
-	bool isDead_ = false;
-	int life_ = 20;
+	bool dead_ = false;
+	int life_ = 1;
 
-	const float rotLimitZ_ = 30.0f;
-	const float rotLimitX_ = 30.0f;
+	const float kRotLimitZ_ = 30.0f;
+	const float kRotLimitX_ = 30.0f;
 
-	const float moveLimitX_ = 40.0f;
-	const float moveLimitY_ = 40.0f;
+	const float kMoveLimitX_ = 40.0f;
+	const float kMoveLimitY_ = 40.0f;
 
 	bool start_ = false;
+
+	bool game_start_ = false;
 
 	bool boss_ = false;
 
@@ -116,15 +122,38 @@ private:
 
 	bool transition_ = false;
 
+	bool transition_2_ = false;
+
 	bool fadeIn_ = false;
 
-	float warningTimer_ = 60.0f * 2;
+	bool fadeInWhite_ = false;
 
-	float warningColor;
+	bool game_start_rot_ = false;
+
+	bool game_over_ = false;
+
+	bool player_extinction_ = false;
+
+	float warning_timer = 60.0f * 2;
+
+	float fadein_timer = 60.0f * 2;
+
+	float game_over_timer = 60.0f * 2;
+
+	float extinction_timer = 10.0f;
+
+	float warning_color;
+
+	float fadein_color;
+
+	float gameover_color;
 
 public: //アクセッサ、インライン関数
-	bool IsDead() const { return isDead_; }
+	bool IsDead() const { return dead_; }
 	bool IsBoss() const { return boss_; }
 	bool IsHit()const { return hit_; }
 	bool IsFadeIn()const { return fadeIn_; }
+	bool IsPlayerExtinction()const { return player_extinction_; }
+
+	bool IsFadeInWhite()const { return fadeInWhite_; }
 };

@@ -67,6 +67,14 @@ void MyGame::Initialize()
     sprite->Initialize(spriteCommon, 0);
     //sprite->SetColor({ 1,1,1,color_ });
 
+    sprite3 = new Sprite();
+    sprite3->SetTextureIndex(2),
+    sprite3->Initialize(spriteCommon, 2);
+
+    sprite4 = new Sprite();
+    sprite4->SetTextureIndex(3),
+    sprite4->Initialize(spriteCommon, 3);
+
     //sprite2 = new Sprite();
     //sprite2->SetTextureIndex(0);
     //sprite2->Initialize(spriteCommon, 0);
@@ -161,7 +169,7 @@ void MyGame::Initialize()
     //camera_->SetEye({ 0,0,0 });
     //object1->PlayAnimation();
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_,sprite);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_,sprite,sprite3,sprite4);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
 
@@ -232,12 +240,20 @@ void MyGame::Update()
 
     WeakEnemyBullets_.remove_if(
         [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
+
+    if (player_->IsPlayerExtinction())
+    {
+        pm1_->ActiveZ(particle1_, { object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
+        
+    }
     
 
     CheckAllCollisions();
 
     camera_->Update();
     sprite->Update();
+    sprite3->Update();
+    sprite4->Update();
 
     //sprite2->Update();
 
@@ -284,7 +300,10 @@ void MyGame::Draw()
     player_->Draw();
     if (player_->IsFadeIn() == true)
     {
-        enemy_->Draw();
+        if (player_->IsFadeInWhite() == false)
+        {
+            enemy_->Draw();
+        }
     }
 
     if (player_->IsBoss())
@@ -300,7 +319,9 @@ void MyGame::Draw()
     }
 
     for (std::unique_ptr<WeakEnemyBullet>& bullet : WeakEnemyBullets_) {
-        bullet->Draw();
+        
+            bullet->Draw();
+        
     }
    
 
@@ -318,7 +339,9 @@ void MyGame::Draw()
 
     sprite->Draw();
 
-    
+    sprite3->Draw();
+
+    sprite4->Draw();
 
 
     //sprite->Draw();
@@ -414,6 +437,7 @@ void MyGame::CheckAllCollisions()
         posAC.z = (posC.z - posA.z) * (posC.z - posA.z);
         radiusAC = (radiusA + radiusC) * (radiusA + radiusC);
 
+
         //球と球の交差判定
         if (radiusAC >= (posAC.x + posAC.y + posAC.z)) {
             //自キャラの衝突時コールバック関数を呼び出す
@@ -421,8 +445,6 @@ void MyGame::CheckAllCollisions()
             //敵弾の衝突時コールバック関数を呼び出す
             weakbullet->OnCollision();
             
-            
-
             
         }
     }
@@ -533,7 +555,7 @@ void MyGame::CheckAllCollisions()
             bullet->OnCollision();
 
             pm1_->ActiveZ(particle1_, { object3DBoss_->GetPosition() }, { 0.0f ,0.0f,100.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 50.0f, 0.0f });
-
+            
         }
     }
 

@@ -11,7 +11,7 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning,Sprite* white,Sprite* gameover) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -20,6 +20,8 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	camera_ = camera;
 	obj_ = obj;
 	warning_ = warning;
+	fadeIn_white = white;
+	gameover_ = gameover;
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -36,15 +38,19 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	pos = { 0.0f,20.0f,-60.0f };
 	obj_->SetPosition(pos);
 
-	warning_->SetColor({ 1,1,1,warningColor });
+	warning_->SetColor({ 1,1,1,warning_color });
+
+	fadeIn_white->SetColor({ 1,1,1,fadein_color });
+
+	gameover_->SetColor({ 1,1,1,gameover_color });
 
 }
 
 void Player::Reset() {
-	pos = { 0.0f, -5.0f, -60.0f };
+	//pos = { 0.0f, -5.0f, -60.0f };
 
 	life_ = 5;
-	isDead_ = false;
+	dead_ = false;
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Reset();
@@ -52,7 +58,7 @@ void Player::Reset() {
 }
 void Player::Update() {
 
-	if (!isDead_) {
+	if (!dead_) {
 		//死亡フラグの立った弾を削除
 		bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 
@@ -75,9 +81,9 @@ void Player::Update() {
 }
 
 void Player::Draw() {
-	if (!isDead_) {
+	if (!dead_) {
 		obj_->Draw();
-		//ImGui::InputInt("HP", &life_);
+		
 
 		//弾描画
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
@@ -92,12 +98,14 @@ void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
 	XMFLOAT3 rot = obj_->GetRotation();
+	XMFLOAT3 scale = obj_->GetScale();
 	float moveSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
 	if (start_ == true)
 	{
 		move.z-=1.0f;
+		
 		if (move.z <= -3500.0f)
 		{
 			boss_ = true;
@@ -108,6 +116,25 @@ void Player::Move() {
 		
 	}
 
+	game_start_ = true;
+	if (move.z <= -650.0f && !game_start_rot_)
+	{
+		//move.y = 55.0f;
+		//move.x = -35.0f;
+		game_start_rot_ = true;
+
+	}
+	if (game_start_rot_)
+	{
+		//move.y -= 0.5f;
+		//move.x += 0.5f;
+		if (move.x >= 0 && move.y <= 20.0f)
+		{
+			game_start_ = false;
+			//game_start_rot_ = false;
+
+		}
+	}
 	
 	
 
@@ -140,16 +167,86 @@ void Player::Move() {
 		transition_ = true;
 		
 	}
-	if (warningColor >= 1.0f)
+	if (input_->Pushkey(DIK_2))
+	{
+		//rot.y -= 1.0f;
+		scale.z -= 0.5f;
+		scale.x -= 0.5f;
+		scale.y += 0.5f;
+		if (scale.z <= 0)
+		{
+			scale.z = max(scale.z, 0);
+			scale.z = min(scale.z, 0);
+
+			scale.x = max(scale.x, 0);
+			scale.x = min(scale.x, 0);
+
+			scale.y = max(scale.y, 10);
+			scale.y = min(scale.y, 10);
+		}
+		transition_2_ = true;
+	}
+
+	if (input_->Pushkey(DIK_3))
+	{
+		//rot.y += 1.0f;
+		scale.z += 0.5f;
+		scale.x += 0.5f;
+		scale.y -= 0.5f;
+
+		
+			scale.z = max(scale.z, 0);
+			scale.z = min(scale.z, 10);
+
+			scale.x = max(scale.x, 0);
+			scale.x = min(scale.x, 10);
+
+			scale.y = max(scale.y, 20);
+			scale.y = min(scale.y, 10);
+		
+		//transition_2_ = true;
+	}
+	if (warning_color >= 1.0f)
 	{
 		fadeIn_ = true;
 		
 	}
 
+	if (fadein_color >= 1.0f)
+	{
+		fadeInWhite_ = true;
+
+	}
+
+	if (fadeInWhite_)
+	{
+		fadein_timer -= 1.0f;
+		if (fadein_timer <= 0.0f)
+		{
+			transition_2_ = false;
+			move.z = -680.0f;
+			camera_->SetTarget({ 0,0,0.0f });
+			camera_->SetEye({ 0,0,8.0f });
+			camera_->SetUp({ 0,20,0 });
+			camera_->CameraMoveVector({ 0,20,-620 });
+			//rot.y = 0;
+			
+
+		}
+		fadein_color -= 0.02f;
+		fadeIn_white->SetColor({ 1,1,1,fadein_color });
+		if (fadein_color <= 0)
+		{
+			fadein_timer = 60.0f * 3;
+
+		}
+
+	}
+
 	if (fadeIn_)
 	{
-		warningTimer_ -= 1.0f;
-		if (warningTimer_ <= 0.0f)
+		warning_timer -= 1.0f;
+		if (warning_timer <= 0.0f)
 		{
 			transition_ = false;
 			camera_->SetTarget({ 0,0,0 });
@@ -160,11 +257,11 @@ void Player::Move() {
 			
 
 		}
-		warningColor -= 0.02f;
-		warning_->SetColor({ 1,1,1,warningColor });
-		if (warningColor <= 0)
+		warning_color -= 0.02f;
+		warning_->SetColor({ 1,1,1,warning_color });
+		if (warning_color <= 0)
 		{
-			warningTimer_ = 60.0f * 3;
+			warning_timer = 60.0f * 3;
 
 		}
 		
@@ -178,9 +275,42 @@ void Player::Move() {
 
 	}
 
+	if (game_over_)
+	{
+		game_over_timer -= 1.0f;
+		if (game_over_timer <= 0)
+		{
+			rot.y += 5.0f;
+			scale.x -= 0.1f;
+			scale.y -= 0.1f;
+			scale.z -= 0.1f;
+			if (scale.x <= 0)
+			{
+				extinction_timer -= 1.0f;
+				scale.x += 0.1f;
+				scale.y += 0.1f;
+				scale.z += 0.1f;
+				player_extinction_ = true;
+				if (extinction_timer <= 0)
+				{
+					player_extinction_ = false;
+					gameover_color += 0.02f;
+					gameover_->SetColor({ 1,1,1,gameover_color });
+					
+				}
+				
+			}
+		}
+	}
+
 	if (transition_) {
-		warningColor += 0.02f;
-		warning_->SetColor({ 1,1,1,warningColor });
+		warning_color += 0.02f;
+		warning_->SetColor({ 1,1,1,warning_color });
+	}
+
+	if (transition_2_) {
+		fadein_color += 0.02f;
+		fadeIn_white->SetColor({ 1,1,1,fadein_color });
 	}
 
 	//自機の回転(Z軸)
@@ -210,22 +340,24 @@ void Player::Move() {
 	}
 
 	//回転制限
-	rot.z = max(rot.z, -rotLimitZ_);
-	rot.z = min(rot.z, +rotLimitZ_);
+	
+	rot.z = max(rot.z, -kRotLimitZ_);
+	rot.z = min(rot.z, +kRotLimitZ_);
 
-	rot.x = max(rot.x, -rotLimitX_);
-	rot.x = min(rot.x, +rotLimitX_);
+	rot.x = max(rot.x, -kRotLimitX_);
+	rot.x = min(rot.x, +kRotLimitX_);
 
 	//移動制限
-	move.x = max(move.x, -moveLimitX_);
-	move.x = min(move.x, +moveLimitX_);
+	move.x = max(move.x, -kMoveLimitX_);
+	move.x = min(move.x, +kMoveLimitX_);
 
 	move.y = max(move.y, 0.0f);
-	move.y = min(move.y, +moveLimitY_);
+	move.y = min(move.y, +kMoveLimitY_);
+	
 
 	obj_->SetPosition(move);
 	obj_->SetRotation(rot);
-
+	obj_->SetScale(scale);
 }
 
 void Player::CameraMove()
@@ -260,8 +392,8 @@ void Player::CameraMove()
 	}
 	if (input_->Pushkey(DIK_DOWN)) {
 		//move.y -= moveSpeed;
-		cmove.y -= moveSpeed;
-		tmove.y -= moveSpeed;
+		cmove.z+= moveSpeed;
+		tmove.z+= moveSpeed;
 	}
 
 	
@@ -360,6 +492,9 @@ void Player::OnCollision() {
 	//easing_.easeIn();
 	
 	if (life_ <= 0) {
-		isDead_ = true;
+		game_over_ = true;
+		start_ = false;
+		
+		//dead_ = true;
 	}
 }

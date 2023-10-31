@@ -78,6 +78,10 @@ private:
 
 	Sprite* sprite2 = nullptr;
 
+	Sprite* sprite3 = nullptr;
+
+	Sprite* sprite4 = nullptr;
+
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;
 	Model* modelRail_ = nullptr;

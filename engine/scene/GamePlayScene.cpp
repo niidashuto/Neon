@@ -14,6 +14,10 @@ void GamePlayScene::Initialize()
 
     spriteCommon_->LoadTexture(0, "warning.png");
 
+    spriteCommon_->LoadTexture(2, "white1280x720.png");
+
+    spriteCommon_->LoadTexture(3, "gameover.png");
+
     //ParticleManager::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
 
     ////âπê∫ì«Ç›çûÇ›
