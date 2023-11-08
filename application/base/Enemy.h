@@ -8,6 +8,7 @@
 #include <list>
 #include <memory>
 
+
 //自機クラスの前方宣言
 class Player;
 

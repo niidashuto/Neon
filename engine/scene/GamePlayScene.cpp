@@ -18,6 +18,10 @@ void GamePlayScene::Initialize()
 
     spriteCommon_->LoadTexture(3, "gameover.png");
 
+    spriteCommon_->LoadTexture(4, "gameclear.png");
+
+    spriteCommon_->LoadTexture(5, "RankS.png");
+
     //ParticleManager::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
 
     ////âπê∫ì«Ç›çûÇ›

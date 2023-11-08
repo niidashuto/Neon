@@ -13,13 +13,14 @@ Boss::~Boss() {
 }
 
 // 初期化
-void Boss::Initialize(Model* model, Object3d* obj, Camera* camera) {
+void Boss::Initialize(Model* model, Object3d* obj, Camera* camera, Sprite* gameclear) {
 	// NULLポインタチェック
 	assert(model);
 
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
+	gameclear_ = gameclear;
 
 	modelBullet_ = Model::LoadFromOBJ("bossbullet");
 	objBullet_ = Object3d::Create();
@@ -33,6 +34,8 @@ void Boss::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 10.0f;					//全体時間
 	timeRate;
+
+	gameclear_->SetColor({ 1,1,1,gamecler_color });
 }
 
 //パラメータ
@@ -95,6 +98,16 @@ void Boss::Update() {
 		UpdateLeave();
 		break;
 
+	}
+
+	if (game_clear_)
+	{
+		game_clear_timer -= 1.0f;
+		if (game_clear_timer <= 0)
+		{
+			gamecler_color += 0.02f;
+			gameclear_->SetColor({ 1,1,1,gamecler_color });
+		}
 	}
 
 	//行列更新
@@ -233,6 +246,7 @@ void Boss::UpdateAttackStage1() {
 	if (isDead_)
 	{
 		phase_ = Phase::Leave;
+		game_clear_ = true;
 	}
 }
 

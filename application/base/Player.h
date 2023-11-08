@@ -30,7 +30,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning, Sprite* white,Sprite* gameover);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning, Sprite* white,Sprite* gameover,Sprite* gameclear);
 	//リセット処理
 	void Reset();
 
@@ -84,6 +84,8 @@ private:
 
 	Sprite* gameover_ = nullptr;
 
+	Sprite* gameclear_ = nullptr;
+
 	//インプット
 	Input* input_ = nullptr;
 
@@ -102,7 +104,7 @@ private:
 
 	//死亡フラグとライフ
 	bool dead_ = false;
-	int life_ = 1;
+	int life_ = 50;
 
 	const float kRotLimitZ_ = 30.0f;
 	const float kRotLimitX_ = 30.0f;
@@ -132,6 +134,8 @@ private:
 
 	bool game_over_ = false;
 
+	bool game_clear_ = false;
+
 	bool player_extinction_ = false;
 
 	float warning_timer = 60.0f * 2;
@@ -140,13 +144,19 @@ private:
 
 	float game_over_timer = 60.0f * 2;
 
+	float game_clear_timer = 60.0f * 2;
+
 	float extinction_timer = 10.0f;
+
+	float start_wait_timer = 60.0f * 2;
 
 	float warning_color;
 
 	float fadein_color;
 
 	float gameover_color;
+
+	float gamecler_color;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return dead_; }

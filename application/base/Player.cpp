@@ -11,7 +11,7 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning,Sprite* white,Sprite* gameover) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning,Sprite* white,Sprite* gameover, Sprite* gameclear) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -22,6 +22,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	warning_ = warning;
 	fadeIn_white = white;
 	gameover_ = gameover;
+	gameclear_ = gameclear;
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -43,6 +44,8 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	fadeIn_white->SetColor({ 1,1,1,fadein_color });
 
 	gameover_->SetColor({ 1,1,1,gameover_color });
+
+	gameclear_->SetColor({ 1,1,1,gamecler_color });
 
 }
 
@@ -104,7 +107,7 @@ void Player::Move() {
 
 	if (start_ == true)
 	{
-		move.z-=1.0f;
+		move.z-=3.0f;
 		
 		if (move.z <= -3500.0f)
 		{
@@ -167,25 +170,15 @@ void Player::Move() {
 		transition_ = true;
 		
 	}
+	
+	//start_wait_timer -= 1.0f;
 	if (input_->Pushkey(DIK_2))
 	{
 		//rot.y -= 1.0f;
-		scale.z -= 0.5f;
-		scale.x -= 0.5f;
-		scale.y += 0.5f;
-		if (scale.z <= 0)
-		{
-			scale.z = max(scale.z, 0);
-			scale.z = min(scale.z, 0);
-
-			scale.x = max(scale.x, 0);
-			scale.x = min(scale.x, 0);
-
-			scale.y = max(scale.y, 10);
-			scale.y = min(scale.y, 10);
-		}
+		
 		transition_2_ = true;
 	}
+	
 
 	if (input_->Pushkey(DIK_3))
 	{
@@ -303,12 +296,36 @@ void Player::Move() {
 		}
 	}
 
+	if (game_clear_)
+	{
+		game_clear_timer -= 1.0f;
+		if (game_clear_timer <= 0)
+		{
+			gamecler_color += 0.02f;
+			gameclear_->SetColor({ 1,1,1,gamecler_color });
+		}
+	}
+
 	if (transition_) {
 		warning_color += 0.02f;
 		warning_->SetColor({ 1,1,1,warning_color });
 	}
 
 	if (transition_2_) {
+		scale.z -= 0.5f;
+		scale.x -= 0.5f;
+		scale.y += 0.5f;
+		if (scale.z <= 0)
+		{
+			scale.z = max(scale.z, 0);
+			scale.z = min(scale.z, 0);
+
+			scale.x = max(scale.x, 0);
+			scale.x = min(scale.x, 0);
+
+			scale.y = max(scale.y, 10);
+			scale.y = min(scale.y, 10);
+		}
 		fadein_color += 0.02f;
 		fadeIn_white->SetColor({ 1,1,1,fadein_color });
 	}
@@ -369,8 +386,8 @@ void Player::CameraMove()
 	
 	if (start_ == true)
 	{
-		cmove.z-=1.0f;
-		tmove.z-=1.0f;
+		cmove.z-=3.0f;
+		tmove.z-=3.0f;
 	}
 	
 	//キーボード入力による移動処理
@@ -486,10 +503,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision() {
 	life_--;
 
-	//camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
-	//camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
-	//camera_->Update();
-	//easing_.easeIn();
+	
 	
 	if (life_ <= 0) {
 		game_over_ = true;

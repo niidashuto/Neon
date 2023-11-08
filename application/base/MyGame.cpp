@@ -65,7 +65,6 @@ void MyGame::Initialize()
     sprite = new Sprite();
     sprite->SetTextureIndex(0),
     sprite->Initialize(spriteCommon, 0);
-    //sprite->SetColor({ 1,1,1,color_ });
 
     sprite3 = new Sprite();
     sprite3->SetTextureIndex(2),
@@ -75,11 +74,10 @@ void MyGame::Initialize()
     sprite4->SetTextureIndex(3),
     sprite4->Initialize(spriteCommon, 3);
 
-    //sprite2 = new Sprite();
-    //sprite2->SetTextureIndex(0);
-    //sprite2->Initialize(spriteCommon, 0);
+    sprite5 = new Sprite();
+    sprite5->SetTextureIndex(4),
+    sprite5->Initialize(spriteCommon, 4);
 
-    //sprite2->SetPosition({ 800,0 });
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
     modelPlayer_ = Model::LoadFromOBJ("player");
@@ -169,11 +167,11 @@ void MyGame::Initialize()
     //camera_->SetEye({ 0,0,0 });
     //object1->PlayAnimation();
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_,sprite,sprite3,sprite4);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input, camera_,sprite,sprite3,sprite4,sprite5);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
 
-    boss_->Initialize(modelBoss_, object3DBoss_, camera_);
+    boss_->Initialize(modelBoss_, object3DBoss_, camera_, sprite5);
     boss_->SetPlayer(player_);
    
     LoadPopEnemyData();
@@ -254,8 +252,7 @@ void MyGame::Update()
     sprite->Update();
     sprite3->Update();
     sprite4->Update();
-
-    //sprite2->Update();
+    sprite5->Update();
 
     postEffect->Update();
 
@@ -289,7 +286,10 @@ void MyGame::Draw()
     
 
     Object3d::PreDraw(dxCommon->GetCommandList());
-    object3d_1->Draw();
+    if (!player_->IsFadeInWhite())
+    {
+        object3d_1->Draw();
+    }
     object3d_2->Draw();
     object3DRail_->Draw();
     if (player_->IsFadeIn()==false)
@@ -302,13 +302,14 @@ void MyGame::Draw()
     {
         if (player_->IsFadeInWhite() == false)
         {
+            
             enemy_->Draw();
         }
     }
 
     if (player_->IsBoss())
     {
-        //boss_->Draw();
+        boss_->Draw();
     }
     
 
@@ -343,8 +344,7 @@ void MyGame::Draw()
 
     sprite4->Draw();
 
-
-    //sprite->Draw();
+    sprite5->Draw();
 
     spriteCommon->PostDraw();
 

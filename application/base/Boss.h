@@ -7,6 +7,8 @@
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
+#include "Player.h"
+#include "SpriteCommon.h"
 
 
 
@@ -31,7 +33,7 @@ public:
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 50;
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Camera* camera);
+	void Initialize(Model* model, Object3d* obj, Camera* camera, Sprite* gameclear);
 
 	//リセット処理
 	void Reset();
@@ -80,6 +82,10 @@ private:
 	//カメラ
 	Camera* camera_ = nullptr;
 
+	Sprite* gameclear_ = nullptr;
+
+	//Sprite* sprite_ = nullptr;
+
 	//行動フェーズ
 	enum class Phase {
 		//ここからステージ1
@@ -120,7 +126,13 @@ private:
 	bool isDead_;
 	int life_;
 
+	bool game_clear_ = false;
+
 	int deathTimer_ = 60 * 5;
+
+	float game_clear_timer = 60.0f * 2;
+	float clear_color_;
+	float gamecler_color;
 
 	//反転フラグ
 	bool isReverse_ = false;
