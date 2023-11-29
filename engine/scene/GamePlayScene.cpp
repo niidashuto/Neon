@@ -458,7 +458,7 @@ void GamePlayScene::CheckAllCollisions()
             //自機弾の衝突時コールバック関数を呼び出す
             bullet->OnCollision();
 
-            //pm1_->ActiveZ(particle1_, { object3DEnemy_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
+            pm1_->ActiveZ(particle1_, { object3DEnemy_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
 
         }
     }
@@ -489,7 +489,7 @@ void GamePlayScene::CheckAllCollisions()
                 //自機弾の衝突時コールバック関数を呼び出す
                 bullet->OnCollision();
 
-                //pm1_->ActiveZ(particle1_, { weakEnemy_->GetWorldPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 10.0f, 0.0f });
+                pm1_->ActiveZ(particle1_, { weakEnemy_->GetWorldPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 10.0f, 0.0f });
             }
         }
     }
@@ -513,7 +513,7 @@ void GamePlayScene::CheckAllCollisions()
             //自機弾の衝突時コールバック関数を呼び出す
             bullet->OnCollision();
 
-            //pm1_->ActiveZ(particle1_, { object3DBoss_->GetPosition() }, { 0.0f ,0.0f,100.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 50.0f, 0.0f });
+            pm1_->ActiveZ(particle1_, { object3DBoss_->GetPosition() }, { 0.0f ,0.0f,100.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 50.0f, 0.0f });
 
         }
     }
