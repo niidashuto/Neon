@@ -17,6 +17,7 @@
 #include "WeakEnemy.h"
 #include <sstream>
 #include "Boss.h"
+#include "TitleScene.h"
 
 /**
 *MyGame.h
@@ -39,18 +40,18 @@ public:
 	void Draw() override;
 
 	//“–‚½‚è”»’è
-	void CheckAllCollisions();
+	//void CheckAllCollisions();
 	//ƒGƒlƒ~[‚Ì’e‚ğ’Ç‰Á
-	void AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
+	//void AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBullet);
 	//G‹›“G‚ÌˆÊ’u
-	void WeakEnemy_(XMFLOAT3 trans);
+	//void WeakEnemy_(XMFLOAT3 trans);
 	//G‹›“G¶¬ƒf[ƒ^
-	void LoadPopEnemyData();
+	//void LoadPopEnemyData();
 	//G‹›“G¶¬
-	void UpdateEnemyPopCommands();
+	//void UpdateEnemyPopCommands();
 
 	
-	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
+	//const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
 	
 
 	
@@ -70,7 +71,7 @@ private:
 
 	//float color_ = 0.5f;
 
-	ImGuiManager* imGui = nullptr;
+	//ImGuiManager* imGui = nullptr;
 
 	
 
@@ -116,6 +117,8 @@ private:
 	PostEffect* postEffect = nullptr;
 
 	GamePlayScene* scene_ = nullptr;
+
+	TitleScene* titleScene_ = nullptr;
 
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;

@@ -47,17 +47,12 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 
 	gameclear_->SetColor({ 1,1,1,gamecler_color });
 
+	Reset();
+
 }
 
 void Player::Reset() {
-	//pos = { 0.0f, -5.0f, -60.0f };
-
-	life_ = 5;
-	dead_ = false;
-	//弾リセット
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Reset();
-	}
+	
 }
 void Player::Update() {
 
@@ -107,7 +102,7 @@ void Player::Move() {
 
 	if (start_ == true)
 	{
-		move.z-=3.0f;
+		move.z-=2.0f;
 		
 		if (move.z <= -3500.0f)
 		{
@@ -164,7 +159,7 @@ void Player::Move() {
 		start_ = true;
 	}
 
-	if (input_->Pushkey(DIK_RETURN))
+	if (input_->Pushkey(DIK_RETURN)&&!game_clear_)
 	{
 		title_ = false;
 		transition_ = true;
@@ -188,14 +183,14 @@ void Player::Move() {
 		scale.y -= 0.5f;
 
 		
-			scale.z = max(scale.z, 0);
-			scale.z = min(scale.z, 10);
+		scale.z = max(scale.z, 0);
+		scale.z = min(scale.z, 10);
 
-			scale.x = max(scale.x, 0);
-			scale.x = min(scale.x, 10);
+		scale.x = max(scale.x, 0);
+		scale.x = min(scale.x, 10);
 
-			scale.y = max(scale.y, 20);
-			scale.y = min(scale.y, 10);
+		scale.y = max(scale.y, 20);
+		scale.y = min(scale.y, 10);
 		
 		//transition_2_ = true;
 	}
@@ -303,7 +298,12 @@ void Player::Move() {
 		{
 			gamecler_color += 0.02f;
 			gameclear_->SetColor({ 1,1,1,gamecler_color });
+			if (gamecler_color >= 1.0f)
+			{
+				game_clear_ = false;
+			}
 		}
+		
 	}
 
 	if (transition_) {
@@ -386,8 +386,8 @@ void Player::CameraMove()
 	
 	if (start_ == true)
 	{
-		cmove.z-=3.0f;
-		tmove.z-=3.0f;
+		cmove.z-=2.0f;
+		tmove.z-=2.0f;
 	}
 	
 	//キーボード入力による移動処理
@@ -426,7 +426,7 @@ void Player::Attack() {
 	
 		if (input_->TriggerKey(DIK_SPACE)&&!title_) {
 			//弾の速度
-			const float kBulletSpeed = 2.0f;
+			const float kBulletSpeed = 4.0f;
 			XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);
 
 

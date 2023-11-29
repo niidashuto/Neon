@@ -189,6 +189,9 @@
     <ClCompile Include="MyMath.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="application\scene\TitleScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -373,6 +376,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="engine\math\MyMath.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scene\TitleScene.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

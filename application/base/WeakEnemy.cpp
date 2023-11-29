@@ -1,12 +1,12 @@
 #include "WeakEnemy.h"
 #include <cassert>
 #include "MyGame.h"
-
+#include "GamePlayScene.h"
 #include "Player.h"
 
 using namespace DirectX;
 
-MyGame* WeakEnemy::myGame_ = nullptr;
+GamePlayScene* WeakEnemy::gamePlayScene_ = nullptr;
 Player* WeakEnemy::player_ = nullptr;
 
 WeakEnemy::~WeakEnemy() {
@@ -168,7 +168,7 @@ void WeakEnemy::Fire() {
 	newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 	//’e‚ð“o˜^
-	myGame_->AddEnemyBullet(std::move(newBullet));
+	gamePlayScene_->AddEnemyBullet(std::move(newBullet));
 	
 	
 }
@@ -209,6 +209,7 @@ void WeakEnemy::UpdateApproach() {
 	if (pos.z < 30.0f) {
 		phase_ = Phase::AttackStage1;
 	}
+
 }
 //UŒ‚
 void WeakEnemy::UpdateAttack() {

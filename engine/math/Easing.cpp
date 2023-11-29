@@ -52,3 +52,13 @@ float Easing::easeIn(float time, float startpos, float differencepos, float tota
 
 	return num_Y;
 }
+
+const float Lerp(const float start, const float end, const float time)
+{
+	return start * (1.0f - time) + end * time;
+}
+
+const Vector3 Lerp3D(const Vector3& start, const Vector3& end, const float time)
+{
+	return start * (1.0f - time) + end * time;
+}

@@ -179,6 +179,7 @@
     <ClCompile Include="application\base\PlayerBullet.cpp" />
     <ClCompile Include="application\base\WeakEnemy.cpp" />
     <ClCompile Include="application\base\WeakEnemyBullet.cpp" />
+    <ClCompile Include="application\scene\TitleScene.cpp" />
     <ClCompile Include="engine\2d\PostEffect.cpp" />
     <ClCompile Include="engine\3d\JsonLoader.cpp" />
     <ClCompile Include="engine\audio\Audio.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="application\base\PlayerBullet.h" />
     <ClInclude Include="application\base\WeakEnemy.h" />
     <ClInclude Include="application\base\WeakEnemyBullet.h" />
+    <ClInclude Include="application\scene\TitleScene.h" />
     <ClInclude Include="engine\2d\PostEffect.h" />
     <ClInclude Include="engine\3d\json.hpp" />
     <ClInclude Include="engine\3d\JsonLoader.h" />

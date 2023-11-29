@@ -16,6 +16,8 @@ class Player;
 
 class MyGame;
 
+class GamePlayScene;
+
 /**
 *WeakEnemy.h
 
@@ -88,7 +90,7 @@ private:
 	Easing easing_ = { 80.0f,20.0f,1.0f};
 	
 
-	static MyGame* myGame_;
+	static GamePlayScene* gamePlayScene_;
 
 	//行動フェーズ
 	enum class Phase {
@@ -143,6 +145,6 @@ public:
 	bool IsDead() const { return isDead_; }
 	static void SetPlayer(Player* player) { player_ = player; }
 
-	static void SetMyGame(MyGame* myGame) { myGame_ = myGame; }
+	static void SetGamePlayScene(GamePlayScene* gamePlayScene) { gamePlayScene_ = gamePlayScene; }
 };
 

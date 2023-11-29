@@ -6,6 +6,7 @@
 #include "Audio.h"
 #include "FbxLoader.h"
 #include "PostEffect.h"
+#include "ImGuiManager.h"
 
 /**
 *SNFramework.h
@@ -48,6 +49,8 @@ protected:
 	Audio* audio = nullptr;
 
 	PostEffect* postEffect = nullptr;
+
+	ImGuiManager* imguiManager = nullptr;
 
 	
 };

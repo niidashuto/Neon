@@ -1,6 +1,7 @@
 #pragma once
 #include "WinApp.h"
 #include <chrono>
+#include "Vector3.h"
 
 class Easing
 {
@@ -16,6 +17,10 @@ public:
 	void Standby() { startCount = std::chrono::steady_clock::now(); }
 
 	float easeIn(float time, float startpos, float differencepos, float totalTime);
+
+	// •âŠÔ
+	const float Lerp(const float start, const float end, const float time);
+	const Vector3 Lerp3D(const Vector3& start, const Vector3& end, const float time);
 
 public:
 	// ŽžŠÔŒv‘ª

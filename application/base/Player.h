@@ -164,6 +164,7 @@ public: //アクセッサ、インライン関数
 	bool IsHit()const { return hit_; }
 	bool IsFadeIn()const { return fadeIn_; }
 	bool IsPlayerExtinction()const { return player_extinction_; }
+	bool IsGameClear()const { return game_clear_; }
 
 	bool IsFadeInWhite()const { return fadeInWhite_; }
 };

@@ -22,6 +22,8 @@ void SNFramework::Initialize()
 
 	audio = Audio::GetInstance();
 
+	imguiManager = ImGuiManager::GetInstance();
+
 	winApp->Initialize();
 
 	dxCommon->Initialize(winApp);
@@ -31,6 +33,8 @@ void SNFramework::Initialize()
 	input->Initialize(winApp);
 
 	audio->Initialize();
+
+	imguiManager->Initialize(winApp,dxCommon);
 
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
@@ -46,6 +50,10 @@ void SNFramework::Update()
 {
 
 	input->Update();
+	imguiManager->Begin();
+
+
+	imguiManager->End();
 }
 
 void SNFramework::Finalize()
@@ -55,6 +63,8 @@ void SNFramework::Finalize()
 	audio->Finalize();
 	
 	FbxLoader::GetInstance()->Finalize();
+
+	imguiManager->Finalize();
 
 	winApp->Finalize();
 	

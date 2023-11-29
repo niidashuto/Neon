@@ -19,6 +19,8 @@ public:
 	void End();
 	//描画
 	void Draw();
+
+	static ImGuiManager* GetInstance();
 private:
 	//SRV用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
