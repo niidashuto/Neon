@@ -12,21 +12,22 @@
 #include "ObjectFBX.h"
 #include "ImGuiManager.h"
 #include "FbxLoader.h"
+#include "SceneManager.h"
 
-class TitleScene {
+class TitleScene :public BaseScene {
 public://メンバ関数
 
 	//初期化
-	void Initialize();
+	void Initialize()override;
 
 	//終了
-	void Finalize();
+	void Finalize()override;
 
 	//毎フレーム処理
-	void Update();
+	void Update()override;
 
 	//描画
-	void Draw();
+	void Draw()override;
 
 	void CheckAllCollisions();
 
@@ -52,8 +53,6 @@ private:
 
 	ImGuiManager* imGui = nullptr;
 
-
-
 	Sprite* sprite = nullptr;
 
 
@@ -66,9 +65,9 @@ private:
 
 	Camera* camera_ = nullptr;
 
-	GamePlayScene* scene_ = nullptr;
+	//GamePlayScene* scene_ = nullptr;
 
 	//ObjectFBX* 
 
-	
+	static SceneManager* sceneManager_;
 };

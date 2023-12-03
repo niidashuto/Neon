@@ -12,27 +12,29 @@
 #include "ObjectFBX.h"
 #include "ImGuiManager.h"
 #include "FbxLoader.h"
+//#include "BaseScene.h"
+#include "SceneManager.h"
 
 /**
 *GamePlayScene.h
 
 * ゲームプレイシーン
 */
-class GamePlayScene
+class GamePlayScene : public BaseScene
 {
 public://メンバ関数
 
 	//初期化
-	void Initialize();
+	void Initialize() override;
 
 	//終了
-	void Finalize();
+	void Finalize() override;
 
 	//毎フレーム処理
-	void Update();
+	void Update() override;
 
 	//描画
-	void Draw();
+	void Draw() override;
 
 	void CheckAllCollisions();
 
@@ -54,6 +56,8 @@ private:
 	static SpriteCommon* spriteCommon_;
 
 	static Input* input_;
+
+	static SceneManager* sceneManager_;
 
 	//弾
 	std::list<std::unique_ptr<WeakEnemyBullet>> WeakEnemyBullets_;

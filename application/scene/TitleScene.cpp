@@ -1,11 +1,13 @@
 #include "TitleScene.h"
-
+#include "GamePlayScene.h"
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 
 SpriteCommon* TitleScene::spriteCommon_ = SpriteCommon::GetInstance();
 
 Input* TitleScene::input_ = Input::GetInstance();
+
+SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 
 void TitleScene::Initialize()
 {
@@ -38,7 +40,13 @@ void TitleScene::Finalize()
 
 void TitleScene::Update()
 {
-   
+   //7キーを押したら
+    if (input_->TriggerKey(DIK_7)) {
+        //ゲームプレイシーン(次シーン)を生成
+        BaseScene* scene = new GamePlayScene();
+        //シーン切り替え依頼
+        sceneManager_->SetNextScene(scene);
+    }
     sprite->Update();
     
 }

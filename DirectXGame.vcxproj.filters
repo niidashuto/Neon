@@ -192,6 +192,12 @@
     <ClCompile Include="application\scene\TitleScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="application\scene\BaseScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="application\scene\SceneManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -379,6 +385,12 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="application\scene\TitleScene.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scene\BaseScene.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scene\SceneManager.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

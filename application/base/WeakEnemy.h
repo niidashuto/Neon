@@ -10,6 +10,8 @@
 #include <sstream>
 #include <Vector3.h>
 #include "Easing.h"
+//#include "GamePlayScene.h"
+//#include "SceneManager.h"
 
 //自機クラスの前方宣言
 class Player;
@@ -90,7 +92,7 @@ private:
 	Easing easing_ = { 80.0f,20.0f,1.0f};
 	
 
-	static GamePlayScene* gamePlayScene_;
+	static GamePlayScene *gamePlayScene_;
 
 	//行動フェーズ
 	enum class Phase {

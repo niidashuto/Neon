@@ -5,6 +5,8 @@ DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 
 SpriteCommon* GamePlayScene::spriteCommon_ = SpriteCommon::GetInstance();
 
+SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
+
 Input* GamePlayScene::input_ = Input::GetInstance();
 
 void GamePlayScene::Initialize()

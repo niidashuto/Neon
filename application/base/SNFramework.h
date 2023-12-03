@@ -7,6 +7,7 @@
 #include "FbxLoader.h"
 #include "PostEffect.h"
 #include "ImGuiManager.h"
+#include "SceneManager.h"
 
 /**
 *SNFramework.h
@@ -51,6 +52,10 @@ protected:
 	PostEffect* postEffect = nullptr;
 
 	ImGuiManager* imguiManager = nullptr;
+
+	//BaseScene* baseScene
+
+	SceneManager* sceneManager = nullptr;
 
 	
 };
