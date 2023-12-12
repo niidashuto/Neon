@@ -68,6 +68,7 @@ void SNFramework::Finalize()
 	audio->Finalize();
 
 	sceneManager->Finalize();
+	delete sceneFactory;
 	
 	FbxLoader::GetInstance()->Finalize();
 

@@ -11,6 +11,7 @@
 #include "PostEffect.h"
 #include "SpriteCommon.h"
 #include "Easing.h"
+#include "Boss.h"
 
 /**
 *Player.h
@@ -30,7 +31,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning, Sprite* white,Sprite* gameover,Sprite* gameclear);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover, Sprite* gameclear);
 	//リセット処理
 	void Reset();
 
@@ -104,7 +105,7 @@ private:
 
 	//死亡フラグとライフ
 	bool dead_ = false;
-	int life_ = 50;
+	int life_ = 1;
 
 	const float kRotLimitZ_ = 30.0f;
 	const float kRotLimitX_ = 30.0f;
@@ -116,7 +117,7 @@ private:
 
 	bool game_start_ = false;
 
-	bool boss_ = false;
+	bool bossStart_ = false;
 
 	bool hit_ = false;
 
@@ -135,6 +136,8 @@ private:
 	bool game_over_ = false;
 
 	bool game_clear_ = false;
+
+	bool clear_change_ = false;
 
 	bool player_extinction_ = false;
 
@@ -160,11 +163,13 @@ private:
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return dead_; }
-	bool IsBoss() const { return boss_; }
+	bool IsBoss() const { return bossStart_; }
 	bool IsHit()const { return hit_; }
 	bool IsFadeIn()const { return fadeIn_; }
 	bool IsPlayerExtinction()const { return player_extinction_; }
 	bool IsGameClear()const { return game_clear_; }
+	bool IsGameOver()const { return game_over_; }
+	bool IsGameClearChange()const { return clear_change_; }
 
 	bool IsFadeInWhite()const { return fadeInWhite_; }
 };

@@ -127,6 +127,7 @@ private:
 	int life_;
 
 	bool game_clear_ = false;
+	bool clearChange_ = false;
 
 	int deathTimer_ = 60 * 5;
 
@@ -139,6 +140,7 @@ private:
 
 public:
 	bool IsDead() const { return isDead_; }
+	bool IsGameClear()const { return clearChange_; }
 	void SetPlayer(Player* player) { player_ = player; }
 };
 

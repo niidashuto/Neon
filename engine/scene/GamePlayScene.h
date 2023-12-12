@@ -47,6 +47,19 @@ public://メンバ関数
 	//雑魚敵生成
 	void UpdateEnemyPopCommands();
 
+	void FadeOut(XMFLOAT3 rgb);
+
+	void FadeIn(XMFLOAT3 rgb);
+
+	void FadeInGameOver(XMFLOAT3 rgb);
+
+	void FadeInWhite(XMFLOAT3 rgb);
+
+	void FadeOutWhite(XMFLOAT3 rgb);
+
+	void UpdateChangeColor();
+
+	//bool IsStart()const { return isStart_; }
 
 	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
 
@@ -66,8 +79,29 @@ private:
 
 	std::stringstream enemyPopCommands;
 
+	XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
+
+	bool isFadeOut_ = false;
+	bool isFadeIn_ = false;
+	bool isFadeInGameOver_ = false;
+	bool isColorReverse_ = true;
+	bool isFadeOutStart_ = true;
 	bool isWait_;
+	bool isEnd_ = false;
+	bool isEndScale_ = false;
+	bool transition_ = false;
+	bool fadeInWhite_ = false;
+	bool fadeInGameOver_ = false;
+	bool fadeOutWhite_ = false;
+	bool scaleSmaller_ = false;
+	bool changeStage_ = false;
+	bool isStart_ = false;
+	bool isLimit_ = false;
 	int waitTimer_;
+
+	float fadein_timer = 60.0f * 2;
+
+	float default_timer = 60.0f * 1;
 
 	//float color_ = 0.5f;
 
@@ -85,10 +119,18 @@ private:
 
 	Sprite* sprite5 = nullptr;
 
+	Sprite* sprite6 = nullptr;
+	Sprite* sprite7 = nullptr;
+	Sprite* sprite8 = nullptr;
+	Sprite* sprite9 = nullptr;
+
+	Sprite* sprite10 = nullptr;
+
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;
 	Model* modelRail_ = nullptr;
 	Model* modelTitle_ = nullptr;
+	Model* modelW_ = nullptr;
 	//3Dオブジェクト生成
 	Object3d* object3d_1 = nullptr;
 	Object3d* object3d_2 = nullptr;
@@ -97,6 +139,7 @@ private:
 	Object3d* object3DEnemy_ = nullptr;
 	Object3d* object3DBoss_ = nullptr;
 	Object3d* object3DTitle_ = nullptr;
+	Object3d* object3DW_ = nullptr;
 
 	//Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
@@ -129,6 +172,16 @@ private:
 
 	Boss* boss_ = nullptr;
 	Model* modelBoss_ = nullptr;
+
+	Easing easeFadeOut_ = Easing(1.0f, 0.0f, 3.0f);
+
+	Easing easeFadeIn_ = Easing(0.0f, 1.0f, 3.0f);
+
+	Easing easeFadeInGameOver_ = Easing(0.0f, 1.0f, 3.0f);
+
+	Easing easeFadeInWhite_ = Easing(0.0f, 1.0f, 3.0f);
+
+	Easing easeFadeOutWhite_ = Easing(1.0f, 0.0f, 3.0f);
 
 };
 

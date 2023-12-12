@@ -8,6 +8,7 @@
 #include "PostEffect.h"
 #include "ImGuiManager.h"
 #include "SceneManager.h"
+#include "AbstractSceneFactory.h"
 
 /**
 *SNFramework.h
@@ -56,6 +57,8 @@ protected:
 	//BaseScene* baseScene
 
 	SceneManager* sceneManager = nullptr;
+
+	AbstractSceneFactory* sceneFactory = nullptr;
 
 	
 };

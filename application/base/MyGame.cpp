@@ -13,9 +13,12 @@ void MyGame::Initialize()
 
     SNFramework::Initialize();
 
-    BaseScene* scene = new TitleScene();
+    //BaseScene* scene = new TitleScene();
+    sceneFactory = new SceneFactory();
+    SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
 
-    sceneManager->SetNextScene(scene);
+    //sceneManager->SetNextScene(scene);
+    SceneManager::GetInstance()->ChangeScene("TITLE");
 
     //scene_ = new GamePlayScene();
     //titleScene_ = new TitleScene();

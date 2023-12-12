@@ -43,7 +43,7 @@ void WeakEnemy::Initialize(Model* model, const XMFLOAT3& pos, Camera* camera) {
 
 	//LoadPopEnemyData();
 
-	easing_.Standby();
+	easing_.Standby(false);
 }
 
 //パラメータ
@@ -51,7 +51,7 @@ void WeakEnemy::Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
-	scale = { 10.0f,10.0f,10.0f };
+	scale = { 5.0f,5.0f,5.0f };
 	
 	obj_->SetScale(scale);
 	//初期フェーズ
@@ -75,7 +75,11 @@ void WeakEnemy::Reset() { Parameter(); }
 void WeakEnemy::Update() {
 
 
-	
+	XMFLOAT3 rot = obj_->GetRotation();
+	rot.z += 1.0f;
+
+
+	obj_->SetRotation(rot);
 
 	//座標を移動させる
 	switch (phase_) {
@@ -188,12 +192,15 @@ void WeakEnemy::Draw() {
 void WeakEnemy::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
+	
+
 	//移動
 	velocity = { 0.0f, 0.0f, 0.0f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
 
+	
 	obj_->SetPosition(pos);
 	//発射タイマーカウントダウン
 	fireTimer--;

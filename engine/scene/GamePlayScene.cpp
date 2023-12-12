@@ -1,5 +1,5 @@
 #include "GamePlayScene.h"
-
+#include "TitleScene.h"
 
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 
@@ -23,6 +23,12 @@ void GamePlayScene::Initialize()
     spriteCommon_->LoadTexture(3, "gameover.png");
 
     spriteCommon_->LoadTexture(4, "gameclear.png");
+
+    spriteCommon_->LoadTexture(5, "w.png");
+    spriteCommon_->LoadTexture(6, "a.png");
+    spriteCommon_->LoadTexture(7, "s.png");
+    spriteCommon_->LoadTexture(8, "d.png");
+    spriteCommon_->LoadTexture(9, "space.png");
 
     //spriteCommon_->LoadTexture(5, "RankS.png");
 
@@ -78,14 +84,50 @@ void GamePlayScene::Initialize()
     sprite5->SetTextureIndex(4),
         sprite5->Initialize(spriteCommon_, 4);
 
+    sprite6 = new Sprite();
+    sprite6->SetTextureIndex(5),
+        sprite6->Initialize(spriteCommon_, 5);
+
+    sprite6->SetPosition({ 1200.0f,0.0f });
+    sprite6->SetSize({ 32.0f,32.0f });
+
+    sprite7 = new Sprite();
+    sprite7->SetTextureIndex(6),
+        sprite7->Initialize(spriteCommon_, 6);
+
+    sprite7->SetPosition({ 1232.0f,32.0f });
+    sprite7->SetSize({ 32.0f,32.0f });
+
+    sprite8 = new Sprite();
+    sprite8->SetTextureIndex(7),
+        sprite8->Initialize(spriteCommon_, 7);
+    sprite8->SetSize({ 32.0f,32.0f });
+
+    sprite8->SetPosition({ 1200.0f,32.0f });
+
+    sprite9 = new Sprite();
+    sprite9->SetTextureIndex(8),
+        sprite9->Initialize(spriteCommon_, 8);
+
+    sprite9->SetPosition({ 1168.0f,32.0f });
+    sprite9->SetSize({ 32.0f,32.0f });
+
+    sprite10 = new Sprite();
+    sprite10->SetTextureIndex(9),
+        sprite10->Initialize(spriteCommon_, 9);
+
+    sprite10->SetPosition({ 1138.0f,80.0f });
+    sprite10->SetSize({ 160.0f,32.0f });
+
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
     modelPlayer_ = Model::LoadFromOBJ("player");
     modelEnemy_ = Model::LoadFromOBJ("enemy");
-    modelWeakEnemy_ = Model::LoadFromOBJ("weakenemy");
+    modelWeakEnemy_ = Model::LoadFromOBJ("enemy2g");
     modelBoss_ = Model::LoadFromOBJ("boss");
     modelRail_ = Model::LoadFromOBJ("rail");
     modelTitle_ = Model::LoadFromOBJ("neon");
+    //modelW_ = Model::LoadFromOBJ("wkey");
 
     object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
@@ -96,6 +138,7 @@ void GamePlayScene::Initialize()
     //object3DWeakEnemy_ = Object3d::Create();
     object3DRail_ = Object3d::Create();
     object3DTitle_ = Object3d::Create();
+    //object3DW_ = Object3d::Create();
 
     //3Dオブジェクトと3Dモデルをひも付け
     object3d_1->SetModel(model_1);
@@ -107,6 +150,7 @@ void GamePlayScene::Initialize()
     //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
     object3DTitle_->SetModel(modelTitle_);
+    //object3DW_->SetModel(modelW_);
     //3Dオブジェクトの位置を指定
     //object3d_2->SetPosition({ -5,0,-5 });
     object3d_3->SetPosition({ +5,0,+5 });
@@ -125,6 +169,7 @@ void GamePlayScene::Initialize()
     object3DTitle_->SetRotation({ 270,0,0 });
     object3DTitle_->SetScale({ 10.0f,10.0f,10.0f });
     object3DTitle_->SetPosition({ 11.0f,30.0f,-60.0f });
+    
 
     object3d_1->SetCamera(camera_);
     object3d_2->SetCamera(camera_);
@@ -135,6 +180,7 @@ void GamePlayScene::Initialize()
     //object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
     object3DTitle_->SetCamera(camera_);
+    
 
     particle1_ = Particle::LoadFromParticleTexture("particle.png");
     pm1_ = ParticleManager::Create();
@@ -160,14 +206,14 @@ void GamePlayScene::Initialize()
     object1->SetPosition({ 0,30,-100 });
     object1->SetRotation({ 0,90,0 });
     object1->SetScale({ 0.1f,0.1f,0.1f });
-    camera_->SetTarget({ 0,17.0f,-20.0f });
-    camera_->SetEye({ 0,20.0f,-12.0f });
+    camera_->SetTarget({ 0,0,0 });
+    camera_->SetEye({ 0,0,8.0f });
     camera_->SetUp({ 0,20,0 });
     camera_->CameraMoveVector({ 0,20,0 });
     //camera_->SetEye({ 0,0,0 });
     //object1->PlayAnimation();
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite, sprite3, sprite4, sprite5);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3,sprite4, sprite5);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
 
@@ -197,13 +243,125 @@ void GamePlayScene::Finalize()
 
 void GamePlayScene::Update()
 {
+    if (isFadeOutStart_)
+    {
+        FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は黒くする
+    }
+
+    if (boss_->IsDead())
+    {
+        FadeIn({ 1.0f,1.0f,1.0f });
+    }
+
+    if (player_->IsDead())
+    {
+        FadeIn({ 1.0f,1.0f,1.0f });
+        FadeInGameOver({ 1.0f,1.0f,1.0f });
+        isLimit_ = true;
+    }
+
+    if (player_->IsDead()||boss_->IsGameClear()) {
+        if (input_->TriggerKey(DIK_RETURN))
+        {
+            SceneManager::GetInstance()->ChangeScene("TITLE");
+        }
+    }
+    /*else if () {
+        SceneManager::GetInstance()->ChangeScene("TITLE");
+    }*/
+
     player_->Update();
     enemy_->Update();
     boss_->Update();
 
+    XMFLOAT3 move = object3DPlayer_->GetPosition();
+    XMFLOAT3 rot = object3DPlayer_->GetRotation();
+    XMFLOAT3 scale = object3DPlayer_->GetScale();
+
     if (enemy_->IsDead())
     {
         UpdateEnemyPopCommands();
+
+        FadeInWhite({ 1.0f,1.0f,1.0f });
+
+
+
+        if (fadeInWhite_)
+        {
+            fadein_timer -= 1.0f;
+            scaleSmaller_ = true;
+            if (scaleSmaller_ && !isEndScale_)
+            {
+                scale.z -= 0.5f;
+                scale.x -= 0.5f;
+                scale.y += 0.5f;
+                if (scale.z <= 0)
+                {
+                    scale.z = max(scale.z, 10);
+                    scale.z = min(scale.z, 0);
+
+                    scale.x = max(scale.x, 10);
+                    scale.x = min(scale.x, 0);
+
+                    scale.y = max(scale.y, 10);
+                    scale.y = min(scale.y, 0);
+                    isEndScale_ = true;
+                }
+
+            }
+            if (fadein_timer <= 0.0f)
+            {
+                FadeOutWhite({ 1.0f,1.0f,1.0f });
+                if (!changeStage_)
+                {
+                    transition_ = false;
+                    move.z = -680.0f;
+                    camera_->SetTarget({ 0,0,0.0f });
+                    camera_->SetEye({ 0,0,8.0f });
+                    camera_->SetUp({ 0,20,0 });
+                    camera_->CameraMoveVector({ 0,20,-620 });
+                    //rot.y = 0;
+                }
+
+                scaleSmaller_ = false;
+
+
+            }
+
+        }
+        if (!scaleSmaller_)
+        {
+            default_timer -= 1.0f;
+            if (default_timer <= 0.0f)
+            {
+                changeStage_ = true;
+                if (!player_->IsGameOver())
+                {
+                scale.z += 0.5f;
+                scale.x += 0.5f;
+                scale.y -= 0.5f;
+                
+
+                scale.z = max(scale.z, 10);
+                scale.z = min(scale.z, 10);
+
+                scale.x = max(scale.x, 0);
+                scale.x = min(scale.x, 10);
+
+                scale.y = max(scale.y, 10);
+                scale.y = min(scale.y, 10);
+
+                }
+
+                //isStart_ = true;
+            }
+        }
+
+
+
+        object3DPlayer_->SetPosition(move);
+        object3DPlayer_->SetRotation(rot);
+        object3DPlayer_->SetScale(scale);
     }
 
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
@@ -219,10 +377,10 @@ void GamePlayScene::Update()
     WeakEnemyBullets_.remove_if(
         [](std::unique_ptr<WeakEnemyBullet>& bullet) { return bullet->IsDead(); });
 
-    if (player_->IsPlayerExtinction())
+    if (player_->IsPlayerExtinction()&&!isEnd_)
     {
-        pm1_->ActiveZ(particle1_, { object3DPlayer_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
-
+        pm1_->ActiveZ(particle1_, { object3DPlayer_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 40, { 3.0f, 0.0f });
+        isEnd_ = true;
     }
 
 
@@ -233,6 +391,11 @@ void GamePlayScene::Update()
     sprite3->Update();
     sprite4->Update();
     sprite5->Update();
+    sprite6->Update();
+    sprite7->Update();
+    sprite8->Update();
+    sprite9->Update();
+    sprite10->Update();
 
     postEffect->Update();
 
@@ -241,7 +404,7 @@ void GamePlayScene::Update()
     object3d_3->Update();
     object3DRail_->Update();
     object3DTitle_->Update();
-
+    //object3DW_->Update();
 
 
     object1->Update();
@@ -259,26 +422,19 @@ void GamePlayScene::Draw()
 
 
     Object3d::PreDraw(dxCommon_->GetCommandList());
-    if (!player_->IsFadeInWhite())
+    if (scaleSmaller_)
     {
         object3d_1->Draw();
     }
     object3d_2->Draw();
     object3DRail_->Draw();
-    if (player_->IsFadeIn() == false)
-    {
-        object3DTitle_->Draw();
-    }
+    
     //object3d_3->Draw();
     player_->Draw();
-    if (player_->IsFadeIn() == true)
-    {
-        if (player_->IsFadeInWhite() == false)
-        {
-
-            enemy_->Draw();
-        }
-    }
+   
+    //object3DW_->Draw();
+    enemy_->Draw();
+    
 
     if (player_->IsBoss())
     {
@@ -308,6 +464,18 @@ void GamePlayScene::Draw()
     spriteCommon_->PreDraw();
 
     //sprite2->Draw();
+
+    if (player_->IsFadeIn() == true)
+    {
+        if (player_->IsFadeInWhite() == false)
+        {
+            sprite6->Draw();
+            sprite7->Draw();
+            sprite8->Draw();
+            sprite9->Draw();
+            sprite10->Draw();
+        }
+    }
 
     sprite->Draw();
 
@@ -596,5 +764,111 @@ void GamePlayScene::UpdateEnemyPopCommands()
 
             break;
         }
+    }
+}
+
+void GamePlayScene::FadeOut(XMFLOAT3 rgb)
+{
+    if (!isFadeOut_)
+    {
+        easeFadeOut_.Standby(true);
+        isFadeOut_ = true;
+    }
+    else
+    {
+        easeFadeOut_.ease_out_quint();
+        sprite->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOut_.num_X });//透明度だけ変える
+
+    }
+}
+
+void GamePlayScene::FadeIn(XMFLOAT3 rgb)
+{
+    if (!isFadeIn_)
+    {
+        easeFadeIn_.Standby(true);
+        isFadeIn_ = true;
+    }
+    else
+    {
+        easeFadeIn_.ease_out_quint();
+        sprite->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeIn_.num_X });//透明度だけ変える
+
+    }
+    
+}
+
+void GamePlayScene::FadeInGameOver(XMFLOAT3 rgb)
+{
+    if (!isFadeInGameOver_)
+    {
+        easeFadeInGameOver_.Standby(true);
+        isFadeInGameOver_ = true;
+    }
+    else
+    {
+        easeFadeInGameOver_.ease_out_quint();
+        sprite4->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInGameOver_.num_X });//透明度だけ変える
+
+    }
+}
+
+void GamePlayScene::FadeInWhite(XMFLOAT3 rgb)
+{
+    if (!fadeInWhite_)
+    {
+        easeFadeInWhite_.Standby(true);
+        fadeInWhite_ = true;
+    }
+    else
+    {
+        easeFadeInWhite_.ease_out_quint();
+        sprite3->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInWhite_.num_X });
+    }
+}
+
+void GamePlayScene::FadeOutWhite(XMFLOAT3 rgb)
+{
+    if (!fadeOutWhite_)
+    {
+        easeFadeOutWhite_.Standby(true);
+        fadeOutWhite_ = true;
+    }
+    else
+    {
+        easeFadeOutWhite_.ease_out_quint();
+        sprite3->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOutWhite_.num_X });
+    }
+}
+
+void GamePlayScene::UpdateChangeColor()
+{
+    //色を変えるスピード
+    const float speedColor = 0.02f;
+
+    if (isColorReverse_)
+    {
+        selectColor_.x -= speedColor;
+        selectColor_.y -= speedColor;
+        selectColor_.z -= speedColor;
+    }
+
+    else
+    {
+        selectColor_.x += speedColor;
+        selectColor_.y += speedColor;
+        selectColor_.z += speedColor;
+
+    }
+
+    const XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
+
+    if (selectColor_.x >= maxAndMinSpeedColor.x)
+    {
+        isColorReverse_ = true;
+    }
+    if (selectColor_.x <= maxAndMinSpeedColor.y)
+    {
+        isColorReverse_ = false;
     }
 }

@@ -107,6 +107,10 @@ void Boss::Update() {
 		{
 			gamecler_color += 0.02f;
 			gameclear_->SetColor({ 1,1,1,gamecler_color });
+			if (gamecler_color >= 1.0f)
+			{
+				clearChange_ = true;
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@
 #include <cassert>
 #include <imgui.h>
 
+
 using namespace DirectX;
 
 Player::~Player() {
@@ -11,7 +12,7 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera, Sprite* warning,Sprite* white,Sprite* gameover, Sprite* gameclear) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover,Sprite* gameclear) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -19,7 +20,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
-	warning_ = warning;
+	//warning_ = warning;
 	fadeIn_white = white;
 	gameover_ = gameover;
 	gameclear_ = gameclear;
@@ -39,7 +40,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	pos = { 0.0f,20.0f,-60.0f };
 	obj_->SetPosition(pos);
 
-	warning_->SetColor({ 1,1,1,warning_color });
+	//warning_->SetColor({ 1,1,1,warning_color });
 
 	fadeIn_white->SetColor({ 1,1,1,fadein_color });
 
@@ -100,13 +101,13 @@ void Player::Move() {
 	float moveSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
-	if (start_ == true)
+	if (start_ == true&&!bossStart_&&!game_over_)
 	{
 		move.z-=2.0f;
 		
 		if (move.z <= -3500.0f)
 		{
-			boss_ = true;
+			bossStart_ = true;
 			start_ = false;
 			
 			
@@ -133,8 +134,19 @@ void Player::Move() {
 
 		}
 	}
-	
-	
+
+	/*if (input_->Pushkey(DIK_7)) {
+
+		if (gameclear_)
+		{
+			warning_color += 0.02f;
+			warning_->SetColor({ 1,1,1,warning_color });
+			if (gameclear_ && warning_color >= 1.0f)
+			{
+				clear_change_ = true;
+			}
+		}
+	}*/
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
@@ -155,113 +167,79 @@ void Player::Move() {
 		rot.x -= rotSpeed;
 	}
 
-	if (input_->Pushkey(DIK_0)) {
-		start_ = true;
+	if (move.z<=-680.0f) {
+		start_wait_timer -= 1.0f;
+		if (start_wait_timer <= 0.0f)
+		{
+			start_ = true;
+		}
 	}
 
-	if (input_->Pushkey(DIK_RETURN)&&!game_clear_)
+	/*if (input_->Pushkey(DIK_RETURN)&&!game_clear_)
 	{
 		title_ = false;
 		transition_ = true;
 		
-	}
+	}*/
 	
 	//start_wait_timer -= 1.0f;
-	if (input_->Pushkey(DIK_2))
-	{
-		//rot.y -= 1.0f;
-		
-		transition_2_ = true;
-	}
 	
 
-	if (input_->Pushkey(DIK_3))
-	{
-		//rot.y += 1.0f;
-		scale.z += 0.5f;
-		scale.x += 0.5f;
-		scale.y -= 0.5f;
+	//if (input_->Pushkey(DIK_3))
+	//{
+	//	//rot.y += 1.0f;
+	//	scale.z += 0.5f;
+	//	scale.x += 0.5f;
+	//	scale.y -= 0.5f;
 
-		
-		scale.z = max(scale.z, 0);
-		scale.z = min(scale.z, 10);
+	//	
+	//	scale.z = max(scale.z, 0);
+	//	scale.z = min(scale.z, 10);
 
-		scale.x = max(scale.x, 0);
-		scale.x = min(scale.x, 10);
+	//	scale.x = max(scale.x, 0);
+	//	scale.x = min(scale.x, 10);
 
-		scale.y = max(scale.y, 20);
-		scale.y = min(scale.y, 10);
-		
-		//transition_2_ = true;
-	}
-	if (warning_color >= 1.0f)
+	//	scale.y = max(scale.y, 20);
+	//	scale.y = min(scale.y, 10);
+	//	
+	//	//transition_2_ = true;
+	//}
+	/*if (warning_color >= 1.0f)
 	{
 		fadeIn_ = true;
 		
-	}
+	}*/
 
-	if (fadein_color >= 1.0f)
+	/*if (fadein_color >= 1.0f)
 	{
 		fadeInWhite_ = true;
 
-	}
+	}*/
 
-	if (fadeInWhite_)
-	{
-		fadein_timer -= 1.0f;
-		if (fadein_timer <= 0.0f)
-		{
-			transition_2_ = false;
-			move.z = -680.0f;
-			camera_->SetTarget({ 0,0,0.0f });
-			camera_->SetEye({ 0,0,8.0f });
-			camera_->SetUp({ 0,20,0 });
-			camera_->CameraMoveVector({ 0,20,-620 });
-			//rot.y = 0;
-			
+	//if (fadeInWhite_)
+	//{
+	//	fadein_timer -= 1.0f;
+	//	if (fadein_timer <= 0.0f)
+	//	{
+	//		transition_2_ = false;
+	//		move.z = -680.0f;
+	//		camera_->SetTarget({ 0,0,0.0f });
+	//		camera_->SetEye({ 0,0,8.0f });
+	//		camera_->SetUp({ 0,20,0 });
+	//		camera_->CameraMoveVector({ 0,20,-620 });
+	//		//rot.y = 0;
+	//		
 
-		}
-		fadein_color -= 0.02f;
-		fadeIn_white->SetColor({ 1,1,1,fadein_color });
-		if (fadein_color <= 0)
-		{
-			fadein_timer = 60.0f * 3;
+	//	}
+	//	fadein_color -= 0.02f;
+	//	fadeIn_white->SetColor({ 1,1,1,fadein_color });
+	//	if (fadein_color <= 0)
+	//	{
+	//		fadein_timer = 60.0f * 3;
 
-		}
+	//	}
 
-	}
-
-	if (fadeIn_)
-	{
-		warning_timer -= 1.0f;
-		if (warning_timer <= 0.0f)
-		{
-			transition_ = false;
-			camera_->SetTarget({ 0,0,0 });
-			camera_->SetEye({ 0,0,8.0f });
-			camera_->SetUp({ 0,20,0 });
-			camera_->CameraMoveVector({ 0,20,0 });
-			rot.y = 0;
-			
-
-		}
-		warning_color -= 0.02f;
-		warning_->SetColor({ 1,1,1,warning_color });
-		if (warning_color <= 0)
-		{
-			warning_timer = 60.0f * 3;
-
-		}
-		
-	}
-	
-	
-
-	if (title_)
-	{
-		rot.y += rotSpeed;
-
-	}
+	//}
 
 	if (game_over_)
 	{
@@ -279,11 +257,13 @@ void Player::Move() {
 				scale.y += 0.1f;
 				scale.z += 0.1f;
 				player_extinction_ = true;
+				dead_ = true;
 				if (extinction_timer <= 0)
 				{
 					player_extinction_ = false;
-					gameover_color += 0.02f;
-					gameover_->SetColor({ 1,1,1,gameover_color });
+					//gameover_color += 0.02f;
+					//gameover_->SetColor({ 1,1,1,gameover_color });
+					
 					
 				}
 				
@@ -291,27 +271,28 @@ void Player::Move() {
 		}
 	}
 
-	if (game_clear_)
+	/*if (game_clear_)
 	{
 		game_clear_timer -= 1.0f;
 		if (game_clear_timer <= 0)
 		{
+			dead_ = true;
 			gamecler_color += 0.02f;
 			gameclear_->SetColor({ 1,1,1,gamecler_color });
 			if (gamecler_color >= 1.0f)
 			{
-				game_clear_ = false;
+				clear_change_ = true;
 			}
 		}
 		
-	}
+	}*/
 
-	if (transition_) {
+	/*if (transition_) {
 		warning_color += 0.02f;
 		warning_->SetColor({ 1,1,1,warning_color });
-	}
+	}*/
 
-	if (transition_2_) {
+	/*if (transition_2_) {
 		scale.z -= 0.5f;
 		scale.x -= 0.5f;
 		scale.y += 0.5f;
@@ -328,7 +309,7 @@ void Player::Move() {
 		}
 		fadein_color += 0.02f;
 		fadeIn_white->SetColor({ 1,1,1,fadein_color });
-	}
+	}*/
 
 	//自機の回転(Z軸)
 	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
@@ -384,7 +365,7 @@ void Player::CameraMove()
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
 	
-	if (start_ == true)
+	if (start_ == true&&!bossStart_&&!game_over_)
 	{
 		cmove.z-=2.0f;
 		tmove.z-=2.0f;
@@ -424,7 +405,7 @@ void Player::CameraMove()
 //攻撃処理
 void Player::Attack() {
 	
-		if (input_->TriggerKey(DIK_SPACE)&&!title_) {
+		if (input_->TriggerKey(DIK_SPACE)) {
 			//弾の速度
 			const float kBulletSpeed = 4.0f;
 			XMFLOAT3 velocity(0.0f, 0.0f, -kBulletSpeed);

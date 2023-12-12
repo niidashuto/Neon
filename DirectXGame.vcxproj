@@ -180,6 +180,7 @@
     <ClCompile Include="application\base\WeakEnemy.cpp" />
     <ClCompile Include="application\base\WeakEnemyBullet.cpp" />
     <ClCompile Include="application\scene\BaseScene.cpp" />
+    <ClCompile Include="application\scene\SceneFactory.cpp" />
     <ClCompile Include="application\scene\SceneManager.cpp" />
     <ClCompile Include="application\scene\TitleScene.cpp" />
     <ClCompile Include="engine\2d\PostEffect.cpp" />
@@ -354,7 +355,9 @@
     <ClInclude Include="application\base\PlayerBullet.h" />
     <ClInclude Include="application\base\WeakEnemy.h" />
     <ClInclude Include="application\base\WeakEnemyBullet.h" />
+    <ClInclude Include="application\scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\scene\BaseScene.h" />
+    <ClInclude Include="application\scene\SceneFactory.h" />
     <ClInclude Include="application\scene\SceneManager.h" />
     <ClInclude Include="application\scene\TitleScene.h" />
     <ClInclude Include="engine\2d\PostEffect.h" />

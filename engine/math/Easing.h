@@ -13,10 +13,13 @@ public:
 	Easing();
 	Easing(float start, float end, float maxTime);
 	float num_Y = 0.0f;
+	float num_X;
 public:
-	void Standby() { startCount = std::chrono::steady_clock::now(); }
+	void Standby(bool reverse) { startCount = std::chrono::steady_clock::now(); }
 
 	float easeIn(float time, float startpos, float differencepos, float totalTime);
+
+	float ease_out_quint();
 
 	// 補間
 	const float Lerp(const float start, const float end, const float time);
@@ -32,4 +35,10 @@ public:
 	float b;					//開始位置
 	float c;					//開始位置-終了位置の差
 	float d;					//合計時間
+
+private:
+	float timeNow;					//時間
+	float startpos;					//開始位置
+	float differencepos;			//開始位置-終了位置の差
+	float totaltime;
 };

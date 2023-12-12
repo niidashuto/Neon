@@ -11,13 +11,14 @@
 #include "ParticleManager.h"
 #include "ObjectFBX.h"
 #include "PostEffect.h"
-#include "GamePlayScene.h"
+//#include "GamePlayScene.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "WeakEnemy.h"
 #include <sstream>
 #include "Boss.h"
 #include "TitleScene.h"
+#include "SceneFactory.h"
 
 
 /**
