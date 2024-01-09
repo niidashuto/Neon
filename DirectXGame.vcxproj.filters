@@ -186,20 +186,20 @@
     <ClCompile Include="application\base\BossBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MyMath.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="application\scene\BaseScene.cpp">
+      <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
     <ClCompile Include="application\scene\TitleScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
-    <ClCompile Include="application\scene\BaseScene.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="MyMath.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="application\scene\SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
     <ClCompile Include="application\scene\SceneFactory.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,9 +372,6 @@
     <ClInclude Include="application\base\WeakEnemyBullet.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="engine\math\Easing.h">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="application\base\Boss.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -384,23 +381,26 @@
     <ClInclude Include="MyMath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="engine\math\MyMath.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="application\scene\TitleScene.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="application\scene\BaseScene.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="application\scene\SceneManager.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="engine\math\Easing.h">
+      <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="application\scene\AbstractSceneFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\application\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scene\TitleScene.h">
+      <Filter>ヘッダー ファイル\application\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scene\SceneManager.h">
+      <Filter>ヘッダー ファイル\application\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\math\MyMath.h">
+      <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="application\scene\SceneFactory.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル\application\scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

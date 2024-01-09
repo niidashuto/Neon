@@ -55,7 +55,7 @@ public://サブクラス
 	};
 
 private://定数
-	static const int vertexCount = 1024;		// 頂点数
+	static const int vertexCount = 2048;		// 頂点数
 
 public://メンバ関数
 

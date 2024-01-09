@@ -2,6 +2,7 @@
 #include "WinApp.h"
 #include "MyMath.h"
 
+
 using namespace DirectX;
 Camera::Camera()
 {
@@ -162,6 +163,19 @@ void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 	SetTarget(target_moved);
 }
 
+void Camera::Reset()
+{
+	////’Ç]‘ÎÛ‚ª‚¢‚ê‚Î
+	//if (player_)
+	//{
+	//	//’Ç]À•WEŠp“x‚Ì‰Šú‰»
+	//	interTarget_ = player_->GetWorldPosition();
+	//	
+	//}
+
+	//XMFLOAT3 offset=
+}
+
 XMFLOAT3 Camera::ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max)
 {
 	const XMFLOAT3 nowEye = eye;
@@ -217,6 +231,25 @@ XMFLOAT3 Camera::ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 
 
 
 
+
+const XMFLOAT3 Camera::lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+
+	result.x = start.x * (1.0f - t) + end.x * t;
+	result.y = start.y * (1.0f - t) + end.y * t;
+	result.z = start.z * (1.0f - t) + end.z * t;
+
+	return result;
+}
+
+const float Camera::Flerp(const float& start, const float& end, const float t)
+{
+	float result;
+	result = start * (1.0f - t) + end * t;
+
+	return result;
+}
 
 void Camera::SetEye(const XMFLOAT3& eye)
 {

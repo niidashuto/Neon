@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include <wrl.h>
+//#include "Player.h"
 
 /**
 *Camera.h
@@ -15,6 +16,8 @@ private:
 	// DirectX::を省略
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMMATRIX = DirectX::XMMATRIX;
+
+	//Player* player_ = nullptr;
 public:
 	Camera();
 	virtual ~Camera();
@@ -30,6 +33,8 @@ public:
 	void CameraMoveVectorEye(const XMFLOAT3& move);
 	//カメラ注視点移動
 	void CameraMoveVectorTarget(const XMFLOAT3& move);
+
+	void Reset();
 
 	//シェイク
 	XMFLOAT3 ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max);
@@ -54,6 +59,8 @@ protected:
 	// 上方向ベクトル
 	XMFLOAT3 up_ = { 0.0f,1.0f,0.0f };
 
+	XMFLOAT3 interTarget_ = {};
+
 public://アクセッサ
 	//ビュー行列
 	const XMMATRIX& GetMatView() { return matView_; }
@@ -68,6 +75,10 @@ public://アクセッサ
 	const XMMATRIX& GetMatBillboard() { return matBillboard_; }
 	const XMMATRIX& GetMatBillboardY() { return matBillboardY_; }
 
+	//補間
+	const XMFLOAT3 lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+
+	const float Flerp(const float& start, const float& end, const float t);
 
 	//視点
 	const XMFLOAT3& GetEye() { return eye_; }

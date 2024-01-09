@@ -12,6 +12,7 @@
 #include "SpriteCommon.h"
 #include "Easing.h"
 #include "Boss.h"
+#include "ParticleManager.h"
 
 /**
 *Player.h
@@ -56,6 +57,8 @@ public:
 	//描画
 	void Draw();
 
+	void DrawParticle();
+
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
@@ -97,6 +100,10 @@ private:
 	SpriteCommon* spriteCommon_ = nullptr;
 	
 	Easing easing_= { 80.0f,20.0f,1.0f };
+
+	Particle* playerParticle_ = nullptr;
+
+	ParticleManager* pPm_ = nullptr;
 
 	//ポジション
 	XMFLOAT3 pos;

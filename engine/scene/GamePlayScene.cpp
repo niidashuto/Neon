@@ -315,6 +315,8 @@ void GamePlayScene::Update()
                 if (!changeStage_)
                 {
                     transition_ = false;
+                    move.x = 0.0f;
+                    move.y = 20.0f;
                     move.z = -680.0f;
                     camera_->SetTarget({ 0,0,0.0f });
                     camera_->SetEye({ 0,0,8.0f });
@@ -379,7 +381,7 @@ void GamePlayScene::Update()
 
     if (player_->IsPlayerExtinction()&&!isEnd_)
     {
-        pm1_->ActiveZ(particle1_, { object3DPlayer_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 40, { 3.0f, 0.0f });
+        pm1_->ActiveZ(particle1_, { object3DPlayer_->GetPosition() }, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 40, { 4.0f, 0.0f });
         isEnd_ = true;
     }
 
@@ -422,7 +424,7 @@ void GamePlayScene::Draw()
 
 
     Object3d::PreDraw(dxCommon_->GetCommandList());
-    if (scaleSmaller_)
+    if (!scaleSmaller_&&player_->GetWorldPosition().z>=-670.0f)
     {
         object3d_1->Draw();
     }
@@ -489,6 +491,7 @@ void GamePlayScene::Draw()
 
     ParticleManager::PreDraw(dxCommon_->GetCommandList());
     pm1_->Draw();
+    player_->DrawParticle();
     //pm2_->Draw();
     ParticleManager::PostDraw();
 

@@ -119,6 +119,11 @@ void TitleScene::Update()
         }
     }
 
+    XMFLOAT3 rot = object3DPlayer_->GetRotation();
+
+    rot.y -= 0.5f;
+
+    object3DPlayer_->SetRotation(rot);
     
     sprite->Update();
     camera_->Update();

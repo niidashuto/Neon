@@ -25,6 +25,8 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	gameover_ = gameover;
 	gameclear_ = gameclear;
 
+	//pPm_ = particle;
+
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
 
@@ -32,6 +34,10 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);
 	
+	playerParticle_ = Particle::LoadFromParticleTexture("lightblue1x1.png");
+	pPm_ = ParticleManager::Create();
+	pPm_->SetParticleModel(playerParticle_);
+	pPm_->SetCamera(camera_);
 
 	//シングルトンインスタンスを取得
 	this->input_ = input;
@@ -68,7 +74,8 @@ void Player::Update() {
 		Attack();
 
 		//弾更新
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) { 
+		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+			pPm_->ActiveZ(playerParticle_, { bullet->GetWorldPosition()}, {0.0f ,0.0f,0.0f}, {0.0f,0.0f,0.0f-2.0f}, {0.0f,0.0f,0.0f}, 1, {5.0f, 0.0f});
 			bullet->Update();
 		}
 
@@ -77,6 +84,8 @@ void Player::Update() {
 	}
 
 	obj_->Update();
+
+	pPm_->Update();
 }
 
 void Player::Draw() {
@@ -87,15 +96,23 @@ void Player::Draw() {
 		//弾描画
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 			bullet->Draw();
+			
 		}
 
 	}
+	
+}
+
+void Player::DrawParticle()
+{
+	pPm_->Draw();
 }
 
 //移動処理
 void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
+	float moveY = obj_->GetPosition().y;
 	XMFLOAT3 rot = obj_->GetRotation();
 	XMFLOAT3 scale = obj_->GetScale();
 	float moveSpeed = 1.0f;
@@ -135,21 +152,8 @@ void Player::Move() {
 		}
 	}
 
-	/*if (input_->Pushkey(DIK_7)) {
-
-		if (gameclear_)
-		{
-			warning_color += 0.02f;
-			warning_->SetColor({ 1,1,1,warning_color });
-			if (gameclear_ && warning_color >= 1.0f)
-			{
-				clear_change_ = true;
-			}
-		}
-	}*/
-
 	//キーボード入力による移動処理
-	XMMATRIX matTrans = XMMatrixIdentity();
+	//XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->Pushkey(DIK_A)) {
 		move.x += moveSpeed;
 		rot.z -= rotSpeed;
@@ -159,11 +163,11 @@ void Player::Move() {
 		rot.z += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_W)) {
-		move.y += moveSpeed;
+		moveY += moveSpeed;
 		rot.x += rotSpeed;
 	}
 	if (input_->Pushkey(DIK_S)) {
-		move.y -= moveSpeed;
+		moveY -= moveSpeed;
 		rot.x -= rotSpeed;
 	}
 
@@ -174,72 +178,6 @@ void Player::Move() {
 			start_ = true;
 		}
 	}
-
-	/*if (input_->Pushkey(DIK_RETURN)&&!game_clear_)
-	{
-		title_ = false;
-		transition_ = true;
-		
-	}*/
-	
-	//start_wait_timer -= 1.0f;
-	
-
-	//if (input_->Pushkey(DIK_3))
-	//{
-	//	//rot.y += 1.0f;
-	//	scale.z += 0.5f;
-	//	scale.x += 0.5f;
-	//	scale.y -= 0.5f;
-
-	//	
-	//	scale.z = max(scale.z, 0);
-	//	scale.z = min(scale.z, 10);
-
-	//	scale.x = max(scale.x, 0);
-	//	scale.x = min(scale.x, 10);
-
-	//	scale.y = max(scale.y, 20);
-	//	scale.y = min(scale.y, 10);
-	//	
-	//	//transition_2_ = true;
-	//}
-	/*if (warning_color >= 1.0f)
-	{
-		fadeIn_ = true;
-		
-	}*/
-
-	/*if (fadein_color >= 1.0f)
-	{
-		fadeInWhite_ = true;
-
-	}*/
-
-	//if (fadeInWhite_)
-	//{
-	//	fadein_timer -= 1.0f;
-	//	if (fadein_timer <= 0.0f)
-	//	{
-	//		transition_2_ = false;
-	//		move.z = -680.0f;
-	//		camera_->SetTarget({ 0,0,0.0f });
-	//		camera_->SetEye({ 0,0,8.0f });
-	//		camera_->SetUp({ 0,20,0 });
-	//		camera_->CameraMoveVector({ 0,20,-620 });
-	//		//rot.y = 0;
-	//		
-
-	//	}
-	//	fadein_color -= 0.02f;
-	//	fadeIn_white->SetColor({ 1,1,1,fadein_color });
-	//	if (fadein_color <= 0)
-	//	{
-	//		fadein_timer = 60.0f * 3;
-
-	//	}
-
-	//}
 
 	if (game_over_)
 	{
@@ -270,46 +208,6 @@ void Player::Move() {
 			}
 		}
 	}
-
-	/*if (game_clear_)
-	{
-		game_clear_timer -= 1.0f;
-		if (game_clear_timer <= 0)
-		{
-			dead_ = true;
-			gamecler_color += 0.02f;
-			gameclear_->SetColor({ 1,1,1,gamecler_color });
-			if (gamecler_color >= 1.0f)
-			{
-				clear_change_ = true;
-			}
-		}
-		
-	}*/
-
-	/*if (transition_) {
-		warning_color += 0.02f;
-		warning_->SetColor({ 1,1,1,warning_color });
-	}*/
-
-	/*if (transition_2_) {
-		scale.z -= 0.5f;
-		scale.x -= 0.5f;
-		scale.y += 0.5f;
-		if (scale.z <= 0)
-		{
-			scale.z = max(scale.z, 0);
-			scale.z = min(scale.z, 0);
-
-			scale.x = max(scale.x, 0);
-			scale.x = min(scale.x, 0);
-
-			scale.y = max(scale.y, 10);
-			scale.y = min(scale.y, 10);
-		}
-		fadein_color += 0.02f;
-		fadeIn_white->SetColor({ 1,1,1,fadein_color });
-	}*/
 
 	//自機の回転(Z軸)
 	if (!input_->Pushkey(DIK_A)&& !input_->Pushkey(DIK_D))
@@ -349,11 +247,11 @@ void Player::Move() {
 	move.x = max(move.x, -kMoveLimitX_);
 	move.x = min(move.x, +kMoveLimitX_);
 
-	move.y = max(move.y, 0.0f);
-	move.y = min(move.y, +kMoveLimitY_);
+	moveY = max(moveY, 0.0f);
+	moveY = min(moveY, +kMoveLimitY_);
 	
 
-	obj_->SetPosition(move);
+	obj_->SetPosition({ move.x,moveY,move.z });
 	obj_->SetRotation(rot);
 	obj_->SetScale(scale);
 }
@@ -373,25 +271,26 @@ void Player::CameraMove()
 	
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
-	if (input_->Pushkey(DIK_LEFT)) {
-		//move.x -= moveSpeed;
+	if (input_->Pushkey(DIK_RIGHT)) {
+		//camera_->Flerp(cmove.x - moveSpeed, (cmove.x - moveSpeed) - cmove.x, 0.1f);
 		cmove.x -= moveSpeed;
+		//camera_->Flerp(tmove.x - moveSpeed, (tmove.x - moveSpeed) - tmove.x, 0.1f);
 		tmove.x -= moveSpeed;
 	}
-	if (input_->Pushkey(DIK_RIGHT)) {
-		//move.x += moveSpeed;
+	if (input_->Pushkey(DIK_LEFT)) {
+		
 		cmove.x += moveSpeed;
 		tmove.x += moveSpeed;
 	}
 	if (input_->Pushkey(DIK_UP)) {
-		//move.y += moveSpeed;
+		
 		cmove.y += moveSpeed;
 		tmove.y += moveSpeed;
 	}
 	if (input_->Pushkey(DIK_DOWN)) {
-		//move.y -= moveSpeed;
-		cmove.z+= moveSpeed;
-		tmove.z+= moveSpeed;
+		
+		cmove.y-= moveSpeed;
+		tmove.y-= moveSpeed;
 	}
 
 	
@@ -434,6 +333,7 @@ void Player::Attack() {
 			bullets_.push_back(std::move(newBullet));
 			//あるメモリの所有権を持つunique_ptrはただ一つしか存在できない
 			//その所有権を謙渡するための機能が std::move()
+
 		}
 	
 }
