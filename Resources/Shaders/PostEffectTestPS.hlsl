@@ -19,7 +19,7 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma)
 
 float4 GaussianBlur(VSOutput input) : SV_TARGET
 {
-    float totalWeight = 0.0f, _Sigma = 0.0f, _StepWidth = 0.001f;
+    float totalWeight = 0.0f, _Sigma = 0.003f, _StepWidth = 0.001f;
     float4 col = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     for (float py = -_Sigma * 2.0f; py <= _Sigma * 2.0f; py += _StepWidth)
@@ -50,5 +50,5 @@ float4 main(VSOutput input) : SV_TARGET
 {
     float4 texcolor = GaussianBlur(input) + highLumi(input);
     //float4 texcolor = tex.Sample(smp, input.uv);
-	return float4(texcolor.rgb, 1) * color;
+	return float4(texcolor.rgb, 1);
 }

@@ -30,6 +30,8 @@ void GamePlayScene::Initialize()
     spriteCommon_->LoadTexture(8, "d.png");
     spriteCommon_->LoadTexture(9, "space.png");
 
+    spriteCommon_->LoadTexture(10, "damage.png");
+
     //spriteCommon_->LoadTexture(5, "RankS.png");
 
     //ParticleManager::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
@@ -118,6 +120,10 @@ void GamePlayScene::Initialize()
 
     sprite10->SetPosition({ 1138.0f,80.0f });
     sprite10->SetSize({ 160.0f,32.0f });
+
+    sprite11 = new Sprite();
+    sprite11->SetTextureIndex(10);
+    sprite11->Initialize(spriteCommon_, 10);
 
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
@@ -261,16 +267,16 @@ void GamePlayScene::Update()
     }
 
     if (player_->IsDead()||boss_->IsGameClear()) {
-        if (input_->TriggerKey(DIK_RETURN))
+        if (input_->TriggerKey(DIK_SPACE))
         {
             SceneManager::GetInstance()->ChangeScene("TITLE");
         }
     }
-    /*else if () {
-        SceneManager::GetInstance()->ChangeScene("TITLE");
-    }*/
-
-    player_->Update();
+    
+    if (!player_->IsDead() || !boss_->IsDead())
+    {
+        player_->Update();
+    }
     enemy_->Update();
     boss_->Update();
 
@@ -398,6 +404,7 @@ void GamePlayScene::Update()
     sprite8->Update();
     sprite9->Update();
     sprite10->Update();
+    sprite11->Update();
 
     postEffect->Update();
 
@@ -486,7 +493,6 @@ void GamePlayScene::Draw()
     sprite4->Draw();
 
     sprite5->Draw();
-
     
 
     ParticleManager::PreDraw(dxCommon_->GetCommandList());

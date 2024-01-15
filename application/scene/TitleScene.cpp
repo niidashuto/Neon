@@ -105,7 +105,7 @@ void TitleScene::Update()
 {
     
    //7ƒL[‚ð‰Ÿ‚µ‚½‚ç
-    if (input_->TriggerKey(DIK_RETURN)) {
+    if (input_->TriggerKey(DIK_SPACE)) {
         isFadeInStart_ = true;
     }
 

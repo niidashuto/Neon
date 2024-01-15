@@ -112,7 +112,7 @@ private:
 
 	//死亡フラグとライフ
 	bool dead_ = false;
-	int life_ = 1;
+	int life_ = 20;
 
 	const float kRotLimitZ_ = 30.0f;
 	const float kRotLimitX_ = 30.0f;
