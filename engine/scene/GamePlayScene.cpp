@@ -25,16 +25,14 @@ void GamePlayScene::Initialize()
     spriteCommon_->LoadTexture(4, "gameclear.png");
 
     spriteCommon_->LoadTexture(5, "w.png");
-    spriteCommon_->LoadTexture(6, "a.png");
+    spriteCommon_->LoadTexture(6, "d.png");
     spriteCommon_->LoadTexture(7, "s.png");
-    spriteCommon_->LoadTexture(8, "d.png");
+    spriteCommon_->LoadTexture(8, "a.png");
     spriteCommon_->LoadTexture(9, "space.png");
 
     spriteCommon_->LoadTexture(10, "damage.png");
 
-    //spriteCommon_->LoadTexture(5, "RankS.png");
-
-    //ParticleManager::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
+    spriteCommon_->LoadTexture(11, "hp.png");
 
     ////音声読み込み
     //Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
@@ -124,6 +122,10 @@ void GamePlayScene::Initialize()
     sprite11 = new Sprite();
     sprite11->SetTextureIndex(10);
     sprite11->Initialize(spriteCommon_, 10);
+
+    spriteHp_ = new Sprite();
+    spriteHp_->SetTextureIndex(11);
+    spriteHp_->Initialize(spriteCommon_, 11);
 
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
@@ -219,7 +221,7 @@ void GamePlayScene::Initialize()
     //camera_->SetEye({ 0,0,0 });
     //object1->PlayAnimation();
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3,sprite4, sprite5);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3,sprite4, sprite5,spriteHp_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
 
@@ -254,11 +256,12 @@ void GamePlayScene::Update()
         FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は黒くする
     }
 
+    //ボスが死んだら
     if (boss_->IsDead())
     {
         FadeIn({ 1.0f,1.0f,1.0f });
     }
-
+    //プレイヤーが死んだら
     if (player_->IsDead())
     {
         FadeIn({ 1.0f,1.0f,1.0f });
@@ -405,6 +408,7 @@ void GamePlayScene::Update()
     sprite9->Update();
     sprite10->Update();
     sprite11->Update();
+    spriteHp_->Update();
 
     postEffect->Update();
 
@@ -474,7 +478,7 @@ void GamePlayScene::Draw()
 
     //sprite2->Draw();
 
-    if (player_->IsFadeIn() == true)
+    if (player_->IsFadeIn() == false)
     {
         if (player_->IsFadeInWhite() == false)
         {
@@ -486,6 +490,8 @@ void GamePlayScene::Draw()
         }
     }
 
+    spriteHp_->Draw();
+
     sprite->Draw();
 
     sprite3->Draw();
@@ -493,6 +499,12 @@ void GamePlayScene::Draw()
     sprite4->Draw();
 
     sprite5->Draw();
+
+
+    if (isDamage_)
+    {
+        sprite11->Draw();
+    }
     
 
     ParticleManager::PreDraw(dxCommon_->GetCommandList());
@@ -583,8 +595,20 @@ void GamePlayScene::CheckAllCollisions()
             //敵弾の衝突時コールバック関数を呼び出す
             weakbullet->OnCollision();
 
+            isDamage_ = true;
+        }
+
+        if (isDamage_)
+        {
+            damage_timer -= 1.0f;
+            if (damage_timer <= 0.0f)
+            {
+                isDamage_ = false;
+                damage_timer = 10.0f;
+            }
 
         }
+       
     }
 
     //自機と全ての敵弾の当たり判定

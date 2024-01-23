@@ -32,7 +32,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover, Sprite* gameclear);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover, Sprite* gameclear,Sprite* hp);
 	//リセット処理
 	void Reset();
 
@@ -43,13 +43,13 @@ public:
 	void Move();
 	void CameraMove();
 
+	void Hp();
+
 	//プレイヤーの攻撃処理
 	void Attack();
 
 	//転送
 	void Trans();
-
-	void Warning();
 
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
@@ -90,6 +90,8 @@ private:
 
 	Sprite* gameclear_ = nullptr;
 
+	Sprite* hp_ = nullptr;
+
 	//インプット
 	Input* input_ = nullptr;
 
@@ -112,7 +114,7 @@ private:
 
 	//死亡フラグとライフ
 	bool dead_ = false;
-	int life_ = 20;
+	float life_ = 20.0f;
 
 	const float kRotLimitZ_ = 30.0f;
 	const float kRotLimitX_ = 30.0f;

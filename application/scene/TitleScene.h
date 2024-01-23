@@ -78,6 +78,8 @@ private:
 
 	Sprite* sprite5 = nullptr;
 
+	Sprite* sprite6 = nullptr;
+
 	Sprite* spriteFadeInOut_ = new Sprite();
 
 

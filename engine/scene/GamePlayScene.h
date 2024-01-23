@@ -97,11 +97,14 @@ private:
 	bool changeStage_ = false;
 	bool isStart_ = false;
 	bool isLimit_ = false;
+	bool isDamage_ = false;
 	int waitTimer_;
 
 	float fadein_timer = 60.0f * 2;
 
 	float default_timer = 60.0f * 1;
+
+	float damage_timer = 10.0f;
 
 	//float color_ = 0.5f;
 
@@ -127,6 +130,8 @@ private:
 	Sprite* sprite10 = nullptr;
 
 	Sprite* sprite11 = nullptr;
+
+	Sprite* spriteHp_ = nullptr;
 
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;

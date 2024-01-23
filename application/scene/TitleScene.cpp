@@ -22,6 +22,8 @@ void TitleScene::Initialize()
 
     spriteCommon_->LoadTexture(4, "gameclear.png");
 
+    spriteCommon_->LoadTexture(5, "pressspace.png");
+
     //spriteCommon_->LoadTexture(5, "warning.png");
 
     ////‰¹º“Ç‚Ýž‚Ý
@@ -50,6 +52,10 @@ void TitleScene::Initialize()
     sprite5 = new Sprite();
     sprite5->SetTextureIndex(4),
     sprite5->Initialize(spriteCommon_, 4);
+
+    sprite6 = new Sprite();
+    sprite6->SetTextureIndex(5),
+        sprite6->Initialize(spriteCommon_, 5);
 
     spriteFadeInOut_->SetTextureIndex(0);
     spriteFadeInOut_->Initialize(spriteCommon_, 0);
@@ -98,7 +104,7 @@ void TitleScene::Initialize()
 void TitleScene::Finalize()
 {
     delete sprite;
-
+    delete sprite6;
 }
 
 void TitleScene::Update()
@@ -126,6 +132,7 @@ void TitleScene::Update()
     object3DPlayer_->SetRotation(rot);
     
     sprite->Update();
+    sprite6->Update();
     camera_->Update();
     //player_->Update();
     object3DTitle_->Update();
@@ -167,6 +174,8 @@ void TitleScene::Draw()
     //ObjectFBX::PostDraw();
 
     spriteCommon_->PreDraw();
+
+    sprite6->Draw();
 
     //sprite2->Draw();
 

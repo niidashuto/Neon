@@ -12,7 +12,7 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover,Sprite* gameclear) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover,Sprite* gameclear,Sprite* hp) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -20,12 +20,11 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	model_ = model;
 	camera_ = camera;
 	obj_ = obj;
-	//warning_ = warning;
 	fadeIn_white = white;
 	gameover_ = gameover;
 	gameclear_ = gameclear;
 
-	//pPm_ = particle;
+	hp_ = hp;
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -45,8 +44,6 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	//ワールド変換の初期化
 	pos = { 0.0f,20.0f,-60.0f };
 	obj_->SetPosition(pos);
-
-	//warning_->SetColor({ 1,1,1,warning_color });
 
 	fadeIn_white->SetColor({ 1,1,1,fadein_color });
 
@@ -72,6 +69,8 @@ void Player::Update() {
 		CameraMove();
 		//攻撃処理
 		Attack();
+
+		Hp();
 
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
@@ -301,6 +300,13 @@ void Player::CameraMove()
 	camera_->SetTarget(tmove);
 }
 
+void Player::Hp()
+{
+	//HPを数値分だけ用意
+	hp_->SetSize({ 20.0f*life_,20.0f });
+	hp_->SetTextureSize({ 20.0f * life_,20.0f });
+}
+
 //攻撃処理
 void Player::Attack() {
 	
@@ -361,11 +367,6 @@ void Player::Trans() {
 
 }
 
-void Player::Warning()
-{
-	
-}
-
 //ワールド座標を取得
 XMFLOAT3 Player::GetWorldPosition() {
 
@@ -382,10 +383,11 @@ XMFLOAT3 Player::GetWorldPosition() {
 
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision() {
+
+	//HPを減らす
 	life_--;
 
-	
-	
+	//HPが0になったら
 	if (life_ <= 0) {
 		game_over_ = true;
 		start_ = false;
