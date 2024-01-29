@@ -369,8 +369,6 @@ void GamePlayScene::Update()
             }
         }
 
-
-
         object3DPlayer_->SetPosition(move);
         object3DPlayer_->SetRotation(rot);
         object3DPlayer_->SetScale(scale);
