@@ -88,14 +88,14 @@ void GamePlayScene::Initialize()
     sprite6->SetTextureIndex(5),
         sprite6->Initialize(spriteCommon_, 5);
 
-    sprite6->SetPosition({ 1200.0f,0.0f });
+    sprite6->SetPosition({ 1180.0f,32.0f });
     sprite6->SetSize({ 32.0f,32.0f });
 
     sprite7 = new Sprite();
     sprite7->SetTextureIndex(6),
         sprite7->Initialize(spriteCommon_, 6);
 
-    sprite7->SetPosition({ 1232.0f,32.0f });
+    sprite7->SetPosition({ 1212.0f,64.0f });
     sprite7->SetSize({ 32.0f,32.0f });
 
     sprite8 = new Sprite();
@@ -103,20 +103,20 @@ void GamePlayScene::Initialize()
         sprite8->Initialize(spriteCommon_, 7);
     sprite8->SetSize({ 32.0f,32.0f });
 
-    sprite8->SetPosition({ 1200.0f,32.0f });
+    sprite8->SetPosition({ 1180.0f,64.0f });
 
     sprite9 = new Sprite();
     sprite9->SetTextureIndex(8),
         sprite9->Initialize(spriteCommon_, 8);
 
-    sprite9->SetPosition({ 1168.0f,32.0f });
+    sprite9->SetPosition({ 1148.0f,64.0f });
     sprite9->SetSize({ 32.0f,32.0f });
 
     sprite10 = new Sprite();
     sprite10->SetTextureIndex(9),
         sprite10->Initialize(spriteCommon_, 9);
 
-    sprite10->SetPosition({ 1138.0f,80.0f });
+    sprite10->SetPosition({ 1118.0f,112.0f });
     sprite10->SetSize({ 160.0f,32.0f });
 
     sprite11 = new Sprite();
@@ -126,6 +126,7 @@ void GamePlayScene::Initialize()
     spriteHp_ = new Sprite();
     spriteHp_->SetTextureIndex(11);
     spriteHp_->Initialize(spriteCommon_, 11);
+    spriteHp_->SetPosition({ 10.0f,10.0f });
 
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
