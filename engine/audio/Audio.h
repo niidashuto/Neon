@@ -5,7 +5,11 @@
 #include <map>
 #include <string>
 
+/**
+*Audio.h
 
+* オーディオ
+*/
 class Audio
 {
 public:
@@ -39,16 +43,17 @@ public:
     };
 
 public:
+    //初期化
     void Initialize();
-
+    //削除
     void Finalize();
-
+    //サウンド読み込み
     void SoundLoadWave(const char* filename);
-
+    //サウンド読み込み停止
     void SoundUnLoad(SoundData* soundData);
-
+    //サウンド再生
     void SoundPlayWave(std::string filename);
-
+    //Audioインスタンス
     static Audio* GetInstance();
 
 private:

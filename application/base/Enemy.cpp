@@ -200,7 +200,7 @@ void Enemy::UpdateApproachStage1() {
 	//指定時間に達した
 	if (fireTimer <= 0) {
 		//弾発射
-		Fire();
+		//Fire();
 		//発射タイマー初期化
 		fireTimer = kFireIntervalStage1;
 	}
@@ -254,7 +254,7 @@ void Enemy::UpdateAttackStage1() {
 	//指定時間に達した
 	if (fireTimer <= 0) {
 		//弾発射
-		Fire();
+		//Fire();
 		//発射タイマー初期化
 		fireTimer = kFireIntervalStage1;
 	}

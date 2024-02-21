@@ -7,7 +7,11 @@
 #include <vector>
 #include <chrono>
 
-//DirectXŠî”Õ
+/**
+*DirectXCommon.h
+
+* DirectX‹¤’Ê•”
+*/
 class DirectXCommon
 {
 public://ƒƒ“ƒoŠÖ”

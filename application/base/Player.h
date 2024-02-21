@@ -10,7 +10,15 @@
 #include "Enemy.h"
 #include "PostEffect.h"
 #include "SpriteCommon.h"
+#include "Easing.h"
+#include "Boss.h"
+#include "ParticleManager.h"
 
+/**
+*Player.h
+
+* プレイヤー
+*/
 class Player
 {
 private:
@@ -24,7 +32,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera);
+	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera,Sprite* white, Sprite* gameover, Sprite* gameclear,Sprite* hp);
 	//リセット処理
 	void Reset();
 
@@ -34,6 +42,8 @@ public:
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
+
+	void Hp();
 
 	//プレイヤーの攻撃処理
 	void Attack();
@@ -46,6 +56,8 @@ public:
 
 	//描画
 	void Draw();
+
+	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -70,6 +82,16 @@ private:
 	//カメラ
 	Camera* camera_ = nullptr;
 
+	Sprite* warning_ = nullptr;
+
+	Sprite* fadeIn_white = nullptr;
+
+	Sprite* gameover_ = nullptr;
+
+	Sprite* gameclear_ = nullptr;
+
+	Sprite* hp_ = nullptr;
+
 	//インプット
 	Input* input_ = nullptr;
 
@@ -78,6 +100,12 @@ private:
 	PostEffect* postEffect_ = nullptr;
 
 	SpriteCommon* spriteCommon_ = nullptr;
+	
+	Easing easing_= { 80.0f,20.0f,1.0f };
+
+	Particle* playerParticle_ = nullptr;
+
+	ParticleManager* pPm_ = nullptr;
 
 	//ポジション
 	XMFLOAT3 pos;
@@ -85,20 +113,72 @@ private:
 	XMFLOAT3 angle;
 
 	//死亡フラグとライフ
-	bool isDead_ = false;
-	int life_ = 5;
+	bool dead_ = false;
+	float life_ = 20.0f;
 
-	const float rotLimitZ_ = 30.0f;
-	const float rotLimitX_ = 30.0f;
+	const float kRotLimitZ_ = 30.0f;
+	const float kRotLimitX_ = 30.0f;
 
-	const float moveLimitX_ = 40.0f;
-	const float moveLimitY_ = 40.0f;
+	const float kMoveLimitX_ = 40.0f;
+	const float kMoveLimitY_ = 40.0f;
 
 	bool start_ = false;
 
-	bool boss_ = false;
+	bool game_start_ = false;
+
+	bool bossStart_ = false;
+
+	bool hit_ = false;
+
+	bool title_ = true;
+
+	bool transition_ = false;
+
+	bool transition_2_ = false;
+
+	bool fadeIn_ = false;
+
+	bool fadeInWhite_ = false;
+
+	bool game_start_rot_ = false;
+
+	bool game_over_ = false;
+
+	bool game_clear_ = false;
+
+	bool clear_change_ = false;
+
+	bool player_extinction_ = false;
+
+	float warning_timer = 60.0f * 2;
+
+	float fadein_timer = 60.0f * 2;
+
+	float game_over_timer = 60.0f * 2;
+
+	float game_clear_timer = 60.0f * 2;
+
+	float extinction_timer = 10.0f;
+
+	float start_wait_timer = 60.0f * 2;
+
+	float warning_color;
+
+	float fadein_color;
+
+	float gameover_color;
+
+	float gamecler_color;
 
 public: //アクセッサ、インライン関数
-	bool IsDead() const { return isDead_; }
-	bool IsBoss() const { return boss_; }
+	bool IsDead() const { return dead_; }
+	bool IsBoss() const { return bossStart_; }
+	bool IsHit()const { return hit_; }
+	bool IsFadeIn()const { return fadeIn_; }
+	bool IsPlayerExtinction()const { return player_extinction_; }
+	bool IsGameClear()const { return game_clear_; }
+	bool IsGameOver()const { return game_over_; }
+	bool IsGameClearChange()const { return clear_change_; }
+
+	bool IsFadeInWhite()const { return fadeInWhite_; }
 };

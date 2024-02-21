@@ -82,13 +82,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)External\imgui;$(SolutionDir)External\DirectXTex</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)External\fbx_sdk\include;$(SolutionDir)External\imgui;$(SolutionDir)External\DirectXTex</IncludePath>
+    <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)External\imgui;$(SolutionDir)External\DirectXTex</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)External\fbx_sdk\include;$(SolutionDir)External\imgui;$(SolutionDir)External\DirectXTex</IncludePath>
+    <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -171,12 +171,18 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application\base\Boss.cpp" />
+    <ClCompile Include="application\base\BossBullet.cpp" />
     <ClCompile Include="application\base\Enemy.cpp" />
     <ClCompile Include="application\base\EnemyBullet.cpp" />
     <ClCompile Include="application\base\Player.cpp" />
     <ClCompile Include="application\base\PlayerBullet.cpp" />
     <ClCompile Include="application\base\WeakEnemy.cpp" />
     <ClCompile Include="application\base\WeakEnemyBullet.cpp" />
+    <ClCompile Include="application\scene\BaseScene.cpp" />
+    <ClCompile Include="application\scene\SceneFactory.cpp" />
+    <ClCompile Include="application\scene\SceneManager.cpp" />
+    <ClCompile Include="application\scene\TitleScene.cpp" />
     <ClCompile Include="engine\2d\PostEffect.cpp" />
     <ClCompile Include="engine\3d\JsonLoader.cpp" />
     <ClCompile Include="engine\audio\Audio.cpp" />
@@ -203,6 +209,7 @@
     <ClCompile Include="engine\math\Vector3.cpp" />
     <ClCompile Include="engine\base\ViewProjection.cpp" />
     <ClCompile Include="engine\base\WinApp.cpp" />
+    <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -340,12 +347,19 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\base\Boss.h" />
+    <ClInclude Include="application\base\BossBullet.h" />
     <ClInclude Include="application\base\Enemy.h" />
     <ClInclude Include="application\base\EnemyBullet.h" />
     <ClInclude Include="application\base\Player.h" />
     <ClInclude Include="application\base\PlayerBullet.h" />
     <ClInclude Include="application\base\WeakEnemy.h" />
     <ClInclude Include="application\base\WeakEnemyBullet.h" />
+    <ClInclude Include="application\scene\AbstractSceneFactory.h" />
+    <ClInclude Include="application\scene\BaseScene.h" />
+    <ClInclude Include="application\scene\SceneFactory.h" />
+    <ClInclude Include="application\scene\SceneManager.h" />
+    <ClInclude Include="application\scene\TitleScene.h" />
     <ClInclude Include="engine\2d\PostEffect.h" />
     <ClInclude Include="engine\3d\json.hpp" />
     <ClInclude Include="engine\3d\JsonLoader.h" />
@@ -356,6 +370,7 @@
     <ClInclude Include="engine\3d\FbxModel.h" />
     <ClInclude Include="engine\3d\ObjectFBX.h" />
     <ClInclude Include="engine\math\Easing.h" />
+    <ClInclude Include="engine\math\MyMath.h" />
     <ClInclude Include="engine\scene\GamePlayScene.h" />
     <ClInclude Include="engine\io\ImGuiManager.h" />
     <ClInclude Include="engine\base\Input.h" />
@@ -372,6 +387,7 @@
     <ClInclude Include="engine\math\Vector3.h" />
     <ClInclude Include="engine\base\ViewProjection.h" />
     <ClInclude Include="engine\base\WinApp.h" />
+    <ClInclude Include="MyMath.h" />
     <ClInclude Include="RailCamera.h" />
   </ItemGroup>
   <ItemGroup>

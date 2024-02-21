@@ -10,13 +10,21 @@
 #include <sstream>
 #include <Vector3.h>
 #include "Easing.h"
+//#include "GamePlayScene.h"
+//#include "SceneManager.h"
 
 //自機クラスの前方宣言
 class Player;
 
 class MyGame;
 
-//敵
+class GamePlayScene;
+
+/**
+*WeakEnemy.h
+
+* 雑魚敵
+*/
 class WeakEnemy {
 private:
 	// DirectX::を省略
@@ -57,7 +65,7 @@ public:
 	void UpdateLeave();
 
 	
-
+	//ベジエ
 	const XMFLOAT3 Bezier(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
@@ -84,7 +92,7 @@ private:
 	Easing easing_ = { 80.0f,20.0f,1.0f};
 	
 
-	static MyGame* myGame_;
+	static GamePlayScene *gamePlayScene_;
 
 	//行動フェーズ
 	enum class Phase {
@@ -139,6 +147,6 @@ public:
 	bool IsDead() const { return isDead_; }
 	static void SetPlayer(Player* player) { player_ = player; }
 
-	static void SetMyGame(MyGame* myGame) { myGame_ = myGame; }
+	static void SetGamePlayScene(GamePlayScene* gamePlayScene) { gamePlayScene_ = gamePlayScene; }
 };
 

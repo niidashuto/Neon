@@ -1,6 +1,11 @@
 #pragma once
 #include "Sprite.h"
-//ポストエフェクト
+
+/**
+*PostEffect.h
+
+* ポストエフェクト
+*/
 class PostEffect
 {
 public:
@@ -57,11 +62,11 @@ public:
 
     //描画後処理
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
-
+    //色指定
     void SetColor(const DirectX::XMFLOAT4& color) { this->color_ = color; }
-
+    //Warning用の赤指定
     void SetRed(const float& red) { this->red_ = red; }
-
+    //PostEffectのインスタンス
     static PostEffect* GetInstance();
 
 private:

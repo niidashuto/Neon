@@ -3,7 +3,11 @@
 #include "Object3d.h"
 #include <DirectXMath.h>
 
-//“G‚Ì’e
+/**
+*EnemyBullet.h
+
+* “G‚Ì’e
+*/
 class EnemyBullet {
 private:
 	// DirectX::‚ğÈ—ª

@@ -6,6 +6,11 @@
 #include <dinput.h>
 #include "WinApp.h"
 
+/**
+*Input.h
+
+* “ü—Í
+*/
 class Input
 {
 public:

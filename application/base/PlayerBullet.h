@@ -3,7 +3,11 @@
 #include "Model.h"
 #include <DirectXMath.h>
 
-//自キャラの弾
+/**
+*PlayerBullet.h
+
+* プレイヤーの弾
+*/
 class PlayerBullet {
 private:
 	// DirectX::を省略
@@ -39,7 +43,7 @@ private:
 	//速度
 	XMFLOAT3 velocity_;
 	//寿命<frm>
-	static const int32_t kLifeTime = 60 * 5;
+	static const int32_t kLifeTime = 60;
 	//死亡時間
 	int32_t deathTimer_ = kLifeTime;
 	//死亡フラグ

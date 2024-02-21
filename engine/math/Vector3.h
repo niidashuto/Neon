@@ -1,6 +1,10 @@
 #pragma once
 
+/**
+*Vector3.h
 
+* 3DƒxƒNƒgƒ‹
+*/
 class Vector3 {
 public:
 	float x; // x¬•ª

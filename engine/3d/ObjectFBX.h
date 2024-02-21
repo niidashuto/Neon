@@ -10,6 +10,11 @@
 #include <DirectXMath.h>
 #include <string>
 
+/**
+*ObjectFBX.h
+
+* FBXオブジェクト
+*/
 class ObjectFBX
 {
 protected://エイリアス
@@ -39,31 +44,32 @@ public:
 		XMMATRIX bones[MAX_BONES];
 	};
 public://静的メンバ関数
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-
+	//モデル指定Setter
 	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
-
+	//アニメーション再生
 	void PlayAnimation();
 	//setter
+	//デバイス指定Setter
 	static void SetDevice(ID3D12Device* device) { ObjectFBX::device = device; }
-
+	//カメラ指定Setter
 	static void SetCamera(Camera* camera) { ObjectFBX::camera = camera; }
-
+	//座標指定Setter
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
-
+	//サイズ指定Setter
 	void SetScale(const XMFLOAT3& scale) { this->scale = scale; }
-
+	//回転指定Setter
 	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
-
+	//描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-
+	//描画後処理
 	static void PostDraw();
-
+	//グラフィックスパイプライン作成
 	static void CreateGraphicsPipeline();
 
 	/// <summary>

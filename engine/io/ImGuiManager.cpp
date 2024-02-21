@@ -76,3 +76,9 @@ void ImGuiManager::Draw()
 	//描画コマンドを発行
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
+
+ImGuiManager* ImGuiManager::GetInstance()
+{
+	static ImGuiManager ins;
+	return &ins;
+}

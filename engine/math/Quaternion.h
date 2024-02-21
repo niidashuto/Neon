@@ -2,6 +2,11 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 
+/**
+*Quaternion.h
+
+* élå≥êî
+*/
 class Quaternion
 {
 public:
@@ -19,6 +24,8 @@ public:
 	void operator*=(const Quaternion& q);
 
 	Matrix4 MakeRotateMatrix() const;
+
+	
 
 };
 

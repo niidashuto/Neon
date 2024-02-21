@@ -1,5 +1,6 @@
 #include "Quaternion.h"
 #include <cmath>
+#include <random>
 
 float Norm(const Quaternion& q)
 {
@@ -68,6 +69,8 @@ Matrix4 Quaternion::MakeRotateMatrix() const
 
 	return mat;
 }
+
+
 
 Matrix4 MakeRotateMatrix(const Quaternion& q)
 {

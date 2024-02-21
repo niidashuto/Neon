@@ -9,7 +9,11 @@
 #include <d3dx12.h>
 #include <fbxsdk.h>
 
-//ノード
+/**
+*Node.h
+
+* ノード
+*/
 struct Node
 {
 	//名前

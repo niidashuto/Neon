@@ -20,7 +20,11 @@ struct JsonData {
 	// オブジェクト配列
 	std::vector<ObjectData> objects;
 };
+/**
+*JsonLoader.h
 
+* jsonローダー
+*/
 class JsonLoader
 {
 public:// 定数

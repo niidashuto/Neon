@@ -6,8 +6,15 @@
 #include "Audio.h"
 #include "FbxLoader.h"
 #include "PostEffect.h"
+#include "ImGuiManager.h"
+#include "SceneManager.h"
+#include "AbstractSceneFactory.h"
 
+/**
+*SNFramework.h
 
+* 自作フレームワーク
+*/
 class SNFramework
 {
 public://メンバ関数
@@ -44,6 +51,14 @@ protected:
 	Audio* audio = nullptr;
 
 	PostEffect* postEffect = nullptr;
+
+	ImGuiManager* imguiManager = nullptr;
+
+	//BaseScene* baseScene
+
+	SceneManager* sceneManager = nullptr;
+
+	AbstractSceneFactory* sceneFactory = nullptr;
 
 	
 };
