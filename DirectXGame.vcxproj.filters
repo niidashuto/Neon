@@ -165,9 +165,6 @@
     <ClCompile Include="application\base\PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="RailCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="engine\3d\JsonLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -191,9 +188,6 @@
     </ClCompile>
     <ClCompile Include="application\scene\TitleScene.cpp">
       <Filter>ソース ファイル\application\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMath.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="application\scene\SceneManager.cpp">
       <Filter>ソース ファイル\application\scene</Filter>
@@ -357,9 +351,6 @@
     <ClInclude Include="application\base\PlayerBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="RailCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="engine\3d\json.hpp">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -377,9 +368,6 @@
     </ClInclude>
     <ClInclude Include="application\base\BossBullet.h">
       <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMath.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="application\scene\BaseScene.h">
       <Filter>ソース ファイル</Filter>

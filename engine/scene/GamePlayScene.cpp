@@ -14,9 +14,9 @@ void GamePlayScene::Initialize()
     ////spriteCommon->LoadTexture(0, "texture.png");
     ////spriteCommon->LoadTexture(1, "reimu.png");
 
-    spriteCommon_->LoadTexture(1, "white1x1.png");
-
     spriteCommon_->LoadTexture(0, "warning.png");
+
+    spriteCommon_->LoadTexture(1, "white1x1.png");
 
     spriteCommon_->LoadTexture(2, "white1280x720.png");
 

@@ -24,15 +24,6 @@ void TitleScene::Initialize()
 
     spriteCommon_->LoadTexture(5, "pressspace.png");
 
-    //spriteCommon_->LoadTexture(5, "warning.png");
-
-    ////‰¹º“Ç‚Ýž‚Ý
-    //Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
-    ////‰¹ºÄ¶
-    ////audio->SoundPlayWave("Resources/fanfare.wav");
-
-    //player_ = new Player();
-
     camera_ = new Camera();
 
     player_ = new Player();
@@ -94,11 +85,6 @@ void TitleScene::Initialize()
     camera_->SetUp({ 0,20,0 });
     camera_->CameraMoveVector({ 0,20,0 });
 
-    //player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3, sprite4, sprite5);
-
-    
-
-    
 }
 
 void TitleScene::Finalize()
@@ -134,7 +120,6 @@ void TitleScene::Update()
     sprite->Update();
     sprite6->Update();
     camera_->Update();
-    //player_->Update();
     object3DTitle_->Update();
     object3DPlayer_->Update();
     object3d_1->Update();
@@ -146,13 +131,8 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 
-
-    //postEffect->PreDraw(dxCommon_->GetCommandList());
-
-
     Object3d::PreDraw(dxCommon_->GetCommandList());
    
-    //player_->Draw();
     object3DPlayer_->Draw();
     if (!player_->IsFadeInWhite())
     {
@@ -167,19 +147,10 @@ void TitleScene::Draw()
 
     Object3d::PostDraw();
 
-    //ObjectFBX::PreDraw(dxCommon_->GetCommandList());
-
-    //object1->Draw(dxCommon->GetCommandList());
-
-    //ObjectFBX::PostDraw();
-
     spriteCommon_->PreDraw();
 
     sprite6->Draw();
 
-    //sprite2->Draw();
-
-    //sprite->Draw();
     spriteFadeInOut_->Draw();
 
     ParticleManager::PreDraw(dxCommon_->GetCommandList());
