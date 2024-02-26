@@ -13,18 +13,10 @@ void MyGame::Initialize()
 
     SNFramework::Initialize();
 
-    //BaseScene* scene = new TitleScene();
     sceneFactory = new SceneFactory();
     SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
 
-    //sceneManager->SetNextScene(scene);
     SceneManager::GetInstance()->ChangeScene("TITLE");
-
-    //scene_ = new GamePlayScene();
-    //titleScene_ = new TitleScene();
-
-    //scene_->Initialize();
-    //titleScene_->Initialize();
 
     postEffect = new PostEffect();
 
@@ -38,9 +30,6 @@ void MyGame::Initialize()
 void MyGame::Finalize()
 {
 #pragma region 最初のシーンの終了
-
-    //scene_->Finalize();
-    //titleScene_->Finalize();
 
 #pragma endregion 最初のシーンの終了
 
@@ -57,8 +46,6 @@ void MyGame::Update()
 #pragma region 基盤システムの更新
     SNFramework::Update();
 
-    //scene_->Update();
-    //titleScene_->Update();
 #pragma endregion 基盤システムの更新
 
 
@@ -67,9 +54,7 @@ void MyGame::Update()
 void MyGame::Draw()
 {
     postEffect->PreDraw(dxCommon->GetCommandList());
-    //spriteCommon->PreDraw();
-    
-    //scene_->Draw();
+   
     sceneManager->Draw();
     
     

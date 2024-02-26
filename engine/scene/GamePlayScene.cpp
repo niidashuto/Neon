@@ -9,14 +9,39 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 
 Input* GamePlayScene::input_ = Input::GetInstance();
 
+// テクスチャ番号
+enum class TextureIndex {
+    WARNING,
+    WHITE1X1,
+    WHITE1280X720,
+    GAMEOVER,
+    GAMECLEAR,
+    W,
+    D,
+    S,
+    A,
+    DAMAGE,
+    HP,
+    
+};
+
+// スプライト番号
+enum class SpriteIndex {
+    SpriteNum,
+};
+
+struct SpriteDef {
+    TextureIndex textureIndex;
+    uint32_t hp;
+};
+
 void GamePlayScene::Initialize()
 {
-    ////spriteCommon->LoadTexture(0, "texture.png");
-    ////spriteCommon->LoadTexture(1, "reimu.png");
-
-    spriteCommon_->LoadTexture(1, "white1x1.png");
+   
 
     spriteCommon_->LoadTexture(0, "warning.png");
+
+    spriteCommon_->LoadTexture(1, "white1x1.png");
 
     spriteCommon_->LoadTexture(2, "white1280x720.png");
 
@@ -34,10 +59,7 @@ void GamePlayScene::Initialize()
 
     spriteCommon_->LoadTexture(11, "hp.png");
 
-    ////音声読み込み
-    //Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
-    ////音声再生
-    ////audio->SoundPlayWave("Resources/fanfare.wav");
+    
 
     player_ = new Player();
 
@@ -60,15 +82,16 @@ void GamePlayScene::Initialize()
 
     camera_ = new Camera();
 
-    //imGui = new ImGuiManager();
-    //imGui->Initialize(winApp_, dxCommon_);
-
-
-    //sprite = new Sprite();
-    //sprite->SetTextureIndex(0);
-    //sprite->Initialize(spriteCommon, 1);
-
     sprite = new Sprite();
+
+   /* std::array<Sprite*, (uint32_t)SpriteIndex::SpriteNum> sprites;
+
+    sprites[(uint32_t)SpriteIndex::SpriteNum]->Initialize(spriteCommon_, (uint32_t)TextureIndex::WARNING);
+
+    for (uint32_t i = 0; i < (uint32_t)SpriteIndex::SpriteNum; i++) {
+        sprites[i]->Initialize(spriteCommon_, (uint32_t)TextureIndex[i])
+    }*/
+
     sprite->SetTextureIndex(0),
         sprite->Initialize(spriteCommon_, 0);
 
@@ -136,7 +159,6 @@ void GamePlayScene::Initialize()
     modelBoss_ = Model::LoadFromOBJ("boss");
     modelRail_ = Model::LoadFromOBJ("rail");
     modelTitle_ = Model::LoadFromOBJ("neon");
-    //modelW_ = Model::LoadFromOBJ("wkey");
 
     object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
@@ -144,10 +166,8 @@ void GamePlayScene::Initialize()
     object3DPlayer_ = Object3d::Create();
     object3DEnemy_ = Object3d::Create();
     object3DBoss_ = Object3d::Create();
-    //object3DWeakEnemy_ = Object3d::Create();
     object3DRail_ = Object3d::Create();
     object3DTitle_ = Object3d::Create();
-    //object3DW_ = Object3d::Create();
 
     //3Dオブジェクトと3Dモデルをひも付け
     object3d_1->SetModel(model_1);
@@ -156,17 +176,13 @@ void GamePlayScene::Initialize()
     object3DPlayer_->SetModel(modelPlayer_);
     object3DEnemy_->SetModel(modelEnemy_);
     object3DBoss_->SetModel(modelBoss_);
-    //object3DWeakEnemy_->SetModel(modelWeakEnemy_);
     object3DRail_->SetModel(modelRail_);
     object3DTitle_->SetModel(modelTitle_);
-    //object3DW_->SetModel(modelW_);
     //3Dオブジェクトの位置を指定
-    //object3d_2->SetPosition({ -5,0,-5 });
     object3d_3->SetPosition({ +5,0,+5 });
     //3Dオブジェクトのスケールを指定
     object3d_1->SetPosition({ 0,-10,0 });
     object3d_1->SetScale({ 10.0f,10.0f,100.0f });
-    //object3d_1->SetRotation({ 10.0f,0.0f,0.0f });
     object3d_2->SetScale({ 600.0f,600.0f,600.0f });
     object3d_3->SetScale({ 10.0f,10.0f,10.0f });
     object3DPlayer_->SetScale({ 10.0f,10.0f,10.0f });
@@ -186,7 +202,6 @@ void GamePlayScene::Initialize()
     object3DPlayer_->SetCamera(camera_);
     object3DEnemy_->SetCamera(camera_);
     object3DBoss_->SetCamera(camera_);
-    //object3DWeakEnemy_->SetCamera(camera_);
     object3DRail_->SetCamera(camera_);
     object3DTitle_->SetCamera(camera_);
     
@@ -219,8 +234,6 @@ void GamePlayScene::Initialize()
     camera_->SetEye({ 0,0,8.0f });
     camera_->SetUp({ 0,20,0 });
     camera_->CameraMoveVector({ 0,20,0 });
-    //camera_->SetEye({ 0,0,0 });
-    //object1->PlayAnimation();
 
     player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3,sprite4, sprite5,spriteHp_);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
@@ -429,10 +442,6 @@ void GamePlayScene::Update()
 void GamePlayScene::Draw()
 {
 
-    
-    //postEffect->PreDraw(dxCommon_->GetCommandList());
-
-
     Object3d::PreDraw(dxCommon_->GetCommandList());
     if (!scaleSmaller_&&player_->GetWorldPosition().z>=-670.0f)
     {
@@ -441,10 +450,8 @@ void GamePlayScene::Draw()
     object3d_2->Draw();
     object3DRail_->Draw();
     
-    //object3d_3->Draw();
     player_->Draw();
    
-    //object3DW_->Draw();
     enemy_->Draw();
     
 
@@ -469,13 +476,9 @@ void GamePlayScene::Draw()
 
     ObjectFBX::PreDraw(dxCommon_->GetCommandList());
 
-    //object1->Draw(dxCommon->GetCommandList());
-
     ObjectFBX::PostDraw();
 
     spriteCommon_->PreDraw();
-
-    //sprite2->Draw();
 
     if (player_->IsFadeIn() == false)
     {
@@ -509,12 +512,8 @@ void GamePlayScene::Draw()
     ParticleManager::PreDraw(dxCommon_->GetCommandList());
     pm1_->Draw();
     player_->DrawParticle();
-    //pm2_->Draw();
+    
     ParticleManager::PostDraw();
-
-    //spriteCommon->PostDraw();
-
-    //postEffect->PostDraw(dxCommon_->GetCommandList());
 
     spriteCommon_->PostDraw();
 
@@ -730,10 +729,8 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<WeakEnemyBullet> weakEnemyBul
 
 void GamePlayScene::WeakEnemy_(XMFLOAT3 trans)
 {
-    //object3DWeakEnemy_->SetPosition(trans);
     std::unique_ptr<WeakEnemy> newWeakEnemy = std::make_unique<WeakEnemy>();
     newWeakEnemy->Initialize(modelWeakEnemy_, trans, camera_);
-    //newWeakEnemy.reset(weakEnemy_);
     _WeakEnemy.push_back(std::move(newWeakEnemy));
 }
 

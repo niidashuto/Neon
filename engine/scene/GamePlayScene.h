@@ -106,8 +106,6 @@ private:
 
 	float damage_timer = 10.0f;
 
-	//float color_ = 0.5f;
-
 	ImGuiManager* imGui = nullptr;
 
 
@@ -148,9 +146,7 @@ private:
 	Object3d* object3DTitle_ = nullptr;
 	Object3d* object3DW_ = nullptr;
 
-	//Object3d* object3DWeakEnemy_ = nullptr;
 	Object3d* object3DRail_ = nullptr;
-	//Object3d* obj_ = nullptr;
 
 	Camera* camera_ = nullptr;
 
