@@ -68,63 +68,21 @@ void GamePlayScene::Initialize()
         sprites[i]->Initialize(spriteCommon_, i);
     }
 
-    /*sprite->SetTextureIndex(0),
-        sprite->Initialize(spriteCommon_, 0);
-
-    sprite3 = new Sprite();
-    sprite3->SetTextureIndex(2),
-        sprite3->Initialize(spriteCommon_, 2);
-
-    sprite4 = new Sprite();
-    sprite4->SetTextureIndex(3),
-        sprite4->Initialize(spriteCommon_, 3);
-
-    sprite5 = new Sprite();
-    sprite5->SetTextureIndex(4),
-        sprite5->Initialize(spriteCommon_, 4);
-
-    sprite6 = new Sprite();
-    sprite6->SetTextureIndex(5),
-        sprite6->Initialize(spriteCommon_, 5);*/
-
     //sprite6->SetPosition({ 1180.0f,32.0f });
     //sprite6->SetSize({ 32.0f,32.0f });
-
-    //sprite7 = new Sprite();
-   // sprite7->SetTextureIndex(6),
-       // sprite7->Initialize(spriteCommon_, 6);
 
     //sprite7->SetPosition({ 1212.0f,64.0f });
     //sprite7->SetSize({ 32.0f,32.0f });
 
-    //sprite8 = new Sprite();
-    //sprite8->SetTextureIndex(7),
-       // sprite8->Initialize(spriteCommon_, 7);
     //sprite8->SetSize({ 32.0f,32.0f });
-
     //sprite8->SetPosition({ 1180.0f,64.0f });
-
-    //sprite9 = new Sprite();
-    //sprite9->SetTextureIndex(8),
-        //sprite9->Initialize(spriteCommon_, 8);
 
     //sprite9->SetPosition({ 1148.0f,64.0f });
     //sprite9->SetSize({ 32.0f,32.0f });
 
-    //sprite10 = new Sprite();
-    //sprite10->SetTextureIndex(9),
-        //sprite10->Initialize(spriteCommon_, 9);
-
     //sprite10->SetPosition({ 1118.0f,112.0f });
     //sprite10->SetSize({ 160.0f,32.0f });
 
-    //sprite11 = new Sprite();
-    //sprite11->SetTextureIndex(10);
-    //sprite11->Initialize(spriteCommon_, 10);
-
-    //spriteHp_ = new Sprite();
-    //spriteHp_->SetTextureIndex(11);
-    //spriteHp_->Initialize(spriteCommon_, 11);
     //spriteHp_->SetPosition({ 10.0f,10.0f });
 
     model_1 = Model::LoadFromOBJ("ground");
@@ -223,8 +181,7 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Finalize()
 {
-    delete sprite;
-
+    
     delete postEffect;
 
     delete object3d_1;
