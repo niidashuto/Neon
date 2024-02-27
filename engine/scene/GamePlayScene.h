@@ -22,6 +22,24 @@
 */
 class GamePlayScene : public BaseScene
 {
+private:
+	// テクスチャ番号
+	enum class TextureIndex {
+		WARNING,
+		WHITE1X1,
+		WHITE1280X720,
+		GAMEOVER,
+		GAMECLEAR,
+		W,
+		D,
+		S,
+		A,
+		SPACE,
+		DAMAGE,
+		HP,
+		NUM
+
+	};
 public://メンバ関数
 
 	//初期化
@@ -79,6 +97,8 @@ private:
 
 	std::stringstream enemyPopCommands;
 
+	std::array<Sprite*, (uint32_t)TextureIndex::NUM> sprites;
+
 	XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
 	bool isFadeOut_ = false;
@@ -107,29 +127,6 @@ private:
 	float damage_timer = 10.0f;
 
 	ImGuiManager* imGui = nullptr;
-
-
-
-	Sprite* sprite = nullptr;
-
-	Sprite* sprite2 = nullptr;
-
-	Sprite* sprite3 = nullptr;
-
-	Sprite* sprite4 = nullptr;
-
-	Sprite* sprite5 = nullptr;
-
-	Sprite* sprite6 = nullptr;
-	Sprite* sprite7 = nullptr;
-	Sprite* sprite8 = nullptr;
-	Sprite* sprite9 = nullptr;
-
-	Sprite* sprite10 = nullptr;
-
-	Sprite* sprite11 = nullptr;
-
-	Sprite* spriteHp_ = nullptr;
 
 	Model* model_1 = nullptr;
 	Model* model_2 = nullptr;
