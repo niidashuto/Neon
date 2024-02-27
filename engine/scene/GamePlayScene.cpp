@@ -9,55 +9,29 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 
 Input* GamePlayScene::input_ = Input::GetInstance();
 
-// テクスチャ番号
-enum class TextureIndex {
-    WARNING,
-    WHITE1X1,
-    WHITE1280X720,
-    GAMEOVER,
-    GAMECLEAR,
-    W,
-    D,
-    S,
-    A,
-    DAMAGE,
-    HP,
-    
-};
-
-// スプライト番号
-enum class SpriteIndex {
-    SpriteNum,
-};
-
-struct SpriteDef {
-    TextureIndex textureIndex;
-    uint32_t hp;
-};
-
 void GamePlayScene::Initialize()
 {
    
 
-    spriteCommon_->LoadTexture(0, "warning.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::WARNING, "warning.png");
 
-    spriteCommon_->LoadTexture(1, "white1x1.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::WHITE1X1, "white1x1.png");
 
-    spriteCommon_->LoadTexture(2, "white1280x720.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::WHITE1280X720, "white1280x720.png");
 
-    spriteCommon_->LoadTexture(3, "gameover.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::GAMEOVER, "gameover.png");
 
-    spriteCommon_->LoadTexture(4, "gameclear.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::GAMECLEAR, "gameclear.png");
 
-    spriteCommon_->LoadTexture(5, "w.png");
-    spriteCommon_->LoadTexture(6, "d.png");
-    spriteCommon_->LoadTexture(7, "s.png");
-    spriteCommon_->LoadTexture(8, "a.png");
-    spriteCommon_->LoadTexture(9, "space.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::W, "w.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::D, "d.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::S, "s.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::A, "a.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::SPACE, "space.png");
 
-    spriteCommon_->LoadTexture(10, "damage.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::DAMAGE, "damage.png");
 
-    spriteCommon_->LoadTexture(11, "hp.png");
+    spriteCommon_->LoadTexture((uint32_t)TextureIndex::HP, "hp.png");
 
     
 
@@ -82,17 +56,19 @@ void GamePlayScene::Initialize()
 
     camera_ = new Camera();
 
-    sprite = new Sprite();
+    //sprite = new Sprite();
 
-   /* std::array<Sprite*, (uint32_t)SpriteIndex::SpriteNum> sprites;
+    //std::array<Sprite*, (uint32_t)TextureIndex::NUM> sprites;
+    //sprites[(uint32_t)TextureIndex::WARNING] = new Sprite();
 
-    sprites[(uint32_t)SpriteIndex::SpriteNum]->Initialize(spriteCommon_, (uint32_t)TextureIndex::WARNING);
+    //sprites[(uint32_t)TextureIndex::WARNING]->Initialize(spriteCommon_, (uint32_t)TextureIndex::WARNING);
 
-    for (uint32_t i = 0; i < (uint32_t)SpriteIndex::SpriteNum; i++) {
-        sprites[i]->Initialize(spriteCommon_, (uint32_t)TextureIndex[i])
-    }*/
+    for (uint32_t i = 0; i < (uint32_t)TextureIndex::NUM; i++) {
+        sprites[i] = new Sprite();
+        sprites[i]->Initialize(spriteCommon_, i);
+    }
 
-    sprite->SetTextureIndex(0),
+    /*sprite->SetTextureIndex(0),
         sprite->Initialize(spriteCommon_, 0);
 
     sprite3 = new Sprite();
@@ -109,47 +85,47 @@ void GamePlayScene::Initialize()
 
     sprite6 = new Sprite();
     sprite6->SetTextureIndex(5),
-        sprite6->Initialize(spriteCommon_, 5);
+        sprite6->Initialize(spriteCommon_, 5);*/
 
-    sprite6->SetPosition({ 1180.0f,32.0f });
-    sprite6->SetSize({ 32.0f,32.0f });
+    //sprite6->SetPosition({ 1180.0f,32.0f });
+    //sprite6->SetSize({ 32.0f,32.0f });
 
-    sprite7 = new Sprite();
-    sprite7->SetTextureIndex(6),
-        sprite7->Initialize(spriteCommon_, 6);
+    //sprite7 = new Sprite();
+   // sprite7->SetTextureIndex(6),
+       // sprite7->Initialize(spriteCommon_, 6);
 
-    sprite7->SetPosition({ 1212.0f,64.0f });
-    sprite7->SetSize({ 32.0f,32.0f });
+    //sprite7->SetPosition({ 1212.0f,64.0f });
+    //sprite7->SetSize({ 32.0f,32.0f });
 
-    sprite8 = new Sprite();
-    sprite8->SetTextureIndex(7),
-        sprite8->Initialize(spriteCommon_, 7);
-    sprite8->SetSize({ 32.0f,32.0f });
+    //sprite8 = new Sprite();
+    //sprite8->SetTextureIndex(7),
+       // sprite8->Initialize(spriteCommon_, 7);
+    //sprite8->SetSize({ 32.0f,32.0f });
 
-    sprite8->SetPosition({ 1180.0f,64.0f });
+    //sprite8->SetPosition({ 1180.0f,64.0f });
 
-    sprite9 = new Sprite();
-    sprite9->SetTextureIndex(8),
-        sprite9->Initialize(spriteCommon_, 8);
+    //sprite9 = new Sprite();
+    //sprite9->SetTextureIndex(8),
+        //sprite9->Initialize(spriteCommon_, 8);
 
-    sprite9->SetPosition({ 1148.0f,64.0f });
-    sprite9->SetSize({ 32.0f,32.0f });
+    //sprite9->SetPosition({ 1148.0f,64.0f });
+    //sprite9->SetSize({ 32.0f,32.0f });
 
-    sprite10 = new Sprite();
-    sprite10->SetTextureIndex(9),
-        sprite10->Initialize(spriteCommon_, 9);
+    //sprite10 = new Sprite();
+    //sprite10->SetTextureIndex(9),
+        //sprite10->Initialize(spriteCommon_, 9);
 
-    sprite10->SetPosition({ 1118.0f,112.0f });
-    sprite10->SetSize({ 160.0f,32.0f });
+    //sprite10->SetPosition({ 1118.0f,112.0f });
+    //sprite10->SetSize({ 160.0f,32.0f });
 
-    sprite11 = new Sprite();
-    sprite11->SetTextureIndex(10);
-    sprite11->Initialize(spriteCommon_, 10);
+    //sprite11 = new Sprite();
+    //sprite11->SetTextureIndex(10);
+    //sprite11->Initialize(spriteCommon_, 10);
 
-    spriteHp_ = new Sprite();
-    spriteHp_->SetTextureIndex(11);
-    spriteHp_->Initialize(spriteCommon_, 11);
-    spriteHp_->SetPosition({ 10.0f,10.0f });
+    //spriteHp_ = new Sprite();
+    //spriteHp_->SetTextureIndex(11);
+    //spriteHp_->Initialize(spriteCommon_, 11);
+    //spriteHp_->SetPosition({ 10.0f,10.0f });
 
     model_1 = Model::LoadFromOBJ("ground");
     model_2 = Model::LoadFromOBJ("skybox");
@@ -235,11 +211,11 @@ void GamePlayScene::Initialize()
     camera_->SetUp({ 0,20,0 });
     camera_->CameraMoveVector({ 0,20,0 });
 
-    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprite3,sprite4, sprite5,spriteHp_);
+    player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_, sprites[(uint32_t)TextureIndex::WHITE1280X720], sprites[(uint32_t)TextureIndex::GAMEOVER], sprites[(uint32_t)TextureIndex::GAMECLEAR], sprites[(uint32_t)TextureIndex::HP]);
     enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
     enemy_->SetPlayer(player_);
 
-    boss_->Initialize(modelBoss_, object3DBoss_, camera_, sprite5);
+    boss_->Initialize(modelBoss_, object3DBoss_, camera_, sprites[(uint32_t)TextureIndex::GAMECLEAR]);
     boss_->SetPlayer(player_);
 
     LoadPopEnemyData();
@@ -410,7 +386,7 @@ void GamePlayScene::Update()
     CheckAllCollisions();
 
     camera_->Update();
-    sprite->Update();
+    /*sprite->Update();
     sprite3->Update();
     sprite4->Update();
     sprite5->Update();
@@ -420,7 +396,12 @@ void GamePlayScene::Update()
     sprite9->Update();
     sprite10->Update();
     sprite11->Update();
-    spriteHp_->Update();
+    spriteHp_->Update();*/
+
+    for (uint32_t i = 0; i < (uint32_t)TextureIndex::NUM; i++) {
+        sprites[i]->Update();
+    }
+
 
     postEffect->Update();
 
@@ -484,28 +465,30 @@ void GamePlayScene::Draw()
     {
         if (player_->IsFadeInWhite() == false)
         {
-            sprite6->Draw();
+            /*sprite6->Draw();
             sprite7->Draw();
             sprite8->Draw();
             sprite9->Draw();
-            sprite10->Draw();
+            sprite10->Draw();*/
+            
         }
     }
 
-    spriteHp_->Draw();
+    sprites[(uint32_t)TextureIndex::HP]->Draw();
 
-    sprite->Draw();
+    sprites[(uint32_t)TextureIndex::WARNING]->Draw();
 
-    sprite3->Draw();
+    sprites[(uint32_t)TextureIndex::WHITE1280X720]->Draw();
 
-    sprite4->Draw();
+    sprites[(uint32_t)TextureIndex::GAMEOVER]->Draw();
 
-    sprite5->Draw();
+    sprites[(uint32_t)TextureIndex::GAMECLEAR]->Draw();
+   
 
 
     if (isDamage_)
     {
-        sprite11->Draw();
+        sprites[(uint32_t)TextureIndex::DAMAGE]->Draw();
     }
     
 
@@ -806,7 +789,7 @@ void GamePlayScene::FadeOut(XMFLOAT3 rgb)
     else
     {
         easeFadeOut_.ease_out_quint();
-        sprite->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOut_.num_X });//透明度だけ変える
+        sprites[(uint32_t)TextureIndex::WARNING]->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOut_.num_X });//透明度だけ変える
 
     }
 }
@@ -821,7 +804,7 @@ void GamePlayScene::FadeIn(XMFLOAT3 rgb)
     else
     {
         easeFadeIn_.ease_out_quint();
-        sprite->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeIn_.num_X });//透明度だけ変える
+        sprites[(uint32_t)TextureIndex::WARNING]->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeIn_.num_X });//透明度だけ変える
 
     }
     
@@ -837,7 +820,7 @@ void GamePlayScene::FadeInGameOver(XMFLOAT3 rgb)
     else
     {
         easeFadeInGameOver_.ease_out_quint();
-        sprite4->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInGameOver_.num_X });//透明度だけ変える
+        sprites[(uint32_t)TextureIndex::GAMEOVER]->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInGameOver_.num_X });//透明度だけ変える
 
     }
 }
@@ -852,7 +835,7 @@ void GamePlayScene::FadeInWhite(XMFLOAT3 rgb)
     else
     {
         easeFadeInWhite_.ease_out_quint();
-        sprite3->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInWhite_.num_X });
+        sprites[(uint32_t)TextureIndex::WHITE1280X720]->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInWhite_.num_X });
     }
 }
 
@@ -866,7 +849,7 @@ void GamePlayScene::FadeOutWhite(XMFLOAT3 rgb)
     else
     {
         easeFadeOutWhite_.ease_out_quint();
-        sprite3->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOutWhite_.num_X });
+        sprites[(uint32_t)TextureIndex::WHITE1280X720]->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeOutWhite_.num_X });
     }
 }
 

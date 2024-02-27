@@ -22,6 +22,24 @@
 */
 class GamePlayScene : public BaseScene
 {
+private:
+	// テクスチャ番号
+	enum class TextureIndex {
+		WARNING,
+		WHITE1X1,
+		WHITE1280X720,
+		GAMEOVER,
+		GAMECLEAR,
+		W,
+		D,
+		S,
+		A,
+		SPACE,
+		DAMAGE,
+		HP,
+		NUM
+
+	};
 public://メンバ関数
 
 	//初期化
@@ -78,6 +96,8 @@ private:
 	std::list<std::unique_ptr<WeakEnemy>> _WeakEnemy;
 
 	std::stringstream enemyPopCommands;
+
+	std::array<Sprite*, (uint32_t)TextureIndex::NUM> sprites;
 
 	XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
