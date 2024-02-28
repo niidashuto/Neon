@@ -126,6 +126,8 @@ private:
 
 	float damage_timer = 10.0f;
 
+	int dead;
+
 	ImGuiManager* imGui = nullptr;
 
 	Model* model_1 = nullptr;
