@@ -77,6 +77,8 @@ public://ƒƒ“ƒoŠÖ”
 
 	void UpdateChangeColor();
 
+	void ObjectDead();
+
 	//bool IsStart()const { return isStart_; }
 
 	const std::list<std::unique_ptr<WeakEnemyBullet>>& GetWeakEnemyBullets() { return WeakEnemyBullets_; }
@@ -126,7 +128,7 @@ private:
 
 	float damage_timer = 10.0f;
 
-	int dead;
+	int phase;
 
 	ImGuiManager* imGui = nullptr;
 
