@@ -9,12 +9,12 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 
 Input* GamePlayScene::input_ = Input::GetInstance();
 
-typedef enum {
-    DEFAULT,
-    ENEMY_DEAD,
+enum class Phase {
+    FADE_OUT_START,
     BOSS_DEAD,
     PLAYER_DEAD,
-}dead;
+    ENEMY_DEAD,
+};
 
 void GamePlayScene::Initialize()
 {
@@ -205,61 +205,29 @@ void GamePlayScene::Finalize()
 
 void GamePlayScene::Update()
 {
-    switch (dead) {
-    case DEFAULT:
-        if (boss_->IsDead())
-        {
-            dead = BOSS_DEAD;
-        }
-        break;
-    case BOSS_DEAD:
+    switch(phase){
 
-
-    }
-
-    if (isFadeOutStart_)
-    {
+    case (int)Phase::FADE_OUT_START:
         FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は黒くする
-    }
+        break;
 
-    //ボスが死んだら
-    if (BOSS_DEAD)
-    {
+    case (int)Phase::BOSS_DEAD:
         FadeIn({ 1.0f,1.0f,1.0f });
-    }
-    //プレイヤーが死んだら
-    if (player_->IsDead())
-    {
+        break;
+
+    case (int)Phase::PLAYER_DEAD:
         FadeIn({ 1.0f,1.0f,1.0f });
         FadeInGameOver({ 1.0f,1.0f,1.0f });
-        isLimit_ = true;
-    }
+        break;
 
-    if (player_->IsDead()||boss_->IsGameClear()) {
-        if (input_->TriggerKey(DIK_SPACE))
-        {
-            SceneManager::GetInstance()->ChangeScene("TITLE");
-        }
-    }
-    
-    if (!player_->IsDead() || !boss_->IsDead())
-    {
-        player_->Update();
-    }
-    enemy_->Update();
-    boss_->Update();
+    case (int)Phase::ENEMY_DEAD:
 
-    XMFLOAT3 move = object3DPlayer_->GetPosition();
-    XMFLOAT3 rot = object3DPlayer_->GetRotation();
-    XMFLOAT3 scale = object3DPlayer_->GetScale();
-
-    if (enemy_->IsDead())
-    {
+        XMFLOAT3 move = object3DPlayer_->GetPosition();
+        XMFLOAT3 rot = object3DPlayer_->GetRotation();
+        XMFLOAT3 scale = object3DPlayer_->GetScale();
         UpdateEnemyPopCommands();
 
         FadeInWhite({ 1.0f,1.0f,1.0f });
-
-
 
         if (fadeInWhite_)
         {
@@ -314,19 +282,19 @@ void GamePlayScene::Update()
                 changeStage_ = true;
                 if (!player_->IsGameOver())
                 {
-                scale.z += 0.5f;
-                scale.x += 0.5f;
-                scale.y -= 0.5f;
-                
+                    scale.z += 0.5f;
+                    scale.x += 0.5f;
+                    scale.y -= 0.5f;
 
-                scale.z = max(scale.z, 10);
-                scale.z = min(scale.z, 10);
 
-                scale.x = max(scale.x, 0);
-                scale.x = min(scale.x, 10);
+                    scale.z = max(scale.z, 10);
+                    scale.z = min(scale.z, 10);
 
-                scale.y = max(scale.y, 10);
-                scale.y = min(scale.y, 10);
+                    scale.x = max(scale.x, 0);
+                    scale.x = min(scale.x, 10);
+
+                    scale.y = max(scale.y, 10);
+                    scale.y = min(scale.y, 10);
 
                 }
 
@@ -337,7 +305,28 @@ void GamePlayScene::Update()
         object3DPlayer_->SetPosition(move);
         object3DPlayer_->SetRotation(rot);
         object3DPlayer_->SetScale(scale);
+        break;
     }
+
+    ObjectDead();
+
+    if (player_->IsDead()||boss_->IsGameClear()) {
+        if (input_->TriggerKey(DIK_SPACE))
+        {
+            SceneManager::GetInstance()->ChangeScene("TITLE");
+        }
+    }
+    
+    if (!player_->IsDead() || !boss_->IsDead())
+    {
+        player_->Update();
+    }
+    enemy_->Update();
+    boss_->Update();
+
+    
+
+    
 
     for (std::unique_ptr<WeakEnemy>& weakEnemy_ : _WeakEnemy) {
 
@@ -858,5 +847,24 @@ void GamePlayScene::UpdateChangeColor()
     if (selectColor_.x <= maxAndMinSpeedColor.y)
     {
         isColorReverse_ = false;
+    }
+}
+
+void GamePlayScene::ObjectDead()
+{
+    //ボスが死んだら
+    if (boss_->IsDead())
+    {
+        phase = (int)Phase::BOSS_DEAD;
+    }
+    //プレイヤーが死んだら
+    if (player_->IsDead())
+    {
+        phase = (int)Phase::PLAYER_DEAD;
+    }
+
+    if (enemy_->IsDead())
+    {
+        phase = (int)Phase::ENEMY_DEAD;
     }
 }
