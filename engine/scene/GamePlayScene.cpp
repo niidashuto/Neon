@@ -351,17 +351,6 @@ void GamePlayScene::Update()
     CheckAllCollisions();
 
     camera_->Update();
-    /*sprite->Update();
-    sprite3->Update();
-    sprite4->Update();
-    sprite5->Update();
-    sprite6->Update();
-    sprite7->Update();
-    sprite8->Update();
-    sprite9->Update();
-    sprite10->Update();
-    sprite11->Update();
-    spriteHp_->Update();*/
 
     for (uint32_t i = 0; i < (uint32_t)TextureIndex::NUM; i++) {
         sprites[i]->Update();
