@@ -9,6 +9,13 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 
 Input* GamePlayScene::input_ = Input::GetInstance();
 
+typedef enum {
+    DEFAULT,
+    ENEMY_DEAD,
+    BOSS_DEAD,
+    PLAYER_DEAD,
+}dead;
+
 void GamePlayScene::Initialize()
 {
    
@@ -198,13 +205,25 @@ void GamePlayScene::Finalize()
 
 void GamePlayScene::Update()
 {
+    switch (dead) {
+    case DEFAULT:
+        if (boss_->IsDead())
+        {
+            dead = BOSS_DEAD;
+        }
+        break;
+    case BOSS_DEAD:
+
+
+    }
+
     if (isFadeOutStart_)
     {
         FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は黒くする
     }
 
     //ボスが死んだら
-    if (boss_->IsDead())
+    if (BOSS_DEAD)
     {
         FadeIn({ 1.0f,1.0f,1.0f });
     }
